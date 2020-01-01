@@ -1,0 +1,55 @@
+{
+  "env": {
+    "amd": true,
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-redux/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": [
+      "react",
+      "react-redux"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["warn", "double"],
+    "strict": ["error", "safe"],
+    "consistent-return": "warn",
+    "dot-location": ["error", "property"],
+    "dot-notation": ["error"],
+    "eqeqeq": "error",
+    "no-alert": "warn",
+    "no-console": "off",
+    "no-else-return": "error",
+    "no-eval": "error",
+    "no-fallthrough": "warn",
+    "no-floating-decimal": "error",
+    "no-implicit-coercion": "warn",
+    "no-implicit-globals": "warn",
+    "no-implied-eval": "error",
+    "no-inner-declarations": "warn",
+    "no-throw-literal": "warn",
+    "no-useless-concat": "error",
+    "no-with": "error",
+    "prefer-promise-reject-errors": "error",
+    "wrap-iife": "error",
+    "yoda": ["error", "never", { "exceptRange": true }]
+  }
+}
