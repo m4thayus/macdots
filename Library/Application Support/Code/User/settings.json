@@ -26,8 +26,12 @@
         "adexposure",
         "csrf",
         "dwindow",
+        "es",
+        "esnext",
         "gsrdata",
+        "interop",
         "mdash",
+        "module",
         "nbcu",
         "numberize",
         "pharma",
@@ -76,5 +80,6 @@
         "#66cccc",
         "#2d2d2d"
     ],
-    "editor.scrollBeyondLastLine": false
+    "editor.scrollBeyondLastLine": false,
+    "editor.tabSize": 2
 }
