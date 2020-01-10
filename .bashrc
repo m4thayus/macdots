@@ -8,6 +8,7 @@
 set -o vi
 
 alias be='bundle exec'
+alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
 
 function git_branch() {
 
@@ -33,4 +34,3 @@ else
 fi
 
 shopt -s checkwinsize
-alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
