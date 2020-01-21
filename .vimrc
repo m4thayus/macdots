@@ -1,9 +1,3 @@
-if has('nvim')
-    " Neovim specific commands
-else
-    " Standard vim specific commands
-endif
-
 set number
 set relativenumber
 set linebreak
@@ -47,6 +41,7 @@ call plug#begin()
   " A tree explorer
   Plug 'scrooloose/nerdTree'
   Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+  Plug 'Xuyuanp/nerdtree-git-plugin'
 
   " Airline
   Plug 'vim-airline/vim-airline'
@@ -74,12 +69,13 @@ call plug#begin()
   Plug 'tpope/vim-rbenv'
 
   " Git Support
-  Plug 'APZelos/blamer.nvim'
   Plug 'tpope/vim-fugitive'
   "Plug 'shumphrey/fugitive-gitlab'
   Plug 'tpope/vim-rhubarb'
-  Plug 'Xuyuanp/nerdtree-git-plugin'
   Plug 'mhinz/vim-signify'
+  if has('nvim')
+    Plug 'APZelos/blamer.nvim'
+  endif
 call plug#end()
 
 " default updatetime 4000ms is not good for async update
@@ -102,9 +98,11 @@ let g:airline#extensions#clock#format='%a, %b %d %I:%M %p'
 let g:airline#extensions#clock#updatetime=1000
 
 " Blamer config
-let g:blamer_enabled = 1
-let g:blamer_template = '<committer> • <summary>'
-let g:blamer_prefix = ' >>> '
+if has('nvim')
+  let g:blamer_enabled = 1
+  let g:blamer_template = '<committer> • <summary>'
+  let g:blamer_prefix = ' >>> '
+endif
 
 " Close nerdTree if only window left is a nerdTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
