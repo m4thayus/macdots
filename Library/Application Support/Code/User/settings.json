@@ -35,6 +35,8 @@
         "nbcu",
         "numberize",
         "pharma",
+        "rcomedy",
+        "scifi",
         "segtype",
         "sformat",
         "smbrands",
@@ -81,5 +83,8 @@
         "#2d2d2d"
     ],
     "editor.scrollBeyondLastLine": false,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "editor.fontLigatures": "'ss01', 'ss02', 'ss06'",
+    "editor.fontFamily": "FiraCode-Retina",
+    "editor.fontSize": 13
 }

@@ -7,8 +7,10 @@
 
 set -o vi
 
-alias be='bundle exec'
+alias be="bundle exec"
 alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
+alias vi="nvim"
+alias vim="nvim"
 
 function git_branch() {
 
