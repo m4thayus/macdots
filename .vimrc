@@ -101,7 +101,7 @@ let g:airline#extensions#clock#updatetime=1000
 if has('nvim')
   let g:blamer_enabled = 1
   let g:blamer_template = '<committer> • <summary>'
-  let g:blamer_prefix = ' >>> '
+  " let g:blamer_prefix = ' >>> '
 endif
 
 " Close nerdTree if only window left is a nerdTree
