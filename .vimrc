@@ -11,7 +11,7 @@ set showbreak=-->
 set textwidth=0
 set showmatch
 
-" set hlsearch
+set hlsearch
 set smartcase
 set ignorecase
 set incsearch
@@ -24,10 +24,10 @@ set tabstop=8
 
 set ruler
 
-set undolevels=1000
 set backspace=indent,eol,start
 
 syntax on
+set title
 
 nmap <Up> <Nop>
 nmap <Right> <Nop>
@@ -51,6 +51,7 @@ call plug#begin()
   " Airline
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
+  Plug 'enricobacis/vim-airline-clock'
 
   " Icons
   Plug 'ryanoasis/vim-devicons'
@@ -75,8 +76,8 @@ call plug#begin()
   " Git Support
   Plug 'APZelos/blamer.nvim'
   Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rhubarb'
   "Plug 'shumphrey/fugitive-gitlab'
+  Plug 'tpope/vim-rhubarb'
   Plug 'Xuyuanp/nerdtree-git-plugin'
   Plug 'mhinz/vim-signify'
 call plug#end()
@@ -87,35 +88,45 @@ set updatetime=100
 let base16colorspace=256 " Access colors present in 256 colorspace
 colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
 
-" let g:airline_theme='tomorrow'
+" Airline config
+let g:airline_theme='tomorrow'
+let g:airline_powerline_fonts=1
+let g:airline_section_error=''
+let g:airline_section_warning=''
+let g:airline_symbols={}
+let g:airline_symbols.maxlinenr=''
+ let g:airline_symbols.dirty='*'
+let g:airline_left_alt_sep=' '
+let g:airline_right_alt_sep=' '
+let g:airline#extensions#clock#format='%a, %b %d %I:%M %p'
+let g:airline#extensions#clock#updatetime=1000
 
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
-
-" Blamer configs
+" Blamer config
 let g:blamer_enabled = 1
-let g:blamer_template = '<committer>'
+let g:blamer_template = '<committer> • <summary>'
 let g:blamer_prefix = ' >>> '
 
-" Open nerdTree automatically in directory
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 " Close nerdTree if only window left is a nerdTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " Ctrl+n toggles nerdtree
 map <C-n> :NERDTreeToggle<CR>
 
-" CoC configs
+" Other nerdTre config
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "M",
+    \ "Staged"    : "S",
+    \ "Untracked" : "U",
+    \ "Renamed"   : "R",
+    \ "Unmerged"  : "M",
+    \ "Deleted"   : "D",
+    \ "Dirty"     : "*",
+    \ "Clean"     : "C",
+    \ 'Ignored'   : 'I',
+    \ "Unknown"   : "?"
+    \ }
+let g:webdevicons_enable_nerdtree = 0
+
+" CoC config
 " if hidden is not set, TextEdit might fail.
 set hidden
 
@@ -244,3 +255,4 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
