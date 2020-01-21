@@ -1,10 +1,12 @@
 export PATH="/usr/local/opt/node@12/bin:$PATH" #for nbcu-data-capture
 export PATH="$PATH:$HOME/.local/bin"
 export FIGNORE="$FIGNORE:.DS_Store"
-export VISUAL=vim
+export VISUAL=nvim
+export EDITOR=nvim
 export CDPATH=".:$HOME:$HOME/Projects"
 
 eval "$(rbenv init -)"
+eval "$(direnv hook bash)"
 
 # Bash Completion:
 # Use `brew install bash-completion`
