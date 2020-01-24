@@ -25,6 +25,7 @@ set title
 set updatetime=100 " default updatetime 4000ms is not good for async update
 set t_Co=256 " 256 colorspace support
 
+" set mouse=nvi
 nmap <Up> <Nop>
 nmap <Right> <Nop>
 nmap <Left> <Nop>
