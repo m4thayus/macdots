@@ -38,6 +38,10 @@ call plug#begin()
   " Intellisense engine for vim8 & neovim
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+  " Support for rubocop and other syntax checkers
+  Plug 'vim-syntastic/syntastic',
+  Plug 'ngmy/vim-rubocop',
+
   " A tree explorer
   Plug 'scrooloose/nerdTree'
   Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -69,39 +73,38 @@ call plug#begin()
   Plug 'tpope/vim-rbenv'
 
   " Git Support
-  Plug 'tpope/vim-fugitive'
-  "Plug 'shumphrey/fugitive-gitlab'
-  Plug 'tpope/vim-rhubarb'
   Plug 'mhinz/vim-signify'
   if has('nvim')
     Plug 'APZelos/blamer.nvim'
   endif
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-rhubarb'
+  "Plug 'shumphrey/fugitive-gitlab'
 call plug#end()
 
-" default updatetime 4000ms is not good for async update
-set updatetime=100
+set updatetime=100 " default updatetime 4000ms is not good for async update
 
+set t_Co=256
 let base16colorspace=256 " Access colors present in 256 colorspace
 colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
+highlight Comment cterm=italic
 
 " Airline config
-let g:airline_theme='tomorrow'
-let g:airline_powerline_fonts=1
-let g:airline_section_error=''
-let g:airline_section_warning=''
-let g:airline_symbols={}
-let g:airline_symbols.maxlinenr=''
- let g:airline_symbols.dirty='*'
-let g:airline_left_alt_sep=' '
-let g:airline_right_alt_sep=' '
-let g:airline#extensions#clock#format='%a, %b %d %I:%M %p'
-let g:airline#extensions#clock#updatetime=1000
+let g:airline_powerline_fonts = 1
+let g:airline_skip_empty_sections = 1
+let g:airline_skip_empty_sections = 1
+let g:airline_symbols = {}
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.dirty = '*'
+let g:airline_left_alt_sep = ' '
+let g:airline_right_alt_sep = ' '
+let g:airline#extensions#clock#format = '%a, %b %d %I:%M %p'
+let g:airline#extensions#clock#updatetime = 1000
 
 " Blamer config
 if has('nvim')
   let g:blamer_enabled = 1
   let g:blamer_template = '<committer> • <summary>'
-  " let g:blamer_prefix = ' >>> '
 endif
 
 " Close nerdTree if only window left is a nerdTree
@@ -124,7 +127,33 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 let g:webdevicons_enable_nerdtree = 0
 
+" Rubocop/Syntastic config
+let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:syntastic_auto_jump = 0 " always populates location list if enabled
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+let airline#extensions#syntastic#warning_symbol = '  '
+let airline#extensions#syntastic#error_symbol = '  '
+let airline#extensions#syntastic#stl_format_err = '%E{%e : %fe}'
+let airline#extensions#syntastic#stl_format_warn = '%W{%w : %fw}'
+
 " CoC config
+let g:coc_global_extensions = [
+  \"coc-json",
+  \"coc-tsserver",
+  \"coc-html",
+  \"coc-css",
+  \"coc-yaml",
+  \"coc-yank",
+  \"coc-spell-checker"
+  \]
+
+let airline#extensions#coc#warning_symbol = '  '
+let airline#extensions#coc#error_symbol = '  '
+
 " if hidden is not set, TextEdit might fail.
 set hidden
 
