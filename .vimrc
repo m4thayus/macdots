@@ -22,6 +22,8 @@ set backspace=indent,eol,start
 
 syntax on
 set title
+set updatetime=100 " default updatetime 4000ms is not good for async update
+set t_Co=256 " 256 colorspace support
 
 nmap <Up> <Nop>
 nmap <Right> <Nop>
@@ -82,17 +84,13 @@ call plug#begin()
   "Plug 'shumphrey/fugitive-gitlab'
 call plug#end()
 
-set updatetime=100 " default updatetime 4000ms is not good for async update
-
-set t_Co=256
-let base16colorspace=256 " Access colors present in 256 colorspace
+let base16colorspace = 256 " Access colors present in 256 colorspace
 colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
 highlight Comment cterm=italic
 
 " Airline config
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 1
-let g:airline_skip_empty_sections = 1
 let g:airline_skip_empty_sections = 1
 let g:airline_symbols = {}
 let g:airline_symbols.maxlinenr = ''
@@ -113,20 +111,24 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " Ctrl+n toggles nerdtree
 map <C-n> :NERDTreeToggle<CR>
 
+let g:NERDTreeShowLineNumbers = 1
+
 " Other nerdTre config
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "M",
     \ "Staged"    : "S",
     \ "Untracked" : "U",
     \ "Renamed"   : "R",
-    \ "Unmerged"  : "M",
+    \ "Unmerged"  : "X",
     \ "Deleted"   : "D",
     \ "Dirty"     : "*",
     \ "Clean"     : "C",
     \ 'Ignored'   : 'I',
     \ "Unknown"   : "?"
     \ }
-let g:webdevicons_enable_nerdtree = 0
+let g:NERDTreeShowIgnoredStatus = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:NERDTreeMinimalUI = 1
 
 " Rubocop/Syntastic config
 let g:syntastic_ruby_checkers = ['rubocop', 'mri']
