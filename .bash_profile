@@ -1,4 +1,5 @@
-export PATH="/usr/local/opt/node@12/bin:$PATH" #for nbcu-data-capture
+export PATH="/usr/local/opt/node@12/bin:$PATH" # for nbcu-data-capture
+export PATH="/usr/local/opt/postgresql@11/bin:$PATH" # for talaria
 export PATH="$PATH:$HOME/.local/bin"
 export FIGNORE="$FIGNORE:.DS_Store"
 export VISUAL=nvim
@@ -13,4 +14,3 @@ eval "$(direnv hook bash)"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
 source ~/.bashrc
-export PATH="/usr/local/opt/postgresql@11/bin:$PATH"
