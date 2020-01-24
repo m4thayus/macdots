@@ -6,6 +6,7 @@
 [[ $- != *i* ]] && return
 
 set -o vi
+shopt -s checkwinsize
 
 alias be="bundle exec"
 alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
@@ -36,5 +37,3 @@ then
 else
     PS1="${GREEN}\u${RESET}@${GREY}\h: ${BLUE}\W ${YELLOW}\$(git_branch)${RESET}\$ "
 fi
-
-shopt -s checkwinsize
