@@ -1,4 +1,3 @@
-export PATH="/usr/local/opt/node@12/bin:$PATH" # for nbcu-data-capture
 export PATH="/usr/local/opt/postgresql@11/bin:$PATH" # for talaria
 export PATH="$PATH:$HOME/.local/bin"
 export FIGNORE="$FIGNORE:.DS_Store"
@@ -7,6 +6,7 @@ export EDITOR=nvim
 export CDPATH=".:$HOME:$HOME/Projects"
 
 eval "$(rbenv init -)"
+eval "$(nodenv init -)"
 eval "$(direnv hook bash)"
 
 # Bash Completion:
