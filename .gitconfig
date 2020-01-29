@@ -1,0 +1,29 @@
+[user]
+	name = Matt Williams
+	email = matt.seongjun@gmail.com
+[core]
+        excludesfile = ~/.gitexcludes
+[alias]
+        st = status
+        ps = push
+        psu = push --set-upstream origin
+        pl = pull
+        ft = fetch
+        cl = clone
+        br = branch
+        brd = branch -d
+        co = checkout
+        com = checkout master
+        cob = checkout -b
+        cm = commit -m
+        cma = commit -am
+        up = pull upstream master
+        all = !git add -A && git commit -m
+        wip = commit -am "WIP"
+        save = !git add -A && git commit -m 'WIP'
+        undo = reset HEAD~1 --mixed
+        amend = commit -a --amend
+[credential "https://github.com"]
+        username = m4thayus
+[credential "https://gitlab.com"]
+        username = m4thayus
