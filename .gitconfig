@@ -3,6 +3,18 @@
 	email = matt.seongjun@gmail.com
 [core]
         excludesfile = ~/.gitexcludes
+[diff]
+        tool = vimdiff
+[difftool]
+        prompt = false
+[difftool "vimdiff"]
+        cmd = nvim -d $BASE $LOCAL -c '$wincmd w' -c 'wincmd H'
+[merge]
+        tool = vimdiff
+[mergetool]
+        prompt = true
+[mergetool "vimdiff"]
+        cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd H'
 [alias]
         st = status
         ps = push
