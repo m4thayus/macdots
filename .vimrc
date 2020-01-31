@@ -146,6 +146,7 @@ let airline#extensions#syntastic#stl_format_warn = '%W{%w : %fw}'
 
 " CoC config
 let g:coc_global_extensions = [
+  \"coc-eslint",
   \"coc-json",
   \"coc-tsserver",
   \"coc-html",
