@@ -22,7 +22,7 @@ set backspace=indent,eol,start
 
 syntax on
 set title
-set updatetime=100 " default updatetime 4000ms is not good for async update
+" set updatetime=100 " default updatetime 4000ms is not good for async update
 set t_Co=256 " 256 colorspace support
 
 " set mouse=nvi
@@ -30,6 +30,8 @@ nmap <Up> <Nop>
 nmap <Right> <Nop>
 nmap <Left> <Nop>
 nmap <Down> <Nop>
+
+autocmd FileType json setlocal equalprg=python\ -m\ json.tool
 
 call plug#begin()
   " Workflow improvments
