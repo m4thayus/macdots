@@ -17,6 +17,7 @@ set softtabstop=2
 set tabstop=8
 
 set ruler
+set nojoinspaces
 
 set backspace=indent,eol,start
 
@@ -90,6 +91,8 @@ call plug#end()
 let base16colorspace = 256 " Access colors present in 256 colorspace
 colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
 highlight Comment cterm=italic
+hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
+hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
 
 " Airline config
 let g:airline#extensions#whitespace#enabled = 0
@@ -106,6 +109,7 @@ let g:airline#extensions#clock#updatetime = 1000
 " Blamer config
 if has('nvim')
   let g:blamer_enabled = 1
+  let g:blamer_show_in_visual_modes = 0
   let g:blamer_template = '<committer> • <summary>'
 endif
 
@@ -157,10 +161,10 @@ let g:coc_global_extensions = [
   \"coc-yank",
   \"coc-spell-checker"
   \]
-hi default CocErrorHighlight cterm=bold ctermbg=Red ctermfg=Black guibg=Red guifg=Black
-hi default CocWarningHighlight cterm=bold ctermbg=DarkYellow ctermfg=White guibg=Orange guifg=White
-hi default CocInfoHighlight cterm=bold ctermbg=Yellow ctermfg=Black guibg=Yellow guifg=Black
-hi default CocHintHighlight cterm=bold ctermbg=Blue ctermfg=Black guibg=Blue guifg=Black
+" hi default CocErrorHighlight cterm=bold ctermbg=Red ctermfg=Black guibg=Red guifg=Black
+" hi default CocWarningHighlight cterm=bold ctermbg=DarkYellow ctermfg=White guibg=Orange guifg=White
+" hi default CocInfoHighlight cterm=bold ctermbg=Yellow ctermfg=Black guibg=Yellow guifg=Black
+" hi default CocHintHighlight cterm=bold ctermbg=Blue ctermfg=Black guibg=Blue guifg=Black
 
 let airline#extensions#coc#warning_symbol = '  '
 let airline#extensions#coc#error_symbol = '  '
@@ -207,8 +211,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> <c-k> <Plug>(coc-diagnostic-prev)
+nmap <silent> <c-j> <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
