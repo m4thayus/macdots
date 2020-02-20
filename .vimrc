@@ -40,6 +40,7 @@ call plug#begin()
   Plug 'tpope/vim-surround' " Quotes and braces
   Plug 'bogado/file-line' " Open to line `vi file.js:10`
   Plug 'tpope/vim-commentary' " Line comments
+  Plug 'tpope/vim-abolish' " Case coercion
 
   " Intellisense engine for vim8 & neovim
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
