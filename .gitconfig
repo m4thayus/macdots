@@ -15,6 +15,8 @@
         prompt = true
 [mergetool "vimdiff"]
         cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd H'
+[fetch]
+        prune = true
 [alias]
         st = status
         ps = push
@@ -27,13 +29,12 @@
         co = checkout
         com = checkout master
         cob = checkout -b
-        cm = commit -m
-        cma = commit -am
+        cm = commit
+        cma = commit -a
         up = pull upstream master
-        all = !git add -A && git commit -m
-        wip = commit -am "WIP"
-        save = !git add -A && git commit -m 'WIP'
+        all = !git add -A && git commit
         undo = reset HEAD~1 --mixed
+        uncommit = reset HEAD^
         amend = commit -a --amend
 [credential "https://github.com"]
         username = m4thayus
