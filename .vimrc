@@ -2,6 +2,9 @@ set number
 set relativenumber
 set linebreak
 set showbreak=-->
+set cpoptions+=n
+set breakindent
+set breakindentopt+=sbr
 set textwidth=0
 set showmatch
 
