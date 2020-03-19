@@ -4,6 +4,7 @@ export FIGNORE="$FIGNORE:.DS_Store"
 export VISUAL=nvim
 export EDITOR=nvim
 export CDPATH=".:$HOME:$HOME/Projects"
+export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
 
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"

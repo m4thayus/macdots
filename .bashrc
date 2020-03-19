@@ -13,8 +13,6 @@ alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOM
 alias vi="nvim"
 alias vim="nvim"
 
-PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
-
 function git_branch() {
 
     inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
