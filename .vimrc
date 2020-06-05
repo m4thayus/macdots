@@ -73,6 +73,9 @@ call plug#begin()
   " Highlight whitespace
   Plug 'ntpeters/vim-better-whitespace'
 
+  " Indicate line indentation
+  Plug 'Yggdroot/indentLine'
+
   " Color schemes
   Plug 'chriskempson/base16-vim'
 
@@ -97,6 +100,10 @@ colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
 highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
+
+" indentLine config
+let g:indentLine_setColors = 0
+hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
 
 " Airline config
 let g:airline#extensions#whitespace#enabled = 0
