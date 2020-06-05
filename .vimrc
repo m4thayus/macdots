@@ -104,6 +104,7 @@ hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
 " indentLine config
 let g:indentLine_setColors = 0
 hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
+let g:indentLine_char = '│'
 
 " Airline config
 let g:airline#extensions#whitespace#enabled = 0
