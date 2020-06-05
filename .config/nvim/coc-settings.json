@@ -1,7 +1,7 @@
 {
-  "cSpell.allowCompoundWords": true,
-  "cSpell.diagnosticLevel": "Information",
-  "cSpell.words": [
+    "cSpell.allowCompoundWords": true,
+    "cSpell.diagnosticLevel": "Information",
+    "cSpell.words": [
         "Cognito",
         "onloaded",
         "Formik",
@@ -23,6 +23,13 @@
         "segtype",
         "sformat",
         "smbrands",
-        "xtime"
+        "xtime",
+        "Jssdk",
+        "Wasm",
+        "checkin",
+        "gsrchart",
+        "mdiv",
+        "minv",
+        "websdk"
     ]
 }
