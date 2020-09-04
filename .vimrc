@@ -151,6 +151,7 @@ let g:NERDTreeMinimalUI = 1
 
 " Rubocop/Syntastic config
 let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:syntastic_coffeescript_checkers = ['coffeelint']
 let g:syntastic_auto_jump = 0 " always populates location list if enabled
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
@@ -309,3 +310,5 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" coc-yank
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
