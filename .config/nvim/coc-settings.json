@@ -30,6 +30,8 @@
         "gsrchart",
         "mdiv",
         "minv",
+        "ondemand",
         "websdk"
-    ]
+    ],
+    "yank.enableCompletion": false
 }
