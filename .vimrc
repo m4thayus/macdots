@@ -45,6 +45,10 @@ call plug#begin()
   Plug 'tpope/vim-commentary' " Line comments
   Plug 'tpope/vim-abolish' " Case coercion
 
+  " fzf and ripgrep support
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
+
   " Intellisense engine for vim8 & neovim
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -53,9 +57,9 @@ call plug#begin()
   Plug 'ngmy/vim-rubocop',
 
   " A tree explorer
-  Plug 'scrooloose/nerdTree'
-  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-  Plug 'Xuyuanp/nerdtree-git-plugin'
+  " Plug 'scrooloose/nerdTree'
+  " Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+  " Plug 'Xuyuanp/nerdtree-git-plugin'
 
   " Airline
   Plug 'vim-airline/vim-airline'

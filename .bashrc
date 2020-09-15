@@ -35,3 +35,6 @@ then
 else
     PS1="${GREEN}\u${RESET}@${GREY}\h: ${BLUE}\W ${YELLOW}\$(git_branch)${RESET}\$ "
 fi
+
+# Setup fzf. Use uninstall script to remove fzf.
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
