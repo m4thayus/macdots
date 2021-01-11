@@ -1,3 +1,4 @@
+export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/opt/postgresql@11/bin:$PATH" # for talaria
 export PATH="$PATH:$HOME/.local/bin"
 export FIGNORE="$FIGNORE:.DS_Store"
