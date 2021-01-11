@@ -45,6 +45,8 @@ call plug#begin()
   Plug 'bogado/file-line' " Open to line `vi file.js:10`
   Plug 'tpope/vim-commentary' " Line comments
   Plug 'tpope/vim-abolish' " Case coercion
+  Plug 'tpope/vim-eunuch' " UNIX commands
+  Plug 'tpope/vim-unimpaired' " Mapping pairs
 
   " fzf and ripgrep support
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -89,6 +91,7 @@ call plug#begin()
   Plug 'tpope/vim-rails'
   Plug 'tpope/vim-rake'
   Plug 'tpope/vim-rbenv'
+  Plug 'tpope/vim-bundler'
 
   " Git Support
   Plug 'mhinz/vim-signify'
@@ -105,6 +108,14 @@ colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
 highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
+
+" Better vim-unimpaired mappings
+nmap < [
+nmap > ]
+omap < [
+omap > ]
+xmap < [
+xmap > ]
 
 " indentLine config
 let g:indentLine_setColors = 0
