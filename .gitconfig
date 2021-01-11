@@ -17,6 +17,8 @@
         cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd H'
 [fetch]
         prune = true
+[pull]
+	rebase = false
 [alias]
         st = status
         ps = push
