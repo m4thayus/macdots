@@ -41,6 +41,7 @@ call plug#begin()
   " Workflow improvments
   Plug 'tpope/vim-repeat' " Help plugins do stuff with .
   Plug 'tpope/vim-surround' " Quotes and braces
+  Plug 'michaeljsmith/vim-indent-object' " Indentation as text object
   Plug 'bogado/file-line' " Open to line `vi file.js:10`
   Plug 'tpope/vim-commentary' " Line comments
   Plug 'tpope/vim-abolish' " Case coercion
