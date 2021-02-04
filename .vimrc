@@ -109,14 +109,6 @@ highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
 
-" Better vim-unimpaired mappings
-nmap < [
-nmap > ]
-omap < [
-omap > ]
-xmap < [
-xmap > ]
-
 " indentLine config
 let g:indentLine_setColors = 0
 hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
