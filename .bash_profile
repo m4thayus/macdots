@@ -5,6 +5,7 @@ export FIGNORE="$FIGNORE:.DS_Store"
 export VISUAL=nvim
 export EDITOR=nvim
 export CDPATH=".:$HOME:$HOME/Projects"
+export AWS_USER=mattw
 export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
 export FZF_DEFAULT_COMMAND="rg --files --hidden"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"

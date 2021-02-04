@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "aws-sdk"
+
+USERNAME = ENV["AWS_USER"]
+CREDENTIALS_FILE = "#{ENV['HOME']}/.aws/credentials"
+DURATION = 24 * 60 * 60
+
+creds = Aws::STS::Client.new(credentials: Aws::SharedCredentials.new(profile_name: "mfa"), region: "us-east-1").get_session_token(duration_seconds: DURATION, serial_number: "arn:aws:iam::681124311158:mfa/#{USERNAME}", token_code: ARGV[0]).credentials
+
+# Be sure to install `awscli` with homebrew
+`aws configure set aws_access_key_id "#{creds.access_key_id}"`
+`aws configure set aws_secret_access_key "#{creds.secret_access_key}"`
+`aws configure set aws_session_token "#{creds.session_token}"`
