@@ -47,6 +47,7 @@ call plug#begin()
   Plug 'tpope/vim-abolish' " Case coercion
   Plug 'tpope/vim-eunuch' " UNIX commands
   Plug 'tpope/vim-unimpaired' " Mapping pairs
+  Plug 'AndrewRadev/splitjoin.vim' " Convert between single and multiline statements
 
   " fzf and ripgrep support
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
