@@ -1,6 +1,6 @@
 [user]
-	name = Matt Williams
-	email = matt.seongjun@gmail.com
+        name = Matt Williams
+        email = matt.seongjun@gmail.com
 [core]
         excludesfile = ~/.gitexcludes
 [diff]
@@ -18,7 +18,7 @@
 [fetch]
         prune = true
 [pull]
-	rebase = false
+        rebase = false
 [alias]
         st = status
         ps = push
