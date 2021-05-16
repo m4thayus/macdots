@@ -159,6 +159,10 @@ let g:webdevicons_enable_nerdtree = 1
 let g:NERDTreeMinimalUI = 1
 
 " Rubocop/Syntastic config
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
 let g:syntastic_ruby_checkers = ['rubocop', 'mri']
 let g:syntastic_coffeescript_checkers = ['coffeelint']
 let g:syntastic_auto_jump = 0 " always populates location list if enabled
