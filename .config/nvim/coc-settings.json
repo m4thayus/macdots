@@ -31,6 +31,7 @@
         "mdiv",
         "minv",
         "ondemand",
+        "toctitle",
         "websdk"
     ],
     "yank.enableCompletion": false
