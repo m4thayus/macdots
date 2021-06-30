@@ -6,6 +6,7 @@ export VISUAL=nvim
 export EDITOR=nvim
 export CDPATH=".:$HOME:$HOME/Projects"
 export AWS_USER=mattw
+export DELTA_PAGER="less -RC"
 export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
 export FZF_DEFAULT_COMMAND="rg --files --hidden"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"
