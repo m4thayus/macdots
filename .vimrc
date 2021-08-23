@@ -93,6 +93,7 @@ call plug#begin()
   Plug 'tpope/vim-rake'
   Plug 'tpope/vim-rbenv'
   Plug 'tpope/vim-bundler'
+  Plug 'itmammoth/run-rspec.vim'
 
   " Git Support
   Plug 'mhinz/vim-signify'
@@ -109,6 +110,14 @@ colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
 highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
+
+" Setup skeleton file templates
+" if has("autocmd")
+" augroup templates
+"   au!
+"   autocmd BufNewFile *.* silent! execute '0r $HOME/.vim/templates/skeleton.'.expand("<afile>:e")
+" augroup END
+" endif
 
 " indentLine config
 let g:indentLine_setColors = 0
@@ -267,7 +276,7 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
+augroup coc
   autocmd!
   " Setup formatexpr specified filetype(s).
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
