@@ -27,9 +27,9 @@ set backspace=indent,eol,start
 syntax on
 set title
 " set updatetime=100 " default updatetime 4000ms is not good for async update
-set t_Co=256 " 256 colorspace support
 
 " set mouse=nvi
+" Disable arrow keys in normal mode
 nmap <Up> <Nop>
 nmap <Right> <Nop>
 nmap <Left> <Nop>
@@ -105,11 +105,18 @@ call plug#begin()
   "Plug 'shumphrey/fugitive-gitlab'
 call plug#end()
 
+set t_Co=256 " 256 colorspace support
 let base16colorspace = 256 " Access colors present in 256 colorspace
-colorscheme base16-tomorrow-night-eighties " Uses kitty's 256 colorspace scheme
+colorscheme base16-tomorrow-night-eighties
 highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
+
+" indentLine config
+let g:indentLine_setColors = 0
+" Below color 18 requires 256 colorspace
+hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
+let g:indentLine_char = '│'
 
 " Setup skeleton file templates
 " if has("autocmd")
@@ -118,11 +125,6 @@ hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
 "   autocmd BufNewFile *.* silent! execute '0r $HOME/.vim/templates/skeleton.'.expand("<afile>:e")
 " augroup END
 " endif
-
-" indentLine config
-let g:indentLine_setColors = 0
-hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
-let g:indentLine_char = '│'
 
 " Airline config
 let g:airline#extensions#whitespace#enabled = 0

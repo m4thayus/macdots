@@ -34,5 +34,10 @@
         "toctitle",
         "websdk"
     ],
-    "yank.enableCompletion": false
+    "yank.enableCompletion": false,
+    "cSpell.userWords": [
+      "Unconfigured",
+      "alacritty",
+      "infocmp"
+    ]
 }
