@@ -2,33 +2,33 @@ import:
   - ~/.config/alacritty/colors.yml
 
 env:
-  # Something is broked on macOS 11.4
-  # It isn't reconstructing from terminfo installed by alacritty
-  # check with `infocmp
-  # Something like below seems to fix the problem
-  # `cp /Applications/Alacritty.app/Contents/Resources/61/alacritty .terminfo/61/`
+  # macOS has an out-of-date ncurses
+  # Pull latest terminfo from Thomas E. Dickey
+  # `curl -LO https://invisible-island.net/datafiles/current/terminfo.src.gz && gunzip terminfo.src.gz`
+  # `/usr/bin/tic -xe alacritty,alacritty-direct terminfo.src`
+  # For local install to ~/.terminfo; Use `sudo` for all users
   TERM: alacritty
 
 window:
   padding:
-    x: 12
-    y: 12
+    x: 6
+    y: 6
   dynamic_padding: true
   startup_mode: Windowed
 
 font:
   normal:
     family: VictorMono Nerd Font
-    style: Regular
+    style: Light
   bold:
     family: Victor Mono
-    style: Bold
+    style: Medium
   italic:
     family: Victor Mono
     style: Italic
   bold_italic:
     family: Victor Mono
-    style: Bold Italic
+    style: Medium Italic
   size: 17.0
 
 key_bindings:

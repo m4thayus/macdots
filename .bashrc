@@ -12,6 +12,7 @@ alias be="bundle exec"
 alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
 alias vi="nvim"
 alias vim="nvim"
+alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
 
 function git_branch() {
 

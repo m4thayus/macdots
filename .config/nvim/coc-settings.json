@@ -38,6 +38,7 @@
     "cSpell.userWords": [
       "Unconfigured",
       "alacritty",
-      "infocmp"
+      "infocmp",
+      "ncurses"
     ]
 }

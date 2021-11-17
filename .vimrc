@@ -60,11 +60,6 @@ call plug#begin()
   Plug 'vim-syntastic/syntastic',
   Plug 'ngmy/vim-rubocop',
 
-  " A tree explorer
-  " Plug 'scrooloose/nerdTree'
-  " Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-  " Plug 'Xuyuanp/nerdtree-git-plugin'
-
   " Airline
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
@@ -112,9 +107,11 @@ highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray
 
-" indentLine config
+" Set whitespace indicator to red
+let g:better_whitespace_ctermcolor='1'
+
+" indentLine config (ctermfg 18 requires 256 colorspace)
 let g:indentLine_setColors = 0
-" Below color 18 requires 256 colorspace
 hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
 let g:indentLine_char = '│'
 
@@ -145,36 +142,12 @@ if has('nvim')
   let g:blamer_template = '<committer> • <summary>'
 endif
 
-" Close nerdTree if only window left is a nerdTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" Ctrl+n toggles nerdtree
-map <C-n> :NERDTreeToggle<CR>
-
-let g:NERDTreeShowLineNumbers = 1
-
-" Other nerdTre config
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "M",
-    \ "Staged"    : "S",
-    \ "Untracked" : "U",
-    \ "Renamed"   : "R",
-    \ "Unmerged"  : "X",
-    \ "Deleted"   : "D",
-    \ "Dirty"     : "*",
-    \ "Clean"     : "C",
-    \ 'Ignored'   : 'I',
-    \ "Unknown"   : "?"
-    \ }
-let g:NERDTreeShowIgnoredStatus = 1
-let g:webdevicons_enable_nerdtree = 1
-let g:NERDTreeMinimalUI = 1
-
 " Rubocop/Syntastic config
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:syntastic_ruby_checkers = ['rubocop']
 let g:syntastic_coffeescript_checkers = ['coffeelint']
 let g:syntastic_auto_jump = 0 " always populates location list if enabled
 let g:syntastic_always_populate_loc_list = 1
