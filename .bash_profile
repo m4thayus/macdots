@@ -9,7 +9,7 @@ export AWS_USER=mattw
 export DELTA_PAGER="less -RC"
 export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
 export FZF_DEFAULT_COMMAND="rg --files --hidden"
-export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --bind=tab:down,btab:up,down:toggle+down,up:toggle+up"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS --select-1 --exit-0"
 # export FZF_COMPLETION_OPTS="$FZF_CTRL_T_OPTS" # Completion was removed

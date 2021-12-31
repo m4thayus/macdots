@@ -10,7 +10,7 @@ set showmatch
 
 set hlsearch
 set smartcase
-set ignorecase
+" set ignorecase
 set incsearch
 
 set autoindent
@@ -26,6 +26,7 @@ set backspace=indent,eol,start
 
 syntax on
 set title
+" set spell
 " set updatetime=100 " default updatetime 4000ms is not good for async update
 
 " set mouse=nvi
@@ -221,8 +222,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `ctrl-k` and `ctrl-j` to navigate diagnostics
-nmap <silent> <c-k> <Plug>(coc-diagnostic-prev)
-nmap <silent> <c-j> <Plug>(coc-diagnostic-next)
+nmap <silent> gk <Plug>(coc-diagnostic-prev)
+nmap <silent> gj <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
