@@ -90,6 +90,7 @@ call plug#begin()
   Plug 'tpope/vim-rbenv'
   Plug 'tpope/vim-bundler'
   Plug 'itmammoth/run-rspec.vim'
+  Plug 'fladson/vim-kitty'
 
   " Git Support
   Plug 'mhinz/vim-signify'
