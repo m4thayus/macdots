@@ -174,10 +174,14 @@ let g:coc_global_extensions = [
   \"coc-yank",
   \"coc-spell-checker"
   \]
-" hi default CocErrorHighlight cterm=bold ctermbg=Red ctermfg=Black guibg=Red guifg=Black
-" hi default CocWarningHighlight cterm=bold ctermbg=DarkYellow ctermfg=White guibg=Orange guifg=White
-" hi default CocInfoHighlight cterm=bold ctermbg=Yellow ctermfg=Black guibg=Yellow guifg=Black
-" hi default CocHintHighlight cterm=bold ctermbg=Blue ctermfg=Black guibg=Blue guifg=Black
+" hi CocErrorHighlight cterm=bold ctermbg=Red ctermfg=Black guibg=Red guifg=Black
+" hi CocWarningHighlight cterm=bold ctermbg=DarkYellow ctermfg=White guibg=Orange guifg=White
+" hi CocInfoHighlight cterm=bold ctermbg=Yellow ctermfg=Black guibg=Yellow guifg=Black
+" hi CocHintHighlight cterm=bold ctermbg=Blue ctermfg=Black guibg=Blue guifg=Black
+
+" CocFadeOut seems to link to Conceal. This sets CocFadeOut explicitly so
+" indentLine doesn't interfere with it
+hi CocFadeOut ctermbg=Black ctermfg=Grey guibg=Black guifg=Grey
 
 let airline#extensions#coc#warning_symbol = '  '
 let airline#extensions#coc#error_symbol = '  '
