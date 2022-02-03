@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+for file in *.jpg; do
+  outfile=`basename $file .jpg`.png
+  echo convert -verbose "'$file'" "'$outfile'"
+done | gm batch -echo on -feedback on -
+
+for file in *.png; do
+  mv -vn $file $HOME/Pictures/Backgrounds/
+done

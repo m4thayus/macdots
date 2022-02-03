@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+txt = File.read(ARGV[0])
+p_tag_added = txt.split("\r\n\r\n").map {|l| "<p>#{l}</p>"}.join("\r\n")
+File.open("paragraphified.html", "w") {|file| file.write(p_tag_added)}
