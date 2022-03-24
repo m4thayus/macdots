@@ -1,64 +1,64 @@
 [user]
-        name = Matt Williams
-        email = matt.seongjun@gmail.com
+  name = Matt Williams
+  email = matt.seongjun@gmail.com
 [core]
-        excludesfile = ~/.gitexcludes
+  excludesfile = ~/.gitexcludes
 [diff]
-        tool = vimdiff
+  tool = vimdiff
 [difftool]
-        prompt = false
+  prompt = false
 [difftool "vimdiff"]
-        cmd = nvim -d $BASE $LOCAL -c '$wincmd w' -c 'wincmd H'
+  cmd = nvim -d $BASE $LOCAL -c '$wincmd w' -c 'wincmd H'
 [merge]
-        tool = vimdiff
+  tool = vimdiff
 [mergetool]
-        prompt = true
+  prompt = true
 [mergetool "vimdiff"]
-        cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd H'
+  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd H'
 [pager]
-        diff = delta
-        log = delta
-        reflog = delta
-        show = delta
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
 [delta]
-        zero-style = "syntax dim auto"
-        plus-style = "#99cc99 bold #2d2d2d"
-        plus-non-emph-style = "#99cc99 bold #2d2d2d"
-        plus-emph-style = "#99cc99 bold ul #2d2d2d"
-        line-numbers-plus-style = "#99cc99 #2d2d2d"
-        minus-style = "#f2777a bold #2d2d2d"
-        minus-non-emph-style = "#f2777a bold #2d2d2d"
-        minus-emph-style = "#f2777a bold strike #2d2d2d"
-        line-numbers-minus-style = "#f2777a #2d2d2d"
-        syntax-theme = base16
-        line-numbers = true
-        navigate = true
+  zero-style = "syntax dim auto"
+  plus-style = "#99cc99 bold #2d2d2d"
+  plus-non-emph-style = "#99cc99 bold #2d2d2d"
+  plus-emph-style = "#99cc99 bold ul #2d2d2d"
+  line-numbers-plus-style = "#99cc99 #2d2d2d"
+  minus-style = "#f2777a bold #2d2d2d"
+  minus-non-emph-style = "#f2777a bold #2d2d2d"
+  minus-emph-style = "#f2777a bold strike #2d2d2d"
+  line-numbers-minus-style = "#f2777a #2d2d2d"
+  syntax-theme = base16
+  line-numbers = true
+  navigate = true
 [interactive]
-        diffFilter = delta --color-only
+  diffFilter = delta --color-only
 [fetch]
-        prune = true
+  prune = true
 [pull]
-        rebase = false
+  rebase = false
 [alias]
-        st = status
-        ps = push
-        psu = push --set-upstream origin
-        pl = pull
-        ft = fetch
-        cl = clone
-        br = branch
-        brd = branch -d
-        co = checkout
-        com = checkout master
-        cob = checkout -b
-        cm = commit
-        cma = commit -a
-        up = pull upstream master
-        all = !git add -A && git commit
-        undo = reset HEAD~1 --mixed
-        uncommit = reset HEAD^
-        amend = commit -a --amend
+  st = status
+  ps = push
+  psu = push --set-upstream origin
+  pl = pull
+  ft = fetch
+  cl = clone
+  br = branch
+  brd = branch -d
+  co = checkout
+  com = checkout master
+  cob = checkout -b
+  cm = commit
+  cma = commit -a
+  up = pull upstream master
+  all = !git add -A && git commit
+  undo = reset HEAD~1 --mixed
+  uncommit = reset HEAD^
+  amend = commit -a --amend
 [credential "https://github.com"]
-        username = m4thayus
+  username = m4thayus
 [credential "https://gitlab.com"]
-        username = m4thayus
+  username = m4thayus
