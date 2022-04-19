@@ -1,8 +1,6 @@
 new -s dev -n home
-new-window -n talaria
-new-window -n focus-group-monitor
-splitw -h
-new-window -n livelabs
+new-window -n adriel
+new-window -n conceptualsoup
 selectw -t 0
 
 # vim:fileencoding=utf-8:ft=conf

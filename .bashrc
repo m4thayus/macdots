@@ -6,22 +6,22 @@
 [[ $- != *i* ]] && return
 
 set -o vi
-shopt -s checkwinsize
+# shopt -s checkwinsize
 
 alias be="bundle exec"
-alias macdots="/usr/local/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
+alias macdots="$(brew --prefix)/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
 alias vi="nvim"
 alias vim="nvim"
 alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
+alias hgmux="tmux source-file ~/.config/tmux/mercury \; attach"
 alias ssh="TERM=xterm ssh"
 
 function git_branch() {
+  inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
 
-    inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
-
-    if [ "$inside_git_repo" ]; then
-        echo "($(git branch --show-current)) "
-    fi
+  if [ "$inside_git_repo" ]; then
+      echo "($(git branch --show-current)) "
+  fi
 }
 
 RED="\[$(tput setaf 1)\]"
@@ -33,14 +33,12 @@ RESET="\[$(tput sgr0)\]"
 
 if [ $(id -u) -eq 0 ];
 then
-    PS1="${RED}\u${RESET}@${GREY}\h: ${BLUE}\W ${YELLOW}\$(git_branch)${RESET}\$ "
+  PS1="${RED}\u${RESET}@${GREY}\h: ${BLUE}\W ${YELLOW}\$(git_branch)${RESET}\$ "
 else
-    PS1="${GREEN}\u${RESET}@${GREY}\h: ${BLUE}\W ${YELLOW}\$(git_branch)${RESET}\$ "
+  PS1="${GREEN}\u${RESET}@${GREY}\h: ${BLUE}\W ${YELLOW}\$(git_branch)${RESET}\$ "
 fi
 
-# Setup fzf. Use uninstall script to remove fzf.
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
