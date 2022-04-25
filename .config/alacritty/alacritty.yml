@@ -33,14 +33,17 @@ font:
 
 key_bindings:
   # Makes alacritty receive <C-6> correctly
-  - { key: Key6,              mods: Control,                    chars: "\x1e"                 }
-    # Default Keybindings
-    #- { key: Key0,           mods: Command,                    action: ResetFontSize         }
-    #- { key: Equals,         mods: Command,                    action: IncreaseFontSize      }
-    #- { key: Plus,           mods: Command,                    action: IncreaseFontSize      }
-    #- { key: Minus,          mods: Command,                    action: DecreaseFontSize      }
-    #- { key: M,              mods: Command,                    action: Minimize              }
-    #- { key: Q,              mods: Command,                    action: Quit                  }
-    #- { key: W,              mods: Command,                    action: Quit                  }
-    #- { key: N,              mods: Command,                    action: SpawnNewInstance      }
-    #- { key: F,              mods: Command|Control,            action: ToggleFullscreen      }
+  - { key: Key6,           mods: Control,                            chars: "\x1e"                 }
+  - { key: F,              mods: Command,                            action: ToggleFullscreen      }
+  - { key: F,              mods: Command|Control, mode: ~Search,     action: SearchForward         }
+  - { key: B,              mods: Command|Control, mode: ~Search,     action: SearchBackward        }
+  # Default Keybindings
+  # - { key: Key0,           mods: Command,                            action: ResetFontSize         }
+  # - { key: Equals,         mods: Command,                            action: IncreaseFontSize      }
+  # - { key: Plus,           mods: Command,                            action: IncreaseFontSize      }
+  # - { key: NumpadAdd,      mods: Command,                            action: IncreaseFontSize      }
+  # - { key: Minus,          mods: Command,                            action: DecreaseFontSize      }
+  # - { key: NumpadSubtract, mods: Command,                            action: DecreaseFontSize      }
+  # - { key: Q,              mods: Command,                            action: Quit                  }
+  # - { key: W,              mods: Command,                            action: Quit                  }
+  # - { key: N,              mods: Command,                            action: SpawnNewInstance      }
