@@ -117,6 +117,11 @@ let g:indentLine_setColors = 0
 hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
 let g:indentLine_char = '│'
 
+" Stop concealing characters in certain syntaxes (b/c indentLine)
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+
 " Setup skeleton file templates
 " if has("autocmd")
 " augroup templates
