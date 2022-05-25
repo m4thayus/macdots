@@ -12,10 +12,10 @@ else
 fi
 
 export PATH="$PATH:$HOME/.local/bin"
-export FIGNORE="$FIGNORE:.DS_Store"
+export FIGNORE="$FIGNORE:.DS_Store:Icon?"
 export VISUAL=nvim
 export EDITOR=nvim
-export CDPATH=".:$HOME:$HOME/Projects:$MERCURY_BASE_PATH"
+export CDPATH=".:$HOME:$HOME/Projects:$MERCURY_BASE_PATH:$HOME/Documents"
 export AWS_USER=mattw
 export DELTA_PAGER="less -RC"
 export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
