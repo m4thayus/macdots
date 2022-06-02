@@ -1,4 +1,6 @@
 ---
+BUNDLE_LOCAL__MERCURY_SSO_AUTH0: "/Users/matt/Projects/mercury/mercury-analytics-sso-auth0"
+BUNDLE_LOCAL__URI_S3: "/Users/matt/Projects/mercury/uri_s3"
 BUNDLE_DISABLE_LOCAL_BRANCH_CHECK: "true"
 BUNDLE_BUILD__FFI: "--with-cflags=-Wno-implicit-function-declaration"
 BUNDLE_BUILD__NOKOGIRI: "--use-system-libraries"
