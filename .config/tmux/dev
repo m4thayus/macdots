@@ -1,6 +1,6 @@
 new -s dev -n home
-new-window -n adriel
-new-window -n conceptualsoup
+new-window -n adriel -c "$HOME/Projects/adriel"
+new-window -n conceptualsoup -c "$HOME/Projects/conceptualsoup"
 selectw -t 0
 
 # vim:fileencoding=utf-8:ft=conf
