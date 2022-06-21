@@ -59,7 +59,7 @@
   uncommit = reset HEAD^
   amend = commit -a --amend
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
 [credential "https://github.com"]
   username = m4thayus
 [credential "https://gitlab.com"]
