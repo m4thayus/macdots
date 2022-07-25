@@ -64,3 +64,5 @@
   username = m4thayus
 [credential "https://gitlab.com"]
   username = m4thayus
+[init]
+  defaultBranch = main
