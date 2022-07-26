@@ -1,4 +1,5 @@
 new -s dev -n home
+new-window -n quicksilver -c "$HOME/Projects/quicksilver"
 new-window -n adriel -c "$HOME/Projects/adriel"
 new-window -n conceptualsoup -c "$HOME/Projects/conceptualsoup"
 selectw -t 0
