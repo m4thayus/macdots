@@ -7,7 +7,7 @@ new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
 new-window -n petasos -c "$MERCURY_BASE_PATH/petasos/api"
 splitw -h -c "$MERCURY_BASE_PATH/petasos/ui"
 splitw -v -c "$MERCURY_BASE_PATH/petasos/ui"
-new-window -n masurveys -c "$MERCURY_BASE_PATH/masurveys"
+new-window -n terraform -c "$MERCURY_BASE_PATH/hg-terraform-eventbridge"
 new-window -n production -c "$HOME"
 selectw -t 0
 
