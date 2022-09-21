@@ -232,7 +232,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use `ctrl-k` and `ctrl-j` to navigate diagnostics
+" navigate diagnostics
 nmap <silent> gk <Plug>(coc-diagnostic-prev)
 nmap <silent> gj <Plug>(coc-diagnostic-next)
 
