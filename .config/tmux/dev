@@ -2,8 +2,6 @@ new -s dev -n home
 new-window -n talaria -c "$MERCURY_BASE_PATH/talaria"
 new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
 new-window -n quicksilver -c "$HOME/Projects/quicksilver"
-new-window -n adriel -c "$HOME/Projects/adriel"
-new-window -n conceptualsoup -c "$HOME/Projects/conceptualsoup"
 new-window -n production -c "$HOME"
 selectw -t 0
 
