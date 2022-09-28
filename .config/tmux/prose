@@ -1,0 +1,6 @@
+new -s prose -n home
+new-window -n adriel -c "$HOME/Projects/adriel"
+new-window -n conceptualsoup -c "$HOME/Projects/conceptualsoup"
+selectw -t 0
+
+# vim:fileencoding=utf-8:ft=conf
