@@ -77,6 +77,9 @@ call plug#begin()
   " Highlight whitespace
   Plug 'ntpeters/vim-better-whitespace'
 
+  " Color code delimiters
+  Plug 'luochen1990/rainbow'
+
   " Indicate line indentation
   Plug 'Yggdroot/indentLine'
 
@@ -117,6 +120,9 @@ let g:indentLine_setColors = 0
 hi Conceal cterm=bold ctermfg=18 guifg=DarkGray
 let g:indentLine_char = '│'
 
+" Delimiter color config
+let g:rainbow_active = 1
+
 " Stop concealing characters in certain syntaxes (b/c indentLine)
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
@@ -156,6 +162,7 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_slim_checkers = ['slim_lint']
 let g:syntastic_coffeescript_checkers = ['coffeelint']
 let g:syntastic_auto_jump = 0 " always populates location list if enabled
 let g:syntastic_always_populate_loc_list = 1
