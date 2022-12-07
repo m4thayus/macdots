@@ -197,7 +197,8 @@ let g:coc_global_extensions = [
 hi CocFadeOut ctermbg=Black ctermfg=Grey guibg=Black guifg=Grey
 
 " Fix coc auto complete menu
-hi link CocMenuSel Cursor
+hi CocMenuSel ctermbg=19 guibg=#0000a2
+" hi link CocMenuSel Cursor
 
 let airline#extensions#coc#warning_symbol = '  '
 let airline#extensions#coc#error_symbol = '  '
