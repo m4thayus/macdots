@@ -35,6 +35,7 @@
         "websdk"
     ],
     "diagnostic.displayByAle": true,
+    "suggest.noselect": true,
     "yank.enableCompletion": false,
     "cSpell.userWords": [
       "Unconfigured",
