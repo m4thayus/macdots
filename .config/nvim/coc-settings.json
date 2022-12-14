@@ -34,6 +34,7 @@
         "toctitle",
         "websdk"
     ],
+    "diagnostic.displayByAle": true,
     "yank.enableCompletion": false,
     "cSpell.userWords": [
       "Unconfigured",

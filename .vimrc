@@ -38,6 +38,8 @@ nmap <Down> <Nop>
 
 autocmd FileType json setlocal equalprg=python3.10\ -m\ json.tool
 
+let g:ale_disable_lsp = 1 " Stop ALE from interfering with coc
+
 call plug#begin()
   " Workflow improvments
   Plug 'tpope/vim-repeat' " Help plugins do stuff with .
@@ -58,8 +60,8 @@ call plug#begin()
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " Support for rubocop and other syntax checkers
-  Plug 'vim-syntastic/syntastic',
-  Plug 'ngmy/vim-rubocop',
+  Plug 'dense-analysis/ale'
+  Plug 'ngmy/vim-rubocop', " do I really want this?
 
   " Airline
   Plug 'vim-airline/vim-airline'
@@ -137,9 +139,22 @@ let g:csv_no_conceal = 1
 " augroup END
 " endif
 
+" ALE Global Configuration
+nmap <silent> gk <Plug>(ale_previous_wrap)
+nmap <silent> gj <Plug>(ale_next_wrap)
+" let g:ale_fixers = {
+"   'javascript': ['prettier', 'eslint'],
+" }
+let g:ale_sign_error = ' '
+let g:ale_sign_warning = ' '
+highlight ALEError term=underline cterm=underline,bold gui=underline,bold guisp=Red
+highlight ALEWarning term=underline cterm=undercurl,bold gui=undercurl,bold guisp=Yellow
+highlight ALEInfo term=underline cterm=undercurl gui=undercurl guisp=Blue
+highlight ALEErrorSign ctermfg=1 ctermbg=18 guifg=#2d2d2d guibg=#393939
+highlight link ALEWarningSign Todo
+
 " Airline config
 let g:airline_theme='base16'
-let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
 let g:airline_symbols = {}
@@ -147,8 +162,21 @@ let g:airline_symbols.maxlinenr = ''
 let g:airline_symbols.dirty = '*'
 let g:airline_left_alt_sep = ' '
 let g:airline_right_alt_sep = ' '
+
+let g:airline#extensions#whitespace#enabled = 0
+
 let g:airline#extensions#clock#format = '%a, %b %d %I:%M %p'
 let g:airline#extensions#clock#updatetime = 1000
+
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#ale#warning_symbol = ' '
+let g:airline#extensions#ale#error_symbol = ' '
+let g:airline#extensions#ale#checking_symbol = ''
+let g:airline#extensions#ale#open_lnum_symbol = ' :'
+let g:airline#extensions#ale#close_lnum_symbol = ''
+
+let airline#extensions#coc#warning_symbol = '  '
+let airline#extensions#coc#error_symbol = '  '
 
 " Blamer config
 if has('nvim')
@@ -156,25 +184,6 @@ if has('nvim')
   let g:blamer_show_in_visual_modes = 0
   let g:blamer_template = '<committer> • <summary>'
 endif
-
-" Rubocop/Syntastic config
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_slim_checkers = ['slim_lint']
-let g:syntastic_coffeescript_checkers = ['coffeelint']
-let g:syntastic_auto_jump = 0 " always populates location list if enabled
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-
-let airline#extensions#syntastic#warning_symbol = '  '
-let airline#extensions#syntastic#error_symbol = '  '
-let airline#extensions#syntastic#stl_format_err = '%E{%e : %fe}'
-let airline#extensions#syntastic#stl_format_warn = '%W{%w : %fw}'
 
 " CoC config
 let g:coc_global_extensions = [
@@ -199,9 +208,6 @@ hi CocFadeOut ctermbg=Black ctermfg=Grey guibg=Black guifg=Grey
 " Fix coc auto complete menu
 hi CocMenuSel ctermbg=19 guibg=#0000a2
 " hi link CocMenuSel Cursor
-
-let airline#extensions#coc#warning_symbol = '  '
-let airline#extensions#coc#error_symbol = '  '
 
 " May need for vim (not neovim) since coc.nvim calculate byte offset by count
 " utf-8 byte sequence.
