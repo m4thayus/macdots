@@ -188,14 +188,15 @@ endif
 
 " CoC config
 let g:coc_global_extensions = [
-  \"coc-eslint",
-  \"coc-json",
-  \"coc-tsserver",
-  \"coc-html",
   \"coc-css",
+  \"coc-eslint",
+  \"coc-html",
+  \"coc-json",
+  \"coc-solargraph",
+  \"coc-spell-checker",
+  \"coc-tsserver",
   \"coc-yaml",
-  \"coc-yank",
-  \"coc-spell-checker"
+  \"coc-yank"
   \]
 " hi CocErrorHighlight cterm=bold ctermbg=Red ctermfg=Black guibg=Red guifg=Black
 " hi CocWarningHighlight cterm=bold ctermbg=DarkYellow ctermfg=White guibg=Orange guifg=White
