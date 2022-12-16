@@ -142,8 +142,8 @@ let g:csv_no_conceal = 1
 " ALE Global Configuration
 let g:ale_lint_on_save = 0
 
-nmap <silent> gk <Plug>(ale_previous_wrap)
-nmap <silent> gj <Plug>(ale_next_wrap)
+nmap <silent> gp <Plug>(ale_previous_wrap)
+nmap <silent> gn <Plug>(ale_next_wrap)
 " let g:ale_fixers = {
 "   'javascript': ['prettier', 'eslint'],
 " }
@@ -155,8 +155,9 @@ highlight ALEErrorSign ctermfg=1 ctermbg=18 guifg=#2d2d2d guibg=#393939
 highlight link ALEWarningSign Todo
 highlight ALEInfoSign ctermfg=4 ctermbg=18 guifg=#2d2d2d guibg=#393939
 
-highlight ALEError term=underline cterm=underline,bold gui=underline,bold guisp=Red
-highlight ALEWarning term=underline cterm=undercurl gui=undercurl guisp=Yellow
+highlight ALEError term=underline cterm=underline,bold gui=underline,bold
+highlight ALEWarning term=underline cterm=undercurl gui=undercurl
+highlight ALEInfo term=underline cterm=undercurl gui=undercurl
 
 " Airline config
 let g:airline_theme='base16'
