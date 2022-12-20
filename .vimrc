@@ -39,6 +39,7 @@ nmap <Down> <Nop>
 autocmd FileType json setlocal equalprg=python3.10\ -m\ json.tool
 
 let g:ale_disable_lsp = 1 " Stop ALE from interfering with coc
+let g:ale_hover_cursor = 0 " CoC handles this with Shift + K
 
 call plug#begin()
   " Workflow improvments
@@ -141,6 +142,12 @@ let g:csv_no_conceal = 1
 
 " ALE Global Configuration
 let g:ale_lint_on_save = 0
+let g:ale_cursor_detail=1
+let g:ale_close_preview_on_insert = 1
+let g:ale_floating_preview = 1 " Equivalent to the two below
+" let g:ale_detail_to_floating_preview = 1
+" let g:ale_hover_to_floating_preview = 1
+let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '│', '─']
 
 nmap <silent> gp <Plug>(ale_previous_wrap)
 nmap <silent> gn <Plug>(ale_next_wrap)
