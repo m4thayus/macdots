@@ -75,7 +75,7 @@ call plug#begin()
   " Auto-completion
   Plug 'Raimondi/delimitMate' " Quotes/Braces
   Plug 'tpope/vim-endwise' " Ruby def/end
-  Plug 'tpope/vim-ragtag' " HTML/XXML tags
+  Plug 'tpope/vim-ragtag' " HTML/XML tags
 
   " Highlight whitespace
   Plug 'ntpeters/vim-better-whitespace'
@@ -142,25 +142,33 @@ let g:csv_no_conceal = 1
 
 " ALE Global Configuration
 let g:ale_lint_on_save = 0
-let g:ale_cursor_detail=1
-let g:ale_close_preview_on_insert = 1
+" let g:ale_set_loclist = 0
+" let g:ale_set_quickfix = 1
+" let g:ale_open_list = 0
+" let g:ale_list_vertical = 1
+let g:ale_echo_cursor = 0
+let g:ale_virtualtext_cursor = 2
+" let g:ale_cursor_detail= 1
 let g:ale_floating_preview = 1 " Equivalent to the two below
 " let g:ale_detail_to_floating_preview = 1
 " let g:ale_hover_to_floating_preview = 1
 let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '│', '─']
+let g:ale_close_preview_on_insert = 1
 
+nmap <silent> ge <Plug>(ale_detail)
 nmap <silent> gp <Plug>(ale_previous_wrap)
 nmap <silent> gn <Plug>(ale_next_wrap)
-" let g:ale_fixers = {
-"   'javascript': ['prettier', 'eslint'],
-" }
 let g:ale_sign_error = ' '
 let g:ale_sign_warning = ' '
 let g:ale_sign_info = ' '
+let g:ale_virtualtext_prefix = '• '
 
 highlight ALEErrorSign ctermfg=1 ctermbg=18 guifg=#2d2d2d guibg=#393939
+highlight ALEVirtualTextError cterm=italic ctermfg=1 guifg=#2d2d2d
 highlight link ALEWarningSign Todo
+highlight ALEVirtualTextWarning cterm=italic ctermfg=3 guifg=#ffcc66
 highlight ALEInfoSign ctermfg=4 ctermbg=18 guifg=#2d2d2d guibg=#393939
+highlight ALEVirtualTextInfo cterm=italic ctermfg=4 guifg=#2d2d2d
 
 highlight ALEError term=underline cterm=underline,bold gui=underline,bold
 highlight ALEWarning term=underline cterm=undercurl gui=undercurl
