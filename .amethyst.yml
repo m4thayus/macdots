@@ -1,0 +1,19 @@
+# Settings reflected in plist here:
+# ~/Library/Preferences/com.amethyst.Amethyst.plist
+#
+# Documentation here:
+# https://github.com/ianyh/Amethyst/blob/development/docs/configuration-files.md
+
+layouts:
+  - tall
+  - wide
+  - fullscreen
+  - bsp
+
+enables-layout-hud: true
+enables-layout-hud-on-space-change: false
+mouse-resizes-windows: true
+
+floating:
+  - com.apple.systempreferences
+  - com.authy.authy-mac
