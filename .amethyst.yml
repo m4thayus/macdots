@@ -15,5 +15,7 @@ enables-layout-hud-on-space-change: false
 mouse-resizes-windows: true
 
 floating:
-  - com.apple.systempreferences
   - com.authy.authy-mac
+  - com.ccpgames.evelauncher
+  - com.apple.systempreferences
+  - com.valvesoftware.steam
