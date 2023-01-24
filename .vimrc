@@ -161,7 +161,7 @@ nmap <silent> gn <Plug>(ale_next_wrap)
 let g:ale_sign_error = ' '
 let g:ale_sign_warning = ' '
 let g:ale_sign_info = ' '
-let g:ale_virtualtext_prefix = '• '
+let g:ale_virtualtext_prefix = '• %code: %'
 
 highlight ALEErrorSign ctermfg=1 ctermbg=18 guifg=#2d2d2d guibg=#393939
 highlight ALEVirtualTextError cterm=italic ctermfg=1 guifg=#2d2d2d
