@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'json'
+
+pattern = Regexp.new(ARGV[0])
+
+instances = JSON.parse `aws ec2 describe-instances`
+instance = instances['Reservations']
+           .flat_map { |r| r['Instances'] }
+           .find { |i| i['Tags'].find { |t| t['Key'] == 'Name' }['Value'] =~ pattern }
+
+if instance
+  puts "Hostname #{instance['PublicDnsName']}"
+else
+  warn 'Instance not found'
+end
