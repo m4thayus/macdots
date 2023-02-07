@@ -1,8 +1,7 @@
 new -s dev -n home
 new-window -n talaria -c "$MERCURY_BASE_PATH/talaria"
+splitw -v -c "$MERCURY_BASE_PATH/talaria"
 new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
-new-window -n focus-group-monitor -c "$MERCURY_BASE_PATH/focus-group-monitor"
-splitw -h -c "$MERCURY_BASE_PATH/focus-group-monitor"
 new-window -n quicksilver -c "$HOME/Projects/quicksilver"
 new-window -n production -c "$HOME"
 selectw -t 0
