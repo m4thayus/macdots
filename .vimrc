@@ -52,6 +52,7 @@ call plug#begin()
   Plug 'tpope/vim-eunuch' " UNIX commands
   Plug 'tpope/vim-unimpaired' " Mapping pairs
   Plug 'AndrewRadev/splitjoin.vim' " Convert between single and multiline statements
+  Plug 'tpope/vim-dispatch' " Asynchronous build and test dispatcher
 
   " fzf and ripgrep support
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -62,7 +63,7 @@ call plug#begin()
 
   " Support for rubocop and other syntax checkers
   Plug 'dense-analysis/ale'
-  Plug 'ngmy/vim-rubocop', " do I really want this?
+  Plug 'vim-test/vim-test'
 
   " Airline
   Plug 'vim-airline/vim-airline'
@@ -95,7 +96,6 @@ call plug#begin()
   Plug 'tpope/vim-rake'
   Plug 'tpope/vim-rbenv'
   Plug 'tpope/vim-bundler'
-  Plug 'itmammoth/run-rspec.vim'
   Plug 'fladson/vim-kitty'
 
   " Git Support
@@ -104,6 +104,7 @@ call plug#begin()
     Plug 'APZelos/blamer.nvim'
   endif
   Plug 'tpope/vim-fugitive'
+  Plug 'junegunn/gv.vim'
   Plug 'tpope/vim-rhubarb'
   "Plug 'shumphrey/fugitive-gitlab'
 call plug#end()
@@ -207,6 +208,22 @@ if has('nvim')
   let g:blamer_show_in_visual_modes = 0
   let g:blamer_template = '<committer> • <summary>'
 endif
+
+" vim-test config
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>s :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
+" make test commands execute using dispatch.vim
+let test#strategy = {
+  \ 'nearest': 'basic',
+  \ 'file':    'dispatch',
+  \ 'suite':   'dispatch_background',
+\}
+let g:test#preserve_screen = 1
+let g:test#neovim#start_normal = 1
+let g:test#basic#start_normal = 1
 
 " CoC config
 let g:coc_global_extensions = [
