@@ -1,5 +1,4 @@
 set number
-set relativenumber
 set linebreak
 set showbreak=-->
 set cpoptions+=n
