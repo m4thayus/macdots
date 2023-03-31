@@ -41,8 +41,12 @@
       "Unconfigured",
       "alacritty",
       "devtool",
+      "dropup",
       "infocmp",
+      "logprobs",
+      "maxlinenr",
       "ncurses",
-      "speakerize"
+      "speakerize",
+      "texthl"
     ]
 }
