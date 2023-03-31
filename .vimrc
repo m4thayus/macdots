@@ -51,7 +51,7 @@ call plug#begin()
   Plug 'tpope/vim-eunuch' " UNIX commands
   Plug 'tpope/vim-unimpaired' " Mapping pairs
   Plug 'AndrewRadev/splitjoin.vim' " Convert between single and multiline statements
-  Plug 'tpope/vim-dispatch' " Asynchronous build and test dispatcher
+  Plug 'tpope/vim-dispatch' " Asynchronous build and test dispatcher recommended for vim-test strategy picking
 
   " fzf and ripgrep support
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -63,6 +63,7 @@ call plug#begin()
   " Support for rubocop and other syntax checkers
   Plug 'dense-analysis/ale'
   Plug 'vim-test/vim-test'
+  Plug 'neomake/neomake'
 
   " Airline
   Plug 'vim-airline/vim-airline'
@@ -158,16 +159,17 @@ let g:ale_close_preview_on_insert = 1
 nmap <silent> ge <Plug>(ale_detail)
 nmap <silent> gp <Plug>(ale_previous_wrap)
 nmap <silent> gn <Plug>(ale_next_wrap)
-let g:ale_sign_error = ' '
+let g:ale_sign_error = ' '
 let g:ale_sign_warning = ' '
 let g:ale_sign_info = ' '
 let g:ale_virtualtext_prefix = '• %code: %'
 
 highlight ALEErrorSign ctermfg=1 ctermbg=18 guifg=#2d2d2d guibg=#393939
-highlight ALEVirtualTextError cterm=italic ctermfg=1 guifg=#2d2d2d
-highlight link ALEWarningSign Todo
-highlight ALEVirtualTextWarning cterm=italic ctermfg=3 guifg=#ffcc66
 highlight ALEInfoSign ctermfg=4 ctermbg=18 guifg=#2d2d2d guibg=#393939
+highlight link ALEWarningSign Todo
+
+highlight ALEVirtualTextError cterm=italic ctermfg=1 guifg=#2d2d2d
+highlight ALEVirtualTextWarning cterm=italic ctermfg=3 guifg=#ffcc66
 highlight ALEVirtualTextInfo cterm=italic ctermfg=4 guifg=#2d2d2d
 
 highlight ALEError term=underline cterm=underline,bold gui=underline,bold
@@ -208,17 +210,47 @@ if has('nvim')
   let g:blamer_template = '<committer> • <summary>'
 endif
 
+" neomake config
+let g:neomake_open_list = 1
+let g:neomake_echo_current_error = 0
+let g:neomake_highlight_columns = 0
+let g:neomake_highlight_lines = 0
+let g:neomake_virtualtext_prefix = '• '
+highlight link NeomakeVirtualTextError ALEVirtualTextError
+highlight link NeomakeVirtualTextWarning ALEVirtualTextWarning
+highlight link NeomakeVirtualTextInfo ALEVirtualTextInfo
+highlight link NeomakeVirtualTextMessage ALEVirtualTextMessage
+let g:neomake_error_sign = {
+  \ 'text': ' ',
+  \ 'texthl': 'ALEErrorSign',
+\}
+let g:neomake_warning_sign = {
+  \ 'text': ' ',
+  \ 'texthl': 'ALEWarningSign',
+\}
+let g:neomake_info_sign = {
+  \ 'text': ' ',
+  \ 'texthl': 'ALEInfoSign'
+\}
+let g:neomake_message_sign = {
+  \ 'text': ' ',
+  \ 'texthl': 'NeomakeMessageSign',
+\}
+
 " vim-test config
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>s :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
-" make test commands execute using dispatch.vim
+" make test commands execute using neomake
 let test#strategy = {
   \ 'nearest': 'basic',
-  \ 'file':    'dispatch',
-  \ 'suite':   'dispatch_background',
+  \ 'file': 'neomake',
+  \ 'suite': 'neomake',
+\}
+let test#ruby#rspec#options = {
+  \ 'nearest': '--format documentation',
 \}
 let g:test#preserve_screen = 1
 let g:test#neovim#start_normal = 1
