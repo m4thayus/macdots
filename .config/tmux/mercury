@@ -2,12 +2,9 @@ new -s hg -n home
 new-window -n talaria -c "$MERCURY_BASE_PATH/talaria"
 new-window -n talaria_services -c "$MERCURY_BASE_PATH/talaria_services"
 new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
-new-window -n focus-group-monitor -c "$MERCURY_BASE_PATH/focus-group-monitor"
-splitw -h -c "$MERCURY_BASE_PATH/focus-group-monitor"
 new-window -n petasos -c "$MERCURY_BASE_PATH/petasos/api"
 splitw -h -c "$MERCURY_BASE_PATH/petasos/ui"
 splitw -v -c "$MERCURY_BASE_PATH/petasos/ui"
-new-window -n terraform -c "$MERCURY_BASE_PATH/hg-terraform-eventbridge"
 new-window -n quicksilver -c "$HOME/Projects/quicksilver"
 new-window -n production -c "$HOME"
 selectw -t 0
