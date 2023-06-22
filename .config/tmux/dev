@@ -4,6 +4,7 @@ splitw -h -c "$MERCURY_BASE_PATH/talaria"
 new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
 splitw -h -c "$MERCURY_BASE_PATH/livelabs"
 new-window -n thoth -c "$MERCURY_BASE_PATH/thoth"
+splitw -h -c "$MERCURY_BASE_PATH/thoth"
 new-window -n quicksilver -c "$HOME/Projects/quicksilver"
 new-window -n production -c "$HOME"
 selectw -t 0
