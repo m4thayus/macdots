@@ -28,7 +28,9 @@ set title
 " set spell
 " set updatetime=100 " default updatetime 4000ms is not good for async update
 
-" set mouse=nvi
+" Enable mouse support in only insert mode
+set mouse=i
+
 " Disable arrow keys in normal mode
 nmap <Up> <Nop>
 nmap <Right> <Nop>
