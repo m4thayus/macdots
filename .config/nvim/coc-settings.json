@@ -38,15 +38,20 @@
     "suggest.noselect": true,
     "yank.enableCompletion": false,
     "cSpell.userWords": [
+      "Amit",
+      "Dockerization",
       "Unconfigured",
       "alacritty",
       "devtool",
       "dropup",
+      "esbuild",
       "infocmp",
       "logprobs",
       "maxlinenr",
       "ncurses",
+      "rubocop",
       "speakerize",
-      "texthl"
+      "texthl",
+      "vimux"
     ]
 }

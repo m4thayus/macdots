@@ -28,8 +28,8 @@ set title
 " set spell
 " set updatetime=100 " default updatetime 4000ms is not good for async update
 
-" Enable mouse support in only insert mode
-set mouse=i
+" Enable mouse support in only visual mode
+set mouse=v
 
 " Disable arrow keys in normal mode
 nmap <Up> <Nop>
@@ -37,7 +37,9 @@ nmap <Right> <Nop>
 nmap <Left> <Nop>
 nmap <Down> <Nop>
 
-autocmd FileType json setlocal equalprg=python3.10\ -m\ json.tool
+if has('autocmd')
+  autocmd FileType json setlocal equalprg=python3.10\ -m\ json.tool " Use python to format json
+endif
 
 let g:ale_disable_lsp = 1 " Stop ALE from interfering with coc
 let g:ale_hover_cursor = 0 " CoC handles this with Shift + K
@@ -66,6 +68,7 @@ call plug#begin()
   Plug 'dense-analysis/ale'
   Plug 'vim-test/vim-test'
   Plug 'neomake/neomake'
+  Plug 'preservim/vimux'
 
   " Airline
   Plug 'vim-airline/vim-airline'
@@ -134,14 +137,6 @@ let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 let g:csv_no_conceal = 1
-
-" Setup skeleton file templates
-" if has("autocmd")
-" augroup templates
-"   au!
-"   autocmd BufNewFile *.* silent! execute '0r $HOME/.vim/templates/skeleton.'.expand("<afile>:e")
-" augroup END
-" endif
 
 " ALE Global Configuration
 let g:ale_lint_on_save = 0
@@ -239,21 +234,27 @@ let g:neomake_message_sign = {
   \ 'texthl': 'NeomakeMessageSign',
 \}
 
+" vimux config
+let g:VimuxHeight = "40"
+let g:VimuxOrientation = "h"
+let g:VimuxUseNearest = 0
+
 " vim-test config
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>s :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
-" make test commands execute using neomake
+" make test commands execute using neomake and vimux
 let test#strategy = {
-  \ 'nearest': 'basic',
+  \ 'nearest': 'vimux',
   \ 'file': 'neomake',
   \ 'suite': 'neomake',
 \}
 let test#ruby#rspec#options = {
   \ 'nearest': '--format documentation',
 \}
+let g:test#echo_command = 0
 let g:test#preserve_screen = 1
 let g:test#neovim#start_normal = 1
 let g:test#basic#start_normal = 1
