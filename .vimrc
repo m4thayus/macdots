@@ -153,9 +153,23 @@ let g:ale_floating_preview = 1 " Equivalent to the two below
 let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '│', '─']
 let g:ale_close_preview_on_insert = 1
 
+let g:ale_fixers = {
+\   'css': ['prettier'],
+\   'graphql': ['prettier'],
+\   'html': ['prettier'],
+\   'javascript': ['prettier'],
+\   'less': ['prettier'],
+\   'markdown': ['prettier'],
+\   'scss': ['prettier'],
+\   'typescript': ['prettier'],
+\}
+
 nmap <silent> ge <Plug>(ale_detail)
 nmap <silent> gp <Plug>(ale_previous_wrap)
 nmap <silent> gn <Plug>(ale_next_wrap)
+nmap <silent> gF <Plug>(ale_fix)
+
+
 let g:ale_sign_error = ' '
 let g:ale_sign_warning = ' '
 let g:ale_sign_info = ' '
