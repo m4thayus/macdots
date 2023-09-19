@@ -35,6 +35,10 @@
         "websdk"
     ],
     "diagnostic.displayByAle": true,
+    "tsserver.useLocalTsdk": true,
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
     "suggest.noselect": true,
     "yank.enableCompletion": false,
     "cSpell.userWords": [
@@ -53,6 +57,9 @@
       "rubocop",
       "speakerize",
       "texthl",
-      "vimux"
+      "vimux",
+      "vite",
+      "vitejs",
+      "vitest"
     ]
 }
