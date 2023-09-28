@@ -53,6 +53,8 @@
       "rubocop",
       "speakerize",
       "texthl",
-      "vimux"
+      "vimux",
+      "vite",
+      "vitejs"
     ]
 }
