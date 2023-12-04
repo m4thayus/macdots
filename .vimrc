@@ -141,6 +141,7 @@ let g:csv_no_conceal = 1
 
 " ALE Global Configuration
 let g:ale_lint_on_save = 0
+let g:ale_fix_on_save = 1
 " let g:ale_set_loclist = 0
 " let g:ale_set_quickfix = 1
 " let g:ale_open_list = 0
@@ -155,14 +156,14 @@ let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '�
 let g:ale_close_preview_on_insert = 1
 
 let g:ale_fixers = {
-\   'css': ['prettier'],
+\   'css': ['prettier', 'stylelint'],
 \   'graphql': ['prettier'],
 \   'html': ['prettier'],
 \   'javascript': ['prettier'],
 \   'javascriptreact': ['prettier'],
 \   'less': ['prettier'],
 \   'markdown': ['prettier'],
-\   'scss': ['prettier'],
+\   'scss': ['prettier', 'stylelint'],
 \   'typescript': ['prettier'],
 \   'typescriptreact': ['prettier'],
 \}
@@ -170,7 +171,7 @@ let g:ale_fixers = {
 nmap <silent> ge <Plug>(ale_detail)
 nmap <silent> gp <Plug>(ale_previous_wrap)
 nmap <silent> gn <Plug>(ale_next_wrap)
-nmap <silent> gF <Plug>(ale_fix)
+nmap <silent> <leader>F <Plug>(ale_fix)
 
 " Turn off use of builtin diagnostics
 let g:ale_use_neovim_diagnostics_api = 0
