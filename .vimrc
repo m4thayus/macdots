@@ -163,6 +163,7 @@ let g:ale_fixers = {
 \   'javascriptreact': ['prettier'],
 \   'less': ['prettier'],
 \   'markdown': ['prettier'],
+\   'ruby': ['rubocop'],
 \   'scss': ['prettier', 'stylelint'],
 \   'typescript': ['prettier'],
 \   'typescriptreact': ['prettier'],
