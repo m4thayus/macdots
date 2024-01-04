@@ -1,0 +1,58 @@
+[colors]
+draw_bold_text_with_bright_colors = false
+
+[[colors.indexed_colors]]
+color = "#f99157"
+index = 16
+
+[[colors.indexed_colors]]
+color = "#a3685a"
+index = 17
+
+[[colors.indexed_colors]]
+color = "#393939"
+index = 18
+
+[[colors.indexed_colors]]
+color = "#515151"
+index = 19
+
+[[colors.indexed_colors]]
+color = "#b4b7b4"
+index = 20
+
+[[colors.indexed_colors]]
+color = "#e0e0e0"
+index = 21
+
+[colors.bright]
+black = "#999999"
+blue = "#b4b7b4"
+cyan = "#a3685a"
+green = "#393939"
+magenta = "#e0e0e0"
+red = "#f99157"
+white = "#ffffff"
+yellow = "#515151"
+
+[colors.cursor]
+cursor = "#cccccc"
+text = "#2d2d2d"
+
+[colors.normal]
+black = "#2d2d2d"
+blue = "#6699cc"
+cyan = "#66cccc"
+green = "#99cc99"
+magenta = "#cc99cc"
+red = "#f2777a"
+white = "#cccccc"
+yellow = "#ffcc66"
+
+[colors.primary]
+background = "#2d2d2d"
+foreground = "#cccccc"
+
+[colors.vi_mode_cursor]
+cursor = "#6699cc"
+text = "CellBackground"

@@ -1,0 +1,53 @@
+import = ["/Users/matt/.config/alacritty/colors.toml"]
+
+[env]
+TERM = "alacritty"
+
+[font]
+size = 17.0
+
+[font.bold]
+family = "Victor Mono"
+style = "Medium"
+
+[font.bold_italic]
+family = "Victor Mono"
+style = "Medium Italic"
+
+[font.italic]
+family = "Victor Mono"
+style = "Italic"
+
+[font.normal]
+family = "VictorMono Nerd Font"
+style = "Light"
+
+[[keyboard.bindings]]
+chars = "\u001E"
+key = "Key6"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "F"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "SearchForward"
+key = "F"
+mode = "~Search"
+mods = "Command|Control"
+
+[[keyboard.bindings]]
+action = "SearchBackward"
+key = "B"
+mode = "~Search"
+mods = "Command|Control"
+
+[window]
+dynamic_padding = true
+startup_mode = "Windowed"
+
+[window.padding]
+x = 6
+y = 6
