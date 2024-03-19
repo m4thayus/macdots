@@ -13,10 +13,15 @@ export CDPATH=".:$HOME:$HOME/Projects:$MERCURY_BASE_PATH:$HOME/Documents"
 export AWS_USER=mattw
 export DELTA_PAGER="less -RC"
 export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
+
 export FZF_DEFAULT_COMMAND="rg --files --hidden"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --bind=tab:down,btab:up,down:toggle+down,up:toggle+up"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS --select-1 --exit-0"
+
+export FX_THEME=2
+export FX_SHOW_SIZE=true
+export FX_NO_MOUSE=true
 
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"
