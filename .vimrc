@@ -45,7 +45,7 @@ let g:ale_disable_lsp = 1 " Stop ALE from interfering with coc
 let g:ale_hover_cursor = 0 " CoC handles this with Shift + K
 
 call plug#begin()
-  " Workflow improvments
+  " Workflow improvements
   Plug 'tpope/vim-repeat' " Help plugins do stuff with .
   Plug 'tpope/vim-surround' " Quotes and braces
   Plug 'michaeljsmith/vim-indent-object' " Indentation as text object
@@ -116,8 +116,9 @@ call plug#begin()
 call plug#end()
 
 set t_Co=256 " 256 colorspace support
-let base16colorspace = 256 " Access colors present in 256 colorspace
+let base16colorspace=256 " Access colors present in 256 colorspace
 colorscheme base16-tomorrow-night-eighties
+set notermguicolors
 highlight Comment cterm=italic
 hi Search cterm=bold ctermbg=DarkGray ctermfg=White guibg=DarkGray guifg=White
 hi IncSearch cterm=bold ctermbg=DarkGray ctermfg=Gray guibg=DarkGray guifg=Gray

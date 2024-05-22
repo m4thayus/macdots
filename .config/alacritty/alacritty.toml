@@ -7,15 +7,15 @@ TERM = "alacritty"
 size = 17.0
 
 [font.bold]
-family = "Victor Mono"
+family = "VictorMono Nerd Font"
 style = "Medium"
 
 [font.bold_italic]
-family = "Victor Mono"
+family = "VictorMono Nerd Font"
 style = "Medium Italic"
 
 [font.italic]
-family = "Victor Mono"
+family = "VictorMono Nerd Font"
 style = "Italic"
 
 [font.normal]
