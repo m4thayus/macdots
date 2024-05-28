@@ -104,6 +104,9 @@ call plug#begin()
   Plug 'tpope/vim-bundler'
   Plug 'fladson/vim-kitty'
 
+  " Code Stats
+  Plug 'wakatime/vim-wakatime'
+
   " Git Support
   Plug 'mhinz/vim-signify'
   if has('nvim')

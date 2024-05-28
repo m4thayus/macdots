@@ -28,6 +28,7 @@
     "Resizer",
     "Stringable",
     "Supremum",
+    "Twip",
     "Unconfigured",
     "Wasm",
     "Yggdroot",
@@ -41,6 +42,7 @@
     "cmap",
     "coffeelint",
     "colspan",
+    "corejs",
     "crosstab",
     "crosstabs",
     "csrf",
@@ -123,6 +125,7 @@
     "vite",
     "vitejs",
     "vitest",
+    "wakatime",
     "websdk",
     "xtime"
   ]
