@@ -1,0 +1,27 @@
+#!/bin/bash
+
+data=$(base64 < $1)
+
+base=${1%.*}
+ext=${1##*.}
+
+case "$ext" in
+  png)
+    type="image/png"
+    ;;
+
+  jp*g)
+    type="image/jpeg"
+    ;;
+
+  gif)
+    type="image/gif"
+    ;;
+
+  *)
+    echo "Unknown extension"
+    exit 1
+    ;;
+esac
+
+echo "export default \"data:$type;base64,$data\"" > "$base.ts"

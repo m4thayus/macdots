@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]
+then
+  cut -c 17- | sed 's/"//' | sed 's/.*,//' | base64 --decode
+else
+  data=$(cut -c 17- < $1 | sed 's/"//')
+  type=$(echo "$data" | sed 's/^data://' | sed 's/;.*//')
+  name=${1%.ts}
+
+  case $type in
+    image/gif)
+      echo "$data" | sed 's/.*,//' | base64 --decode > $name.gif
+      ;;
+
+    image/png)
+      echo "$data" | sed 's/.*,//' | base64 --decode > $name.png
+      ;;
+
+    image/jpeg)
+      echo "$data" | sed 's/.*,//' | base64 --decode > $name.jpg
+      ;;
+
+    image/*)
+      echo "unknown image"
+      ;;
+
+    *)
+      echo "unknown format"
+      ;;
+  esac
+fi
