@@ -38,7 +38,7 @@ nmap <Left> <Nop>
 nmap <Down> <Nop>
 
 if has('autocmd')
-  autocmd FileType json setlocal equalprg=python3.10\ -m\ json.tool " Use python to format json
+  autocmd FileType json setlocal equalprg=python3.12\ -m\ json.tool " Use python to format json
 endif
 
 let g:ale_disable_lsp = 1 " Stop ALE from interfering with coc
