@@ -1,14 +1,14 @@
 new -s dev -n home
 new-window -n talaria -c "$MERCURY_BASE_PATH/talaria"
 splitw -h -c "$MERCURY_BASE_PATH/talaria"
-new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
-splitw -h -c "$MERCURY_BASE_PATH/livelabs"
 new-window -n thoth -c "$MERCURY_BASE_PATH/thoth"
 new-window -n maat -c "$MERCURY_BASE_PATH/maat"
 splitw -h -c "$MERCURY_BASE_PATH/maat"
 splitw -v -c "$MERCURY_BASE_PATH/maat"
 new-window -n hermes -c "$MERCURY_BASE_PATH/hermes"
 splitw -h -c "$MERCURY_BASE_PATH/hermes"
+new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
+splitw -h -c "$MERCURY_BASE_PATH/livelabs"
 new-window -n quicksilver -c "$HOME/Projects/quicksilver"
 new-window -n production -c "$HOME"
 selectw -t 0
