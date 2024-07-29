@@ -4,23 +4,41 @@ import = ["/Users/matt/.config/alacritty/colors.toml"]
 TERM = "alacritty"
 
 [font]
-size = 17.0
+size = 14.0
 
+# VictorMono
+# [font.bold]
+# family = "VictorMono Nerd Font"
+# style = "Medium"
+
+# [font.bold_italic]
+# family = "VictorMono Nerd Font"
+# style = "Medium Italic"
+
+# [font.italic]
+# family = "VictorMono Nerd Font"
+# style = "Italic"
+
+# [font.normal]
+# family = "VictorMono Nerd Font"
+# style = "Light"
+
+# Cascadia Code
 [font.bold]
-family = "VictorMono Nerd Font"
-style = "Medium"
+family = "Cascadia Code NF"
+style = "SemiBold"
 
 [font.bold_italic]
-family = "VictorMono Nerd Font"
-style = "Medium Italic"
+family = "Cascadia Code NF"
+style = "SemiBold Italic"
 
 [font.italic]
-family = "VictorMono Nerd Font"
-style = "Italic"
+family = "Cascadia Code NF"
+style = "SemiLight Italic"
 
 [font.normal]
-family = "VictorMono Nerd Font"
-style = "Light"
+family = "Cascadia Code NF"
+style = "SemiLight"
 
 [[keyboard.bindings]]
 chars = "\u001E"
