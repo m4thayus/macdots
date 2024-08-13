@@ -3,12 +3,18 @@
 
 require 'json'
 
+def instance_name(instance)
+  tag = instance.fetch('Tags', []).find { |t| t['Key'] == 'Name' }
+  tag&.fetch('Value', nil)
+end
+
 pattern = Regexp.new(ARGV[0])
 
 instances = JSON.parse `aws ec2 describe-instances`
 instance = instances['Reservations']
            .flat_map { |r| r['Instances'] }
-           .find { |i| i['Tags'].find { |t| t['Key'] == 'Name' }['Value'] =~ pattern }
+           .reject { |r| r.dig('State', 'Name') == 'terminated' }
+           .find { |i| instance_name(i) =~ pattern }
 
 if instance
   puts "Hostname #{instance['PublicDnsName']}"
