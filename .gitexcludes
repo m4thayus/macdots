@@ -2,5 +2,3 @@
 .*.swp
 .*.swo
 .powenv
-.node-version
-~/Projects/talaria/config/translate-credentials.json
