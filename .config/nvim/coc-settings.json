@@ -145,6 +145,7 @@
     "tseslint",
     "typecheck",
     "uncoded",
+    "uncurry",
     "vimux",
     "vite",
     "vitejs",
