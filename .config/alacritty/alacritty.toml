@@ -1,4 +1,3 @@
-import = ["/Users/matt/.config/alacritty/colors.toml"]
 
 [env]
 TERM = "alacritty"
@@ -69,3 +68,6 @@ startup_mode = "Windowed"
 [window.padding]
 x = 6
 y = 6
+
+[general]
+import = ["/Users/matt/.config/alacritty/colors.toml"]
