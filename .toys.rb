@@ -27,6 +27,15 @@ tool 'route-map' do
   end
 end
 
+tool 'test' do
+  desc 'Run the test suite'
+
+  def run
+    system 'npm run test'
+    exec 'rspec'
+  end
+end
+
 tool 'talaria-dev-server' do
   desc 'Start a dev server'
 
