@@ -27,7 +27,7 @@ tool 'route-map' do
   end
 end
 
-tool 'dev-server' do
+tool 'talaria-dev-server' do
   desc 'Start a dev server'
 
   def run
@@ -36,6 +36,18 @@ tool 'dev-server' do
     `rails restart`
     puts 'Starting server'
     exec 'webpacker-dev-server'
+  end
+end
+
+tool 'thoth-dev-server' do
+  desc 'Start a dev server'
+
+  def run
+    `eslint_d restart`
+    `rails vite:clobber`
+    `rails restart`
+    puts 'Starting server'
+    exec './node_modules/.bin/vite'
   end
 end
 

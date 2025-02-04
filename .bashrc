@@ -7,6 +7,8 @@
 
 set -o vi
 
+$(toys system bash-completion install)
+
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # BEGIN_KITTY_SHELL_INTEGRATION
