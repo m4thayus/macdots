@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-desc 'Show notable PRs'
+desc 'Print link to notable PRs'
 def run
   require 'date'
   require 'uri'
