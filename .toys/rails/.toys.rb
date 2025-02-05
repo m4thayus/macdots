@@ -3,6 +3,8 @@
 tool 'routes' do
   desc 'Add the route map to the bottom of config/routes.rb'
 
+  include :bundler
+
   def run
     prefix = "# rubocop:disable Style/BlockComments\n=begin\n"
     suffix = "=end\n# rubocop:enable Style/BlockComments\n"
@@ -29,11 +31,12 @@ end
 
 tool 'test' do
   desc 'Run the full test suite'
+
+  include :bundler
+
   def run
-    cli.run('rails test javascript')
-    cli.run('rails test ruby')
-    # system 'yarn test'
-    # exec 'rspec'
+    system 'yarn test'
+    exec 'rspec'
   end
 
   tool 'javascript' do
