@@ -34,3 +34,27 @@ tool 'logs' do
     end
   end
 end
+
+ENCODINGS = {
+  'mac' => 'MACROMAN',
+  'unicode' => 'UTF8',
+  'windows' => 'CP1252'
+}.freeze
+
+tool 'csv' do
+  tool 'convert' do
+    desc 'Convert csv file from source encoding to utf-8'
+
+    required_arg :encoding, complete: %w[mac unicode windows]
+    required_arg :file, complete: :file_system
+    optional_arg :question_name
+
+    def run
+      if options[:question_name]
+        exec "iconv -f #{ENCODINGS[options[:encoding]]} -t UTF8 #{options[:file]} > ~/#{options[:question_name]}.csv"
+      else
+        exec "iconv -f #{ENCODINGS[options[:encoding]]} -t UTF8 #{options[:file]}"
+      end
+    end
+  end
+end
