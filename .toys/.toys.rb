@@ -45,8 +45,8 @@ tool 'csv' do
   tool 'convert' do
     desc 'Convert csv file from source encoding to utf-8'
 
-    required_arg :encoding, complete: %w[mac unicode windows]
     required_arg :file, complete: :file_system
+    required_arg :encoding, complete: %w[mac unicode windows]
     optional_arg :question_name
 
     def run
