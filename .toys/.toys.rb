@@ -22,7 +22,7 @@ tool 'logs' do
     end
   end
 
-  tool 'concat' do
+  tool 'cat' do
     desc 'Concatinate log files together in order'
 
     required_arg :log_file1, complete: :file_system
@@ -30,7 +30,7 @@ tool 'logs' do
     remaining_args :remaining_log_files, complete: :file_system
 
     def run
-      exec "cat #{[options[:log_file1], options[:log_file2]].concat(options[:remaining_log_files]).join(' ')} | grep ''^.,'' | sort -n"
+      exec "cat #{[options[:log_file1], options[:log_file2]].concat(options[:remaining_log_files]).join(' ')} | grep '^.,' | sort -n"
     end
   end
 end
