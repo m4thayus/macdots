@@ -11,7 +11,14 @@ tool 'logs' do
   tool 'production' do
     desc 'Fetch production logs'
 
-    required_arg :remote_host
+    ssh_hosts = lambda do |ctx|
+      `grep "^Host\\s" ~/.ssh/config | cut -c6- | grep -v '*'`
+        .split
+        .filter { |s| s.start_with?(ctx.fragment) }
+        .map { |s| Toys::Completion::Candidate.new(s) }
+    end
+
+    required_arg :remote_host, complete: ssh_hosts
     optional_arg :log_file, default: 'production.log'
     flag :app, '--app [NAME]', default: 'talaria', complete_values: %w[talaria thoth]
     flag :out, '--out [FILE]', complete_values: :file_system
