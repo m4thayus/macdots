@@ -36,7 +36,7 @@ tool 'test' do
 
   def run
     system 'yarn test'
-    exec 'rspec'
+    exec 'rails parallel:spec'
   end
 
   tool 'javascript' do
