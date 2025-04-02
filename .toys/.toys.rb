@@ -7,16 +7,39 @@ tool 'colortest' do
   end
 end
 
-tool 'logs' do
-  tool 'production' do
-    desc 'Fetch production logs'
+tool 'production' do
+  ssh_hosts = lambda do |ctx|
+    `grep "^Host\\s" ~/.ssh/config | cut -c6- | grep -v '*'`
+      .split
+      .filter { |s| s.start_with?(ctx.fragment) }
+      .map { |s| Toys::Completion::Candidate.new(s) }
+  end
 
-    ssh_hosts = lambda do |ctx|
-      `grep "^Host\\s" ~/.ssh/config | cut -c6- | grep -v '*'`
-        .split
-        .filter { |s| s.start_with?(ctx.fragment) }
-        .map { |s| Toys::Completion::Candidate.new(s) }
+  tool 'backups' do
+    desc 'Fetch production database backups'
+
+    required_arg :remote_host, complete: ssh_hosts
+    flag :app, '--app [NAME]', default: 'talaria', complete_values: %w[talaria thoth livelabs quicksilver]
+    flag :out, '--out [FILE]', complete_values: :file_system
+
+    def run
+      local_filepath = out || "~/Projects/mercury/#{app}/sandbox/"
+      remote_file = case app
+                    when 'talaria'
+                      'backups/talaria-production.sql'
+                    when 'thoth'
+                      'backups/thoth_production.sql'
+                    when 'livelabs'
+                      'backups/livelabs_production.sql'
+                    when 'quicksilver'
+                      '/var/www/quicksilver/shared/data/production.sqlite3'
+                    end
+      exec "scp #{options[:remote_host]}:#{remote_file} #{local_filepath}"
     end
+  end
+
+  tool 'logs' do
+    desc 'Fetch production logs'
 
     required_arg :remote_host, complete: ssh_hosts
     optional_arg :log_file, default: 'production.log'
