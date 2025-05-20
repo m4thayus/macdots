@@ -15,7 +15,7 @@ tool 'production' do
       .map { |s| Toys::Completion::Candidate.new(s) }
   end
 
-  tool 'backups' do
+  tool 'snapshots' do
     desc 'Fetch production database backups'
 
     required_arg :remote_host, complete: ssh_hosts
