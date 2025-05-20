@@ -44,6 +44,8 @@ endif
 let g:ale_disable_lsp = 1 " Stop ALE from interfering with coc
 let g:ale_hover_cursor = 0 " CoC handles this with Shift + K
 
+let g:polyglot_disabled = ['csv']
+
 call plug#begin()
   " Workflow improvements
   Plug 'tpope/vim-repeat' " Help plugins do stuff with .
@@ -141,6 +143,7 @@ let g:rainbow_active = 1
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
+
 let g:csv_no_conceal = 1
 
 " ALE Global Configuration
