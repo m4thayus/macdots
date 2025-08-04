@@ -6,8 +6,8 @@ include :bundler
 
 def run
   `eslint_d restart`
-  `rails webpacker:clobber`
+  `rails shakapacker:clobber`
   `rails restart`
   puts 'Starting server'
-  exec 'webpacker-dev-server'
+  exec 'shakapacker-dev-server'
 end
