@@ -29,7 +29,7 @@ require('lazy').setup({
   require 'plugins.lspconfig',
   require 'plugins.conform',
   require 'plugins.blink-cmp',
-  require 'plugins.tokyonight',
+  require 'plugins.colorscheme',
   require 'plugins.todo-comments',
   require 'plugins.mini',
   require 'plugins.treesitter',
