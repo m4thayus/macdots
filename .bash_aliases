@@ -5,6 +5,9 @@
 alias vi="nvim"
 alias vim="nvim"
 
+alias vil='NVIM_APPNAME="nvim-legacy" nvim'
+alias viml='NVIM_APPNAME="nvim-legacy" nvim'
+
 alias ssh="TERM=xterm ssh"
 alias docker="podman"
 alias be="bundle exec"
