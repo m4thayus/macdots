@@ -55,11 +55,20 @@ return {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          sorting_strategy = "ascending",
+          layout_config = {
+            prompt_position = "top",
+          },
+          mappings = {
+            i = {
+              -- ["<c-enter>"] = "to_fuzzy_refine",
+              ["<Tab>"] = require("telescope.actions").move_selection_next,
+              ["<S-Tab>"] = require("telescope.actions").move_selection_previous,
+              ["`"] = require("telescope.actions").toggle_selection,
+            },
+          },
+        },
         -- pickers = {}
         extensions = {
           ["ui-select"] = {
@@ -83,7 +92,7 @@ return {
       vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
       vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
       vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[\\] Find existing buffers" })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set("n", "<leader>/", function()
