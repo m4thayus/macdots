@@ -20,6 +20,22 @@ return {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.o.timeoutlen
       delay = 0,
+      -- Only trigger which-key after these prefixes; prevents popups on normal motions
+      triggers = {
+        { "<leader>", mode = { "n", "v" } },
+        { "<localleader>", mode = { "n", "v" } },
+        -- Mini Surround and similar multi-key chains
+        { "s", mode = { "n", "x", "o" } },
+        -- Core vim prefixes that open sub-menus
+        { "<C-w>", mode = "n" }, -- windows + window navigation
+        { "z", mode = "n" }, -- folds, spelling, views
+        { "[", mode = "n" },
+        { "]", mode = "n" }, -- diagnostic / gitsigns-style next/prev jumps
+        { '"', mode = "n" }, -- registers
+        { "'", mode = "n" }, -- marks (line)
+        { "`", mode = "n" }, -- marks (exact position)
+        { "g", mode = "n" }, -- g-prefixed motions/operators
+      },
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
