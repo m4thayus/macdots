@@ -34,7 +34,7 @@ return {
         { '"', mode = "n" }, -- registers
         { "'", mode = "n" }, -- marks (line)
         { "`", mode = "n" }, -- marks (exact position)
-        { "g", mode = "n" }, -- g-prefixed motions/operators
+        { "gr", mode = "n" }, -- lsp
       },
       icons = {
         -- set icon mappings to true if you have a Nerd Font
