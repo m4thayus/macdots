@@ -26,6 +26,9 @@ vim.o.showmode = false
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Enable tab expansion
+vim.o.expandtab = true
+
 -- Save undo history
 vim.o.undofile = true
 

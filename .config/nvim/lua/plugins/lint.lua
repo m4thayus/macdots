@@ -2,11 +2,16 @@ return {
 
   { -- Linting
     "mfussenegger/nvim-lint",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre", "BufNewFile", "BufWritePost" },
     config = function()
       local lint = require "lint"
       lint.linters_by_ft = {
+        css = { "stylelint" },
+        javascript = { "eslint_d", "eslint" },
         markdown = { "markdownlint" },
+        ruby = { "rubocop" },
+        scss = { "stylelint" },
+        typescript = { "eslint_d", "eslint" },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -51,7 +56,12 @@ return {
           -- avoid superfluous noise, notably within the handy LSP pop-ups that
           -- describe the hovered symbol using Markdown.
           if vim.bo.modifiable then
+            -- try_lint without arguments runs the linters defined in `linters_by_ft`
+            -- for the current filetype
             lint.try_lint()
+            -- You can call `try_lint` with a linter name or a list of names to always
+            -- run specific linters, independent of the `linters_by_ft` configuration
+            -- require("lint").try_lint "cspell"
           end
         end,
       })
