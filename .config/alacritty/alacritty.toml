@@ -70,4 +70,5 @@ x = 6
 y = 6
 
 [general]
-import = ["/Users/matt/.config/alacritty/colors.toml"]
+import = ["/Users/matt/.config/alacritty/kanagawa-dragon.toml"]
+# import = ["/Users/matt/.config/alacritty/tomorrow-night-eighties.toml"]
