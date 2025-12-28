@@ -59,6 +59,7 @@ return {
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
         callback = function(event)
@@ -207,6 +208,15 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+
+      -- Disable legacy TypeScript clients managed by nvim-lspconfig; typescript-tools will handle TS.
+      pcall(function()
+        vim.lsp.config("ts_ls", { enabled = false, filetypes = {} })
+      end)
+      pcall(function()
+        vim.lsp.config("tsserver", { enabled = false, filetypes = {} })
+      end)
+
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -235,6 +245,7 @@ return {
             },
           },
         },
+        ruby_lsp = {},
       }
 
       -- Ensure the servers and tools above are installed
