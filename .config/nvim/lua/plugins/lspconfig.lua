@@ -56,29 +56,152 @@ return {
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
       -- Handle ruby-lsp / ruby-lsp-rails custom commands that the client must implement.
-      if not vim.lsp.commands["rubyLsp.openFile"] then
-        vim.lsp.commands["rubyLsp.openFile"] = function(command)
-          local arg = command.arguments and command.arguments[1]
-          if not arg then
-            return
-          end
+      local ruby_lsp_codelens_setup_done = false
+      local output_bufnr, output_winnr, append_position
 
-          local uri = type(arg) == "table" and (arg.uri or arg.url or arg[1]) or arg
-          if not uri then
-            return
-          end
+      local function ensure_output_buf(command)
+        if not (output_bufnr and vim.api.nvim_buf_is_valid(output_bufnr)) then
+          output_bufnr = vim.api.nvim_create_buf(false, true)
+          vim.api.nvim_buf_set_name(output_bufnr, "Ruby LSP Command: " .. command)
+          vim.bo[output_bufnr].bufhidden = "wipe"
+          vim.bo[output_bufnr].buftype = "nofile"
+          vim.bo[output_bufnr].swapfile = false
+        end
+        vim.bo[output_bufnr].modifiable = true
+        vim.api.nvim_buf_set_lines(output_bufnr, 0, -1, false, { "Running command: " .. command, "" })
+      end
 
-          local fname = vim.uri_to_fname(uri)
-          vim.cmd.edit(vim.fn.fnameescape(fname))
+      local function ensure_output_win()
+        local curwin = vim.api.nvim_get_current_win()
+        if not (output_winnr and vim.api.nvim_win_is_valid(output_winnr)) then
+          vim.cmd "botright split"
+          output_winnr = vim.api.nvim_get_current_win()
+          vim.api.nvim_win_set_height(output_winnr, 12)
+        end
+        vim.api.nvim_win_set_buf(output_winnr, output_bufnr)
+        vim.api.nvim_win_set_option(output_winnr, "number", false)
+        vim.api.nvim_win_set_option(output_winnr, "relativenumber", false)
+        vim.api.nvim_set_current_win(curwin)
+      end
 
-          local range = type(arg) == "table" and arg.range
-          if range and range.start then
-            local row = (range.start.line or 0) + 1
-            local col = (range.start.character or 0) + 1
-            pcall(vim.api.nvim_win_set_cursor, 0, { row, col })
-          end
+      local function display_command_output(_, data)
+        if not (data and output_bufnr and vim.api.nvim_buf_is_valid(output_bufnr)) then
+          return
+        end
+        append_position = append_position or 2
+        vim.api.nvim_buf_set_lines(output_bufnr, append_position, append_position, false, data)
+        append_position = append_position + #data
+      end
+
+      local function run_command_in_split(command)
+        if type(command) ~= "string" or command == "" then
+          vim.notify("ruby-lsp: no command to run", vim.log.levels.WARN)
+          return
+        end
+        ensure_output_buf(command)
+        ensure_output_win()
+        append_position = 2
+
+        local job_id = vim.fn.jobstart(command, {
+          on_stdout = display_command_output,
+          on_stderr = display_command_output,
+          on_exit = function()
+            if output_bufnr and vim.api.nvim_buf_is_valid(output_bufnr) then
+              vim.bo[output_bufnr].modifiable = false
+            end
+          end,
+          stdout_buffered = false,
+          stderr_buffered = false,
+        })
+
+        if job_id <= 0 then
+          vim.notify("ruby-lsp: failed to start command: " .. command, vim.log.levels.ERROR)
         end
       end
+
+      local function edit_file(uri)
+        if not uri then
+          return
+        end
+        local line = tonumber(uri:match "#L(%d+)" or 1) or 1
+        local path = uri:gsub("^file://", ""):gsub("#L%d+", "")
+        vim.cmd(string.format("edit +%d %s", line, vim.fn.fnameescape(path)))
+      end
+
+      local function open_file_command(command)
+        local arg = command.arguments and command.arguments[1]
+        if type(arg) == "string" then
+          return edit_file(arg)
+        end
+        if type(arg) ~= "table" or vim.tbl_isempty(arg) then
+          vim.notify("ruby-lsp: openFile missing arguments", vim.log.levels.WARN)
+          return
+        end
+        if #arg == 1 then
+          return edit_file(arg[1])
+        end
+        vim.ui.select(arg, {
+          prompt = "Select a file to jump to",
+          format_item = function(uri)
+            return uri:match "^.+/(.+)$" or uri
+          end,
+        }, edit_file)
+      end
+
+      local function run_test_command(command)
+        local args = command.arguments or {}
+        local cmd = args[3] or args[1]
+        run_command_in_split(cmd)
+      end
+
+      local function run_task_command(command)
+        local args = command.arguments or {}
+        run_command_in_split(args[1])
+      end
+
+      local function run_rspec_command(command)
+        local args = command.arguments or {}
+        run_command_in_split(args[1])
+      end
+
+      local function setup_ruby_lsp_codelens()
+        if ruby_lsp_codelens_setup_done then
+          return
+        end
+        ruby_lsp_codelens_setup_done = true
+
+        local original_handler = vim.lsp.codelens.on_codelens
+        local supported = {
+          ["rubyLsp.runTest"] = true,
+          ["rubyLsp.runTask"] = true,
+          ["rubyLsp.openFile"] = true,
+        }
+
+        ---@diagnostic disable-next-line: duplicate-set-field
+        vim.lsp.codelens.on_codelens = function(err, result, ctx)
+          local client = vim.lsp.get_client_by_id(ctx.client_id)
+          if not client or client.name ~= "ruby_lsp" then
+            return original_handler(err, result, ctx)
+          end
+
+          local filtered = vim.tbl_filter(function(lens)
+            local cmd = lens.command and lens.command.command
+            return cmd and (supported[cmd] or cmd:match "^rubyLsp%.rspec")
+          end, result or {})
+
+          return original_handler(err, filtered, ctx)
+        end
+
+        vim.lsp.commands["rubyLsp.runTest"] = run_test_command
+        vim.lsp.commands["rubyLsp.runTask"] = run_task_command
+        vim.lsp.commands["rubyLsp.openFile"] = open_file_command
+        vim.lsp.commands["rubyLsp.rspecRunExample"] = run_rspec_command
+        vim.lsp.commands["rubyLsp.rspecRunFile"] = run_rspec_command
+        vim.lsp.commands["rubyLsp.rspecRunDirectory"] = run_rspec_command
+        vim.lsp.commands["rubyLsp.rspecRunAll"] = run_rspec_command
+      end
+
+      setup_ruby_lsp_codelens()
 
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
@@ -301,6 +424,19 @@ return {
           },
           ruby_lsp = {
             cmd = { vim.fn.expand "~/.rbenv/shims/ruby-lsp" },
+            init_options = {
+              enabledFeatures = {
+                codeLens = true,
+              },
+              addonSettings = {
+                ["Ruby LSP Rails"] = {
+                  enablePendingMigrationsPrompt = false,
+                },
+                ["Ruby LSP RSpec"] = {
+                  rspecCommand = "rspec -f d",
+                },
+              },
+            },
           },
         },
         -- This table contains config for all language servers that are *not* installed via Mason.
