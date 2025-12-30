@@ -55,6 +55,31 @@ return {
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
+      -- Handle ruby-lsp / ruby-lsp-rails custom commands that the client must implement.
+      if not vim.lsp.commands["rubyLsp.openFile"] then
+        vim.lsp.commands["rubyLsp.openFile"] = function(command)
+          local arg = command.arguments and command.arguments[1]
+          if not arg then
+            return
+          end
+
+          local uri = type(arg) == "table" and (arg.uri or arg.url or arg[1]) or arg
+          if not uri then
+            return
+          end
+
+          local fname = vim.uri_to_fname(uri)
+          vim.cmd.edit(vim.fn.fnameescape(fname))
+
+          local range = type(arg) == "table" and arg.range
+          if range and range.start then
+            local row = (range.start.line or 0) + 1
+            local col = (range.start.character or 0) + 1
+            pcall(vim.api.nvim_win_set_cursor, 0, { row, col })
+          end
+        end
+      end
+
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -110,17 +135,8 @@ return {
           --  the definition of its *type*, not where it was *defined*.
           map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
 
-          -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
-          ---@param client vim.lsp.Client
-          ---@param method vim.lsp.protocol.Method
-          ---@param bufnr? integer some lsp support methods only in specific files
-          ---@return boolean
           local function client_supports_method(client, method, bufnr)
-            if vim.fn.has "nvim-0.11" == 1 then
-              return client:supports_method(method, bufnr)
-            else
-              return client.supports_method(method, { bufnr = bufnr })
-            end
+            return client:supports_method(method, bufnr)
           end
 
           -- The following two autocommands are used to highlight references of the
@@ -160,6 +176,36 @@ return {
             map("<leader>th", function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, "[T]oggle Inlay [H]ints")
+          end
+
+          -- Show and run code lenses when supported (e.g. ruby-lsp and ruby-lsp-rails)
+          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_codeLens, event.buf) then
+            local codelens_augroup = vim.api.nvim_create_augroup("kickstart-lsp-codelens-" .. event.buf, { clear = true })
+            local refresh_codelens = function(bufnr)
+              vim.lsp.codelens.refresh { bufnr = bufnr }
+            end
+
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              buffer = event.buf,
+              group = codelens_augroup,
+              callback = function()
+                refresh_codelens(event.buf)
+              end,
+            })
+
+            vim.api.nvim_create_autocmd("LspDetach", {
+              buffer = event.buf,
+              group = codelens_augroup,
+              callback = function(event2)
+                vim.api.nvim_clear_autocmds { group = codelens_augroup, buffer = event2.buf }
+              end,
+            })
+
+            refresh_codelens(event.buf)
+            map("<leader>cr", function()
+              refresh_codelens(event.buf)
+            end, "[C]ode Lens [R]efresh")
+            map("<leader>cl", vim.lsp.codelens.run, "[C]ode [L]ens run")
           end
         end,
       })
