@@ -33,6 +33,7 @@ require("lazy").setup({
   require "plugins.lint",
   require "plugins.conform",
   require "plugins.blink-cmp",
+  require "plugins.neotest",
   require "plugins.colorscheme",
   require "plugins.todo-comments",
   require "plugins.mini",
