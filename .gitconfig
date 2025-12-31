@@ -23,9 +23,11 @@
 [delta]
   line-numbers = true
   navigate = true
+  syntax-theme = Kanagawa
 
   ; Kanagawa Dragon
   zero-style = "dim auto"
+  hunk-header-style = "line-number auto"
   plus-style = "#8a9a7b bold #181616"
   plus-non-emph-style = "#8a9a7b bold #181616"
   plus-emph-style = "#8a9a7b bold ul #181616"
