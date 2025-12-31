@@ -1,4 +1,4 @@
-local js_formatter = { "prettierd", "prettier", stop_after_first = true }
+local prettier = { "prettierd", "prettier", stop_after_first = true }
 
 return {
   { -- Autoformat
@@ -33,10 +33,10 @@ return {
       end,
       formatters_by_ft = {
         lua = { "stylua" },
-        javascript = js_formatter,
-        javascriptreact = js_formatter,
-        typescript = js_formatter,
-        typescriptreact = js_formatter,
+        javascript = prettier,
+        javascriptreact = prettier,
+        typescript = prettier,
+        typescriptreact = prettier,
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
