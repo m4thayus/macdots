@@ -11,18 +11,18 @@ return {
   },
   keys = {
     {
-      "<leader>tt",
+      "<leader>tn",
       function()
         require("neotest").run.run()
       end,
-      desc = "[t]est nearest",
+      desc = "[T]est [N]earest",
     },
     {
-      "<leader>tT",
+      "<leader>tf",
       function()
         require("neotest").run.run(vim.fn.expand "%")
       end,
-      desc = "[T]est current file",
+      desc = "[T]est current [F]ile",
     },
     {
       "<leader>ts",
