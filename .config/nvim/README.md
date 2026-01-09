@@ -15,7 +15,8 @@ Opinionated Neovim setup built on Kickstart-style modules and managed by `lazy.n
    ```
 3) Launch `nvim` and run `:checkhealth` for environment validation.
 
-> Tip: `init.lua` has the leader key commented out. Uncomment `vim.g.mapleader = " "` if you want Space as leader (default is `\`).
+> [!TIP]
+> `init.lua` has the leader key commented out. Uncomment `vim.g.mapleader = " "` if you want Space as leader (default is `\`).
 
 ## Layout
 - Entry point: `init.lua` wires `lua/options.lua`, `lua/filetypes.lua`, `lua/keymaps.lua`, `lua/lazy-bootstrap.lua`, and `lua/lazy-plugins.lua`.
