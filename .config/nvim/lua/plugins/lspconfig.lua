@@ -408,6 +408,7 @@ return {
           -- ts_ls = {},
           --
           codebook = {},
+          eslint = {},
           lua_ls = {
             -- cmd = { ... },
             -- filetypes = { ... },
