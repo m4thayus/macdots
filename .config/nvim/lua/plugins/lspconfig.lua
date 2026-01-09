@@ -424,7 +424,9 @@ return {
           },
           ruby_lsp = {
             cmd = { vim.fn.expand "~/.rbenv/shims/ruby-lsp" },
-            init_options = {
+            init_option = {
+              formatter = "rubocop",
+              linters = { "rubocop" },
               enabledFeatures = {
                 codeLens = true,
               },
@@ -435,6 +437,15 @@ return {
                 ["Ruby LSP RSpec"] = {
                   rspecCommand = "rspec -f d",
                 },
+              },
+            },
+          },
+          stylelint_lsp = {
+            settings = {
+              stylelintplus = {
+                -- see available options in stylelint-lsp documentation
+                autoFixOnFormat = true, -- automatically apply fixes in response to format requests.
+                autoFixOnSave = true, -- automatically apply fixes on save.
               },
             },
           },

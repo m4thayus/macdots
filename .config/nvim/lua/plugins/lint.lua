@@ -6,12 +6,14 @@ return {
     config = function()
       local lint = require "lint"
       lint.linters_by_ft = {
-        css = { "stylelint" },
+        -- stylelint-lsp handles linting support for relevant files
+        -- css = { "stylelint" },
+        -- scss = { "stylelint" },
         javascript = { "eslint_d", "eslint" },
-        markdown = { "markdownlint" },
-        ruby = { "rubocop" },
-        scss = { "stylelint" },
         typescript = { "eslint_d", "eslint" },
+        markdown = { "markdownlint" },
+        -- Ruby LSP provides linting support for ruby via rubocop,
+        -- ruby = { "rubocop" },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
