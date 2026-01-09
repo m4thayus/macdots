@@ -3,7 +3,7 @@
 Opinionated Neovim setup built on Kickstart-style modules and managed by `lazy.nvim`. It ships with sensible defaults, LSP/completion/formatting, tree navigation, Telescope search, and test runners for common stacks.
 
 ## Requirements
-- Neovim >= 0.10
+- Neovim >= 0.11
 - Tooling: `git`, `make`, `unzip`, `rg`
 - Optional: Nerd Font for icons, `rbenv`-installed `ruby-lsp` shim (`~/.rbenv/shims/ruby-lsp`), Node toolchain for TypeScript/JS language tools
 
