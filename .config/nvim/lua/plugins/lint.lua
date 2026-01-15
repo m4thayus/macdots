@@ -5,7 +5,69 @@ return {
     event = { "BufReadPre", "BufNewFile", "BufWritePost" },
     config = function()
       local lint = require "lint"
+      local normalize = (vim.fs and vim.fs.normalize) and vim.fs.normalize or function(path) return path end
+      local function coffeelint_parser(output, bufnr, linter_cwd)
+        if not vim.api.nvim_buf_is_valid(bufnr) then
+          return {}
+        end
+
+        local ok, decoded = pcall(vim.json.decode, output)
+        if not ok or type(decoded) ~= "table" then
+          return {}
+        end
+
+        local buffer_path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p")
+        local diagnostics = {}
+
+        for file, entries in pairs(decoded) do
+          local file_path
+          if file:match("^%w:") or vim.startswith(file, "/") then
+            file_path = file
+          else
+            file_path = vim.fn.simplify(linter_cwd .. "/" .. file)
+          end
+
+          if normalize(file_path) == normalize(buffer_path) then
+            for _, entry in ipairs(entries or {}) do
+              local rule = entry.rule or entry.name
+              local message = entry.message or "Coffeelint issue"
+              if rule and rule ~= "" then
+                message = string.format("[%s] %s", rule, message)
+              end
+
+              local lnum = entry.lineNumber and math.max(entry.lineNumber - 1, 0) or 0
+              local end_lnum = entry.lineNumberEnd and math.max(entry.lineNumberEnd - 1, lnum) or lnum
+              local col = entry.columnNumber and math.max(entry.columnNumber - 1, 0) or 0
+              local end_col = entry.columnNumberEnd and math.max(entry.columnNumberEnd - 1, col) or col
+              local severity = entry.level == "warn" and vim.diagnostic.severity.WARN or vim.diagnostic.severity.ERROR
+
+              diagnostics[#diagnostics + 1] = {
+                lnum = lnum,
+                end_lnum = end_lnum,
+                col = col,
+                end_col = end_col,
+                severity = severity,
+                message = message,
+                source = "coffeelint",
+              }
+            end
+          end
+        end
+
+        return diagnostics
+      end
+
+      lint.linters.coffeelint = {
+        cmd = "coffeelint",
+        stdin = false,
+        args = { "--reporter=raw" },
+        stream = "stdout",
+        ignore_exitcode = true,
+        parser = coffeelint_parser,
+      }
       lint.linters_by_ft = {
+        coffee = { "coffeelint" },
+        litcoffee = { "coffeelint" },
         markdown = { "markdownlint-cli2" },
 
         -- stylelint-lsp handles linting support for relevant files
