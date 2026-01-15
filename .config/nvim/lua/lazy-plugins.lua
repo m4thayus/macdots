@@ -36,6 +36,7 @@ require("lazy").setup({
   require "plugins.colorscheme",
   require "plugins.todo-comments",
   require "plugins.mini",
+  require "plugins.coffee-script",
   require "plugins.treesitter",
   require "plugins.neo-tree",
 
