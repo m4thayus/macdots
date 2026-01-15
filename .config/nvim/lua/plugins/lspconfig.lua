@@ -455,6 +455,9 @@ return {
         -- Structure is identical to the mason table from above.
         others = {
           -- dartls = {},
+          coffeesense = {
+            filetypes = { "coffee", "coffeescript" },
+          },
         },
       }
 
@@ -471,11 +474,12 @@ return {
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers.mason or {})
-      vim.list_extend(ensure_installed, {
+      local mason_packages = vim.tbl_keys(servers.mason or {})
+      vim.list_extend(mason_packages, {
+        "coffeesense-language-server",
         "stylua", -- Used to format Lua code
       })
-      require("mason-tool-installer").setup { ensure_installed = ensure_installed }
+      require("mason-tool-installer").setup { ensure_installed = mason_packages }
 
       -- Either merge all additional server configs from the `servers.mason` and `servers.others` tables
       -- to the default language server configs as provided by nvim-lspconfig or
