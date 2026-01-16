@@ -1,74 +1,84 @@
 # Neovim Configuration
 
 Opinionated Neovim setup built on Kickstart-style modules and managed
-by `lazy.nvim`. It ships with sensible defaults, LSP/completion/formatting,
-tree navigation, Telescope search, and test runners for common
-stacks.
+by `lazy.nvim`. It ships with sensible defaults, LSP/completion,
+formatting, Telescope search, tree navigation, and test runners.
 
 ## Requirements
 
 - Neovim >= 0.11
 - Tooling: `git`, `make`, `unzip`, `rg`
-- Optional: Nerd Font for icons, `rbenv`-installed `ruby-lsp` shim
-(`~/.rbenv/shims/ruby-lsp`), Node toolchain for TypeScript/JS
-language tools
+- Optional: Nerd Font for icons
+- Optional: Node toolchain for JS/TS tooling
+- Optional: `~/.rbenv/shims/ruby-lsp` for Ruby LSP code lenses
+- Optional: `stylua`, `prettier` or `prettierd`, `coffeelint`
 
 ## Getting Started
 
-1) Install (or clone) into `~/.config/nvim`.
-2) Sync plugins:
+1. Install (or clone) into `~/.config/nvim`.
+2. Sync plugins:
 
    ```bash
    nvim --headless "+Lazy! sync" +qa
    ```
 
-3) Launch `nvim` and run `:checkhealth` for environment validation.
+3. Launch `nvim` and run `:checkhealth` for environment validation.
 
 > [!TIP]
-> `init.lua` has the leader key commented out. Uncomment `vim.g.mapleader = " "` if you want Space as leader (default is `\`).
+> `init.lua` has the leader key commented out. Uncomment
+> `vim.g.mapleader = " "` if you want Space as leader (default is `\`).
 
 ## Layout
 
 - Entry point: `init.lua` wires `lua/options.lua`, `lua/filetypes.lua`,
-`lua/keymaps.lua`, `lua/lazy-bootstrap.lua`, and `lua/lazy-plugins.lua`.
-- Plugin specs: `lua/plugins/*.lua`; add local overrides in `lua/plugins/custom/`.
+  `lua/keymaps.lua`, `lua/lazy-bootstrap.lua`, and `lua/lazy-plugins.lua`.
+- Plugin specs: `lua/plugins/*.lua`; add overrides in
+  `lua/plugins/custom/`.
 - Lockfile: `lazy-lock.json` (keep in sync when updating plugins).
 
 ## Core Features & Keymaps
 
-- **Search (Telescope)**: `<leader>sf` files, `<leader>sg` live
-grep, `<leader>sh` help tags, `<leader>sr` resume, `<leader>b`
-buffers. `</>` maps to current-buffer fuzzy find.
-- **File tree (neo-tree)**: `<leader>\` toggles reveal/close in the sidebar.
-- **Diagnostics**: `<leader>q` opens diagnostic quickfix; LSP symbols/defs via `grd/gri/grr/gW/gO/grt`.
-- **Completion (blink.cmp)**: super-tab preset; `<Tab>/<S-Tab>`
-navigate snippets, `<C-Space>` toggle docs, `<C-k>` signature help.
-- **Formatting (conform.nvim)**: `<leader>f` formats buffer; saves
-format automatically (except C/C++) using `stylua` or `prettier/prettierd`
-where available.
-- **Linting (nvim-lint)**: markdownlint on Markdown; extend via
-`lint.linters_by_ft`. Trigger manually with `:lua
-require("lint").try_lint()`.
+- **Search (Telescope)**: `<leader>sf` files, `<leader>sg` live grep,
+  `<leader>sw` word under cursor, `<leader>sd` diagnostics,
+  `<leader>sh` help tags, `<leader>sr` resume, `<leader>s/` open-file
+  grep, `<leader>b` buffers, `<leader>/` current-buffer fuzzy find.
+- **File tree (neo-tree)**: `<leader>\` toggles reveal/close.
+- **Diagnostics & LSP**: `<leader>q` opens loclist; `grd/grr/gri/grt`
+  jump; `grn` rename; `gra` code action; `gO/gW` symbols; `<leader>th`
+  toggle inlay hints; `<leader>cl` run code lens.
+- **Completion (blink.cmp)**: super-tab preset; `<Tab>/<S-Tab>` to
+  navigate snippets, `<C-Space>` docs, `<C-k>` signature help.
+- **Formatting (conform.nvim)**: `<leader>f` formats buffer; format on
+  save (except C/C++) using `stylua` and `prettier/prettierd`.
+- **Linting (nvim-lint)**: `markdownlint-cli2` for Markdown,
+  `coffeelint` for CoffeeScript. Trigger with
+  `:lua require("lint").try_lint()`.
 - **Testing (neotest)**: `<leader>tn` nearest, `<leader>tf` file,
-`<leader>ts` summary, `<leader>to` output. Adapters for RSpec and
-Vitest prewired.
+  `<leader>ts` summary, `<leader>to` output. Adapters for RSpec and
+  Vitest are prewired.
+- **Git (gitsigns)**: `]c/[c` next/prev hunk; `<leader>hs` stage,
+  `<leader>hr` reset, `<leader>hp` preview, `<leader>hb` blame.
+- **Text objects & surrounds (mini.nvim)**: `mini.ai` extends
+  textobjects; `mini.surround` uses `sa/sd/sr` for add/delete/replace.
 
 ## Language Support
 
 - **LSP**: Managed by Mason (`:Mason`). Defaults include `lua_ls`,
-`codebook`, `eslint`, `stylelint_lsp`, and `ruby_lsp` (with code
-lens + Rails/RSpec commands). TypeScript/JS use `typescript-tools.nvim`
-with blink.cmp capabilities.
+  `codebook`, `eslint`, `stylelint_lsp`, `ruby_lsp`, and `coffeesense`.
+  TypeScript/JS use `typescript-tools.nvim` with blink.cmp capabilities.
+  `lazydev.nvim` enhances Lua completion for Neovim APIs.
 - **Treesitter**: Parsers installed for common languages (Lua, Ruby,
-JS/TS, HTML/CSS/SCSS, Terraform, SQL, YAML, etc.) with per-filetype
-autostart; indentation disabled for Ruby to keep regex-based
-indenting.
+  JS/TS, HTML/CSS/SCSS, Terraform, SQL, YAML, and more) with
+  per-filetype autostart; indentation stays regex-based for Ruby.
+- **CoffeeScript**: Filetypes from `vim-coffee-script`, LSP via
+  `coffeesense-language-server`, lint via `coffeelint`.
 
 ## Appearance & UI
 
-- Colorscheme: Kanagawa (dragon variant) set in `lua/plugins/colorscheme.lua`.
-- Status/UX helpers: which-key, indent guides, gitsigns, todo-comments,
-autopairs, mini.nvim basics.
+- Colorscheme: Kanagawa (dragon variant).
+- Statusline: `mini.statusline` with Nerd Font support.
+- UI helpers: which-key, indent guides, guess-indent, todo-comments,
+  autopairs.
 
 ## Maintenance
 
@@ -78,10 +88,12 @@ autopairs, mini.nvim basics.
 
 ## Customization Pointers
 
-- Set `vim.g.have_nerd_font = true` in `init.lua` for icon support (default on).
-- Add new plugins under `lua/plugins/custom/` to keep local changes isolated.
-- Adjust formatter/linters in `lua/plugins/conform.lua` and
-`lua/plugins/lint.lua`; add LSP servers in `lua/plugins/lspconfig.lua`.
+- Set `vim.g.have_nerd_font = true` in `init.lua` for icon support
+  (default on).
+- Add new plugins under `lua/plugins/custom/` to keep local changes
+  isolated.
+- Adjust formatters and linters in `lua/plugins/conform.lua` and
+  `lua/plugins/lint.lua`; add LSP servers in `lua/plugins/lspconfig.lua`.
 
 Happy editing! If anything feels off, open `:help` or use `<leader>sh`
 to fuzzy-search Neovim docs.
