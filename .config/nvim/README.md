@@ -45,7 +45,8 @@ formatting, Telescope search, tree navigation, and test runners.
 - **File tree (neo-tree)**: `<leader>\` toggles reveal/close.
 - **Diagnostics & LSP**: `<leader>q` opens loclist; `grd/grr/gri/grt`
   jump; `grn` rename; `gra` code action; `gO/gW` symbols; `<leader>th`
-  toggle inlay hints; `<leader>cl` run code lens.
+  toggle inlay hints; `<leader>cl` run code lens; `gl` opens diagnostic
+  float. See `docs/DIAGNOSTICS-STYLING.md` for styling tweaks.
 - **Completion (blink.cmp)**: super-tab preset; `<Tab>/<S-Tab>` to
   navigate snippets, `<C-Space>` docs, `<C-k>` signature help.
 - **Formatting (conform.nvim)**: `<leader>f` formats buffer; format on

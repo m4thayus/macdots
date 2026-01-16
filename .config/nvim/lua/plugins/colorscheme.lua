@@ -11,6 +11,22 @@ return {
       ---@diagnostic disable-next-line: missing-fields
       require("kanagawa").setup {
         theme = "dragon",
+        keywordStyle = { italic = false },
+        overrides = function(colors)
+          local theme = colors.theme
+          local Color = require("kanagawa.lib.color")
+          local dim = function(hex, amount)
+            return Color(hex):brighten(-amount, theme.ui.bg):to_hex()
+          end
+          return {
+            ["@variable.builtin"] = { italic = false },
+            ["@constant.builtin"] = { italic = false },
+            DiagnosticVirtualTextError = { fg = dim(theme.diag.error, 0), italic = true },
+            DiagnosticVirtualTextWarn = { fg = dim(theme.diag.warning, 0.1), italic = true },
+            DiagnosticVirtualTextInfo = { fg = dim(theme.diag.info, 0.2), italic = true },
+            DiagnosticVirtualTextHint = { fg = dim(theme.diag.hint, 0.3), italic = true },
+          }
+        end,
       }
 
       -- Load the colorscheme here.

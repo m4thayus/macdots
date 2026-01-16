@@ -348,6 +348,7 @@ return {
           },
         } or {},
         virtual_text = {
+          prefix = "> ",
           source = "if_many",
           spacing = 2,
           format = function(diagnostic)

@@ -31,6 +31,7 @@ return {
         { "z", mode = "n" }, -- folds, spelling, views
         { "[", mode = "n" },
         { "]", mode = "n" }, -- diagnostic / gitsigns-style next/prev jumps
+        { "g", mode = "n" }, -- goto + general g-prefix mappings
         { '"', mode = "n" }, -- registers
         { "'", mode = "n" }, -- marks (line)
         { "`", mode = "n" }, -- marks (exact position)
@@ -78,6 +79,7 @@ return {
         { "<leader>s", group = "[S]earch" },
         { "<leader>t", group = "[T]est/[T]oggle" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+        { "g", group = "[G]oto", mode = { "n" } },
         { "gr", group = "LSP Actions", mode = { "n" } },
       },
     },
