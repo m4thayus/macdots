@@ -31,7 +31,6 @@ return {
         { "z", mode = "n" }, -- folds, spelling, views
         { "[", mode = "n" },
         { "]", mode = "n" }, -- diagnostic / gitsigns-style next/prev jumps
-        { "g", mode = "n" }, -- goto + general g-prefix mappings
         { '"', mode = "n" }, -- registers
         { "'", mode = "n" }, -- marks (line)
         { "`", mode = "n" }, -- marks (exact position)
