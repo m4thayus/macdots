@@ -406,7 +406,7 @@ return {
           --    https://github.com/pmizio/typescript-tools.nvim
           --
           -- But for many setups, the LSP (`ts_ls`) will work just fine
-          -- ts_ls = {},
+          -- ts_ls = {}, -- Excluded via automatic_enable.exclude (using typescript-tools instead)
           --
           codebook = {},
           eslint = {},
@@ -494,7 +494,9 @@ return {
       -- After configuring our language servers, we now enable them
       require("mason-lspconfig").setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_enable = ensure_installed, -- automatically run vim.lsp.enable() for all servers that are installed via Mason
+        automatic_enable = {
+          exclude = { "ts_ls" }, -- Don't enable ts_ls since we're using typescript-tools instead
+        },
       }
 
       -- Manually run vim.lsp.enable for all language servers that are *not* installed via Mason

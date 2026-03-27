@@ -27,6 +27,10 @@ eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 eval "$(direnv hook bash)"
 
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 function git_branch() {
   inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
 
