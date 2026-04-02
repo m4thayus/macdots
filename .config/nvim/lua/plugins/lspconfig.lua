@@ -170,27 +170,9 @@ return {
         end
         ruby_lsp_codelens_setup_done = true
 
-        local original_handler = vim.lsp.codelens.on_codelens
-        local supported = {
-          ["rubyLsp.runTest"] = true,
-          ["rubyLsp.runTask"] = true,
-          ["rubyLsp.openFile"] = true,
-        }
-
-        ---@diagnostic disable-next-line: duplicate-set-field
-        vim.lsp.codelens.on_codelens = function(err, result, ctx)
-          local client = vim.lsp.get_client_by_id(ctx.client_id)
-          if not client or client.name ~= "ruby_lsp" then
-            return original_handler(err, result, ctx)
-          end
-
-          local filtered = vim.tbl_filter(function(lens)
-            local cmd = lens.command and lens.command.command
-            return cmd and (supported[cmd] or cmd:match "^rubyLsp%.rspec")
-          end, result or {})
-
-          return original_handler(err, filtered, ctx)
-        end
+        -- NOTE: vim.lsp.codelens.on_codelens is a no-op stub in nvim 0.12+; codelens
+        -- results are handled internally by vim.lsp._capability and cannot be filtered
+        -- via on_codelens anymore. Commands are still registered so codelenses execute.
 
         vim.lsp.commands["rubyLsp.runTest"] = run_test_command
         vim.lsp.commands["rubyLsp.runTask"] = run_task_command
@@ -304,30 +286,20 @@ return {
           -- Show and run code lenses when supported (e.g. ruby-lsp and ruby-lsp-rails)
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_codeLens, event.buf) then
             local codelens_augroup = vim.api.nvim_create_augroup("kickstart-lsp-codelens-" .. event.buf, { clear = true })
-            local refresh_codelens = function(bufnr)
-              vim.lsp.codelens.refresh { bufnr = bufnr }
-            end
 
-            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-              buffer = event.buf,
-              group = codelens_augroup,
-              callback = function()
-                refresh_codelens(event.buf)
-              end,
-            })
+            -- nvim 0.12+: enable() replaces the old refresh() + autocmd pattern;
+            -- it automatically manages refresh on buffer changes and client events.
+            vim.lsp.codelens.enable(true, { bufnr = event.buf })
 
             vim.api.nvim_create_autocmd("LspDetach", {
               buffer = event.buf,
               group = codelens_augroup,
               callback = function(event2)
+                vim.lsp.codelens.enable(false, { bufnr = event2.buf })
                 vim.api.nvim_clear_autocmds { group = codelens_augroup, buffer = event2.buf }
               end,
             })
 
-            refresh_codelens(event.buf)
-            map("<leader>cr", function()
-              refresh_codelens(event.buf)
-            end, "[C]ode Lens [R]efresh")
             map("<leader>cl", vim.lsp.codelens.run, "[C]ode [L]ens run")
           end
         end,
