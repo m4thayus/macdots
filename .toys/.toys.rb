@@ -1,5 +1,45 @@
 # frozen_string_literal: true
 
+tool 'bonsai' do
+  desc 'Slow-growing bonsai screensaver that keeps your laptop awake'
+  long_desc 'Runs cbonsai in live mode via caffeinate, growing the tree over a full work day.',
+            'Pass --hours to adjust the target growth duration (default: 10).',
+            'Uses TERM=xterm-256color so colors work inside tmux.'
+
+  flag :hours, '--hours [N]', default: 10 do
+    desc 'Target hours for the tree to finish growing (default: 10)'
+    accept Float
+  end
+
+  flag :life, '--life [N]', default: 32 do
+    desc 'cbonsai --life value; higher = more complex tree (default: 32)'
+    accept Integer
+  end
+
+  # cbonsai at --life 32 grows in ~175 steps; tune STEPS if your tree
+  # finishes too early or too late.
+  BONSAI_STEPS = 175
+
+  def run
+    step_delay = (hours * 3600.0 / BONSAI_STEPS).round(2)
+    puts "Growing bonsai over #{hours}h — #{step_delay}s between steps. Ctrl-C to stop."
+
+    pid = spawn('caffeinate', '-di')
+
+    begin
+      system(
+        { 'TERM' => 'xterm-256color' },
+        'cbonsai', '--live',
+        '--time', step_delay.to_s,
+        '--life', life.to_s
+      )
+    ensure
+      Process.kill('TERM', pid)
+      Process.wait(pid)
+    end
+  end
+end
+
 tool 'colortest' do
   desc 'Run a terminal color test'
   def run
