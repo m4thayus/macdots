@@ -1,15 +1,15 @@
 new -s dev -n home
+splitw -h
+splitw -v
+send-keys -t 1 'toys bonsai' Enter
+send-keys -t 0 'brew update && brew upgrade codex claude-code claude' Enter
 new-window -n talaria -c "$MERCURY_BASE_PATH/talaria"
-splitw -h -c "$MERCURY_BASE_PATH/talaria"
-new-window -n psychopomp -c "$MERCURY_BASE_PATH/psychopomp"
-splitw -h -c "$MERCURY_BASE_PATH/psychopomp"
+splitw -h -c "$MERCURY_BASE_PATH/talaria" "bin/dev"
 new-window -n thoth -c "$MERCURY_BASE_PATH/thoth"
-new-window -n dev-home -c "$MERCURY_BASE_PATH/hg-dev-home"
-new-window -n hermes -c "$MERCURY_BASE_PATH/hermes"
-splitw -h -c "$MERCURY_BASE_PATH/hermes"
-splitw -v -c "$MERCURY_BASE_PATH/hermes"
+new-window -n psychopomp -c "$MERCURY_BASE_PATH/psychopomp"
 new-window -n livelabs -c "$MERCURY_BASE_PATH/livelabs"
 new-window -n quicksilver -c "$HOME/Projects/quicksilver"
+new-window -n dev-home -c "$MERCURY_BASE_PATH/hg-dev-home" "npm run dev"
 new-window -n production -c "$HOME"
 selectw -t 0
 
