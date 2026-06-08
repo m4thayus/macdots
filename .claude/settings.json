@@ -1,0 +1,32 @@
+{
+  "awaySummaryEnabled": false,
+  "autoUpdatesChannel": "stable",
+  "autoDreamEnabled": true,
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "chrome-devtools-mcp@chrome-devtools-plugins": true,
+    "frontend-design@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true,
+    "codex@openai-codex": true,
+    "worktrunk@worktrunk": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "worktrunk": {
+      "source": {
+        "source": "github",
+        "repo": "max-sixty/worktrunk"
+      }
+    }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "wt list statusline --format=claude-code"
+  }
+}
