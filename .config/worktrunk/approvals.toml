@@ -1,0 +1,15 @@
+[projects."github.com/mercuryanalytics/talaria"]
+approved-commands = [
+    "wt step copy-ignored",
+    "puma-dev link -n {{ branch | sanitize }}.talaria .",
+    "rm -f ~/.puma-dev/{{ branch | sanitize }}.talaria",
+]
+
+[projects."github.com/mercuryanalytics/thoth"]
+approved-commands = [
+    "wt step copy-ignored",
+    "puma-dev link -n {{ branch | sanitize }}.thoth .",
+    "echo {{ branch | hash_port }} > ~/.puma-dev/vite.{{ branch | sanitize }}.thoth",
+    "rm -f ~/.puma-dev/{{ branch | sanitize }}.thoth",
+    "rm -f ~/.puma-dev/vite.{{ branch | sanitize }}.thoth",
+]
