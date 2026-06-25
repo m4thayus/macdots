@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require 'tmpdir'
+
 tool 'bonsai' do
   desc 'Slow-growing bonsai screensaver that keeps your laptop awake'
   long_desc 'Runs cbonsai in live mode via caffeinate, growing the tree over a full work day.',
             'Pass --hours to adjust the target growth duration (default: 10).',
+            'Redraws on terminal resize (cbonsai itself ignores SIGWINCH) by restarting',
+            'with --load at the current growth point, so a resize recenters the same tree.',
             'Uses TERM=xterm-256color so colors work inside tmux.'
 
   flag :hours, '--hours [N]', default: 10 do
@@ -16,26 +20,57 @@ tool 'bonsai' do
     accept Integer
   end
 
-  # cbonsai at --life 32 grows in ~175 steps; tune STEPS if your tree
-  # finishes too early or too late.
-  BONSAI_STEPS = 175
+  flag :seed, '--seed [N]' do
+    desc 'RNG seed; fixed so resizes redraw the same tree (default: random)'
+    accept Integer
+  end
 
   def run
-    step_delay = (hours * 3600.0 / BONSAI_STEPS).round(2)
-    puts "Growing bonsai over #{hours}h — #{step_delay}s between steps. Ctrl-C to stop."
+    tree_seed = seed || rand(1..32_767)
+    save = File.join(Dir.tmpdir, "cbonsai-#{Process.pid}.save")
 
-    pid = spawn('caffeinate', '-di')
+    # Pre-grow once to /dev/null to learn this seed/life's real branch count.
+    # cbonsai's save file is "seed branchCount"; each branch is one live step,
+    # so the final count is both our step total and the unit for resize-resume.
+    system('cbonsai', '-s', tree_seed.to_s, '-L', life.to_s, '-p', '-W', save,
+           out: File::NULL, err: File::NULL)
+    total = [File.read(save).split[1].to_i, 1].max
+    step_delay = (hours * 3600.0 / total).round(3)
+    puts "Growing bonsai over #{hours}h (seed #{tree_seed}, #{total} steps, #{step_delay}s each). Ctrl-C to stop."
+
+    caffeine = spawn('caffeinate', '-di')
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    pid = nil
+    resized = false
+    # cbonsai can't redraw on resize, so wake the blocking wait below by killing
+    # it; the loop then relaunches at the current growth point for the new size.
+    trap('WINCH') do
+      resized = true
+      Process.kill('TERM', pid) if pid
+    end
 
     begin
-      system(
-        { 'TERM' => 'xterm-256color' },
-        'cbonsai', '--live',
-        '--time', step_delay.to_s,
-        '--life', life.to_s
-      )
+      loop do
+        elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+        branches = (elapsed / step_delay).to_i.clamp(0, total)
+        File.write(save, "#{tree_seed} #{branches}")
+
+        args = ['cbonsai', '--live', '--time', step_delay.to_s, '--life', life.to_s,
+                '--seed', tree_seed.to_s, '--save', save]
+        # --load rebuilds instantly to `branches` at the current terminal size
+        # (no per-step sleep) before resuming live growth.
+        args += ['--load', save] if branches.positive?
+
+        resized = false
+        pid = spawn({ 'TERM' => 'xterm-256color' }, *args)
+        Process.wait(pid) # blocks until resize-kill or the tree finishes growing
+        break unless resized
+      end
     ensure
-      Process.kill('TERM', pid)
-      Process.wait(pid)
+      trap('WINCH', 'DEFAULT')
+      Process.kill('TERM', caffeine)
+      Process.wait(caffeine)
+      File.delete(save) if File.exist?(save)
     end
   end
 end
