@@ -1,7 +1,8 @@
 {
-  "awaySummaryEnabled": false,
-  "autoUpdatesChannel": "stable",
-  "autoDreamEnabled": true,
+  "statusLine": {
+    "type": "command",
+    "command": "wt list statusline --format=claude-code"
+  },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "chrome-devtools-mcp@chrome-devtools-plugins": true,
@@ -9,7 +10,12 @@
     "clangd-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true,
     "codex@openai-codex": true,
-    "worktrunk@worktrunk": true
+    "worktrunk@worktrunk": true,
+    "ponytail@ponytail": true,
+    "educational-style@private-agent-plugins": true,
+    "mercury-coding-standards@private-agent-plugins": true,
+    "mercury-pr-rescue@private-agent-plugins": true,
+    "talaria-naming-conventions@private-agent-plugins": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -23,10 +29,21 @@
         "source": "github",
         "repo": "max-sixty/worktrunk"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "private-agent-plugins": {
+      "source": {
+        "source": "git",
+        "url": "git@github.com:mercuryanalytics/private-agent-plugins.git"
+      }
     }
   },
-  "statusLine": {
-    "type": "command",
-    "command": "wt list statusline --format=claude-code"
-  }
+  "awaySummaryEnabled": false,
+  "autoUpdatesChannel": "stable",
+  "autoDreamEnabled": true
 }
