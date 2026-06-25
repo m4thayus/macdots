@@ -8,10 +8,11 @@ tool 'import' do
     FileUtils.mkdir_p(dest)
 
     Dir['*.jpg'].each do |jpg|
-      png = "#{File.basename(jpg, '.jpg')}.png"
-      exec(['gm', 'convert', '-verbose', jpg, png])
-      # -n: never clobber an existing background
-      exec(['mv', '-vn', png, dest])
+      system('gm', 'convert', '-verbose', jpg, "#{File.basename(jpg, '.jpg')}.png")
     end
+
+    # Move every png — both freshly converted and any already in the dir.
+    # -n: never clobber an existing background.
+    Dir['*.png'].each { |png| system('mv', '-vn', png, dest) }
   end
 end
