@@ -15,7 +15,8 @@ tool 'encode' do
   desc 'Encode an image as a base64 data: URL in a TS module (file.png -> file.ts)'
 
   optional_arg :file, complete: :file_system
-  flag :type, '--type EXT', desc: 'Image type when piping via stdin (png/jpg/gif)'
+  flag :type, '--type EXT', complete_values: MIME.keys,
+       desc: 'Image type when piping via stdin (png/jpg/gif)'
 
   def run
     file = options[:file]
