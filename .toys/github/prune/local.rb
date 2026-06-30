@@ -2,7 +2,8 @@
 
 desc 'Prune local branches merged on origin, or that you never authored'
 long_desc \
-  'For each local branch (skipping the current one and origin\'s default),',
+  'For each local branch (skipping the current one, origin\'s default, and the',
+  'long-lived "staging" deploy branch),',
   'prune it if: it is merged into origin\'s default branch (ancestor check,',
   'then merged-PR state via gh to catch squash merges), its PR was closed',
   'without merging, or you have no commits on it — e.g. a branch you checked',
@@ -37,7 +38,9 @@ rescue Errno::EPIPE
 end
 
 def branches
-  skip = [default_branch, `git branch --show-current`.strip]
+  # 'staging' is a long-lived deploy branch: it's an ancestor of main between
+  # deploys, so merged-local would otherwise delete it on every run.
+  skip = [default_branch, 'staging', `git branch --show-current`.strip]
   `git for-each-ref --format='%(refname:short)' refs/heads`.split("\n") - skip
 end
 
