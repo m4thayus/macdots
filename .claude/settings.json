@@ -15,7 +15,8 @@
     "educational-style@private-agent-plugins": true,
     "mercury-coding-standards@private-agent-plugins": true,
     "mercury-pr-rescue@private-agent-plugins": true,
-    "talaria-naming-conventions@private-agent-plugins": true
+    "talaria-naming-conventions@private-agent-plugins": true,
+    "mercury-cleanup-pass@private-agent-plugins": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -40,7 +41,8 @@
       "source": {
         "source": "git",
         "url": "git@github.com:mercuryanalytics/private-agent-plugins.git"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "awaySummaryEnabled": false,
