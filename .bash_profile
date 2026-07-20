@@ -11,6 +11,7 @@ export EDITOR=nvim
 export MERCURY_BASE_PATH="$HOME/Projects/mercury"
 export CDPATH=".:$HOME:$HOME/Projects:$MERCURY_BASE_PATH:$HOME/Documents"
 export AWS_USER=mattw
+export AWS_PROFILE=mercury
 export DELTA_PAGER="less -RC"
 export PROMPT_COMMAND='echo -ne "\033]0;${PWD/$HOME/~}\007"'
 
