@@ -1,27 +1,41 @@
 # frozen_string_literal: true
 
 tool 'authorize' do
-  desc 'Exchange an MFA token code for 24h session credentials'
+  desc 'Log in via AWS SSO (opens a browser)'
 
-  required_arg :token_code
-  flag :user, '--user USER', default: ENV['AWS_USER']
+  flag :profile, '--profile PROFILE', default: ENV['AWS_PROFILE']
 
   def run
-    require 'aws-sdk-core'
+    # aws sso login blocks until the browser callback completes, so a plain
+    # shell-out is all we need — no callback plumbing on our side.
+    cmd = ['aws', 'sso', 'login']
+    cmd += ['--profile', profile] if profile
+    exit(1) unless system(*cmd)
+  end
 
-    creds = Aws::STS::Client.new(
-      credentials: Aws::SharedCredentials.new(profile_name: 'mfa'),
-      region: 'us-east-1'
-    ).get_session_token(
-      duration_seconds: 24 * 60 * 60,
-      serial_number: "arn:aws:iam::681124311158:mfa/#{user}",
-      token_code: options[:token_code]
-    ).credentials
+  tool 'legacy' do
+    desc 'Exchange an MFA token code for 24h session credentials (pre-SSO)'
 
-    # Be sure to install `awscli` with homebrew
-    `aws configure set aws_access_key_id "#{creds.access_key_id}"`
-    `aws configure set aws_secret_access_key "#{creds.secret_access_key}"`
-    `aws configure set aws_session_token "#{creds.session_token}"`
+    required_arg :token_code
+    flag :user, '--user USER', default: ENV['AWS_USER']
+
+    def run
+      require 'aws-sdk-core'
+
+      creds = Aws::STS::Client.new(
+        credentials: Aws::SharedCredentials.new(profile_name: 'mfa'),
+        region: 'us-east-1'
+      ).get_session_token(
+        duration_seconds: 24 * 60 * 60,
+        serial_number: "arn:aws:iam::681124311158:mfa/#{user}",
+        token_code: options[:token_code]
+      ).credentials
+
+      # Be sure to install `awscli` with homebrew
+      `aws configure set aws_access_key_id "#{creds.access_key_id}"`
+      `aws configure set aws_secret_access_key "#{creds.secret_access_key}"`
+      `aws configure set aws_session_token "#{creds.session_token}"`
+    end
   end
 end
 
