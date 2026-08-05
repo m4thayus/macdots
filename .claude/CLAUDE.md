@@ -38,6 +38,10 @@ repo" section of `~/README.md` before running it.
 - Use `macdots`, never a hand-rolled `git --git-dir=$HOME/.macdots.git ...`.
   The wrapper carries the guard; the raw form silently bypasses it.
 - Pathspecs resolve against cwd, not `$HOME`. `cd ~` first or use full paths.
+- **This repo is public — keep commit messages to what changed and the durable
+  why.** A message that spells out what a change was defending against is a map
+  of the weakness for anyone reading back through history. Rules in tracked
+  docs have to name specifics to function; history does not.
 
 **Why:** tracking dotfiles where they actually live (rather than symlinking
 them out of a single directory) is the whole point of the design, but it means
