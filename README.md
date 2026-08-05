@@ -3,6 +3,18 @@
 Configuration for my (macOS-based) dev environment, managed as a bare git repo
 (`git --git-dir=$HOME/.macdots.git --work-tree=$HOME`, aliased `macdots`).
 
+The alias lives in `.bash_aliases` (sourced from `.bashrc`), so it only exists
+in interactive bash — not zsh, and not in scripts or agent shells. From a
+non-interactive shell, either spell out the `git --git-dir=... --work-tree=...`
+form or source it *and put the command on its own line* (bash expands aliases
+at parse time, so a same-line `source ~/.bash_aliases; macdots ...` still
+fails):
+
+```bash
+shopt -s expand_aliases; source ~/.bash_aliases
+macdots status
+```
+
 A short list of configured apps and tools:
 
 - Terminal Emulator: kitty or alacritty with tmux as a multiplexer
