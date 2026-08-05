@@ -1,0 +1,51 @@
+#!/bin/sh
+# Bare-repo git wrapper for the dotfiles in $HOME.
+#
+# A script on PATH rather than only a shell alias: aliases exist only in
+# interactive bash, so zsh, scripts, cron and coding agents could not reach it
+# and would hand-roll the --git-dir form (dropping the guard below with it).
+#
+# THE WORK TREE IS ALL OF $HOME and .gitignore excludes only .macdots.git.
+# That is deliberate — the repo tracks dotfiles where they actually live — but
+# it means any command that walks untracked files stats every file under
+# $HOME: Library, Projects, node_modules, every cache. That has hard-locked
+# this machine. The repo sets status.showUntrackedFiles=no so the default is
+# safe; this guard stops the flags that override it.
+#
+# Escape hatch, if you genuinely mean it and have scoped it to a subdirectory:
+#   git --git-dir="$HOME/.macdots.git" --work-tree="$HOME" ...
+#
+# Deliberately does not cd to $HOME: pathspecs should resolve against your cwd
+# like they do in any other repo. This repo has enough exceptions already.
+#
+# Deliberately POSIX sh, not Ruby, despite Ruby being the norm here: rbenv is
+# configured by these very dotfiles, so a wrapper that needs it cannot be used
+# to repair them on a fresh or half-broken machine — which is exactly when it
+# is needed. sh also keeps this out of the shim path on every invocation.
+refuse() {
+	echo "macdots: refusing '$1' — it walks all of \$HOME and can lock up the machine." >&2
+	echo "macdots: see the 'Working in this repo' section of ~/README.md." >&2
+	exit 2
+}
+
+case "$1" in
+	clean) refuse "clean" ;;
+	status)
+		for arg in "$@"; do
+			case "$arg" in
+			-uno | --untracked-files=no) ;;
+			-u* | --untracked-files | --untracked-files=*) refuse "$arg" ;;
+			esac
+		done
+		;;
+	add)
+		# ponytail: -A/--all only; `add -u` is tracked-files-only and safe.
+		for arg in "$@"; do
+			case "$arg" in
+			-A | --all) refuse "$arg" ;;
+			esac
+		done
+		;;
+esac
+
+exec git --git-dir="$HOME/.macdots.git" --work-tree="$HOME" "$@"

@@ -9,7 +9,10 @@ alias ssh="TERM=xterm ssh"
 alias docker="podman"
 alias be="bundle exec"
 
-alias macdots="$(brew --prefix)/bin/git --git-dir=$HOME/.macdots.git/ --work-tree=$HOME"
+# Points at the script rather than re-spelling the git invocation: an inlined
+# --git-dir form here would silently bypass the script's guard against commands
+# that walk all of $HOME. See ~/README.md.
+alias macdots="$HOME/.local/bin/macdots"
 
 alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
 alias pmux="tmux source-file ~/.config/tmux/prose \; attach"

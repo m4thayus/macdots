@@ -1,0 +1,86 @@
+# Allowlist: everything under $HOME is ignored unless admitted below.
+#
+# The work tree is all of $HOME and this repo is public, so the default has to
+# be "not published" — a blacklist only protects what it thought to name. It
+# also keeps untracked walks cheap. See ~/README.md before running any
+# whole-tree git command here.
+#
+# Newly tracked paths need a line below. That surfaces as `macdots add`
+# refusing the file, which is the right moment to decide whether it belongs in
+# a public repo.
+#
+# Directories take the un-ignore/re-ignore dance, since git will not descend
+# into an excluded directory to find a negation:
+#
+#     !/.foo/          <- admit the directory itself
+#     /.foo/*          <- but not its contents by default
+#     !/.foo/bar       <- admit just this
+
+/*
+!/.gitignore
+!/README.md
+
+# Shell
+!/.bash_aliases
+!/.bash_profile
+!/.bashrc
+
+# Git
+!/.gitconfig
+!/.gitexcludes
+!/.ignore
+
+# Editors, linters, window manager
+!/.amethyst.yml
+!/.goaccessrc
+!/.rubocop.yml
+!/.vimrc
+
+# XDG config — gated per app so unrelated application state cannot drift in
+!/.config/
+/.config/*
+!/.config/alacritty/
+!/.config/bat/
+!/.config/codebook/
+!/.config/kitty/
+!/.config/nvim/
+!/.config/nvim-legacy/
+!/.config/tmux/
+!/.config/worktrunk/
+
+# rclone, gated to the tracked file only
+!/.config/rclone/
+/.config/rclone/*
+!/.config/rclone/exclude.conf
+
+# Custom Toys commands — ours end to end
+!/.toys/
+
+# Scripts on PATH; the rest of .local is installed artifacts
+!/.local/
+/.local/*
+!/.local/bin/
+
+# Agent tooling — config only, none of the session or cache churn
+!/.claude/
+/.claude/*
+!/.claude/CLAUDE.md
+!/.claude/settings.json
+
+# Version pins
+!/.bundle/
+/.bundle/*
+!/.bundle/config
+!/.nodenv/
+/.nodenv/*
+!/.nodenv/version
+!/.rbenv/
+/.rbenv/*
+!/.rbenv/version
+
+# Belt and braces, since these can appear inside directories admitted above
+.DS_Store
+.env
+.env.*
+*.key
+*.pem

@@ -21,6 +21,29 @@ Leave the files you touch better than you found them. When a change makes someth
 
 The recurring failure mode this guards against is leaving a half-done state after a change — and, after a merge that mixes someone else's work into files you refactored, assuming the cleanup "stuck" without re-checking. Re-scan; don't assume.
 
+## `$HOME` Is a Git Work Tree
+
+My dotfiles are a bare repo whose work tree is **all of `$HOME`**, driven by
+`~/.local/bin/macdots` (also aliased `macdots`). Read the "Working in this
+repo" section of `~/README.md` before running it.
+
+- **Never** `macdots status -u` / `-uall` / `--untracked-files=...`, `add -A`,
+  `add .` from `$HOME`, or `clean`. Each walks every file on the machine, which
+  has locked it up badly enough to need a reboot. `status.showUntrackedFiles=no`
+  plus an allowlist `~/.gitignore` keep the defaults safe; those flags defeat
+  both. Add explicit paths, always — the repo is public.
+- **To enumerate files under `$HOME`, reach for `ls`/`fd`, not git.** Git here
+  is for the tracked set only — if the question is "what's in this directory",
+  git is the wrong tool and the expensive one.
+- Use `macdots`, never a hand-rolled `git --git-dir=$HOME/.macdots.git ...`.
+  The wrapper carries the guard; the raw form silently bypasses it.
+- Pathspecs resolve against cwd, not `$HOME`. `cd ~` first or use full paths.
+
+**Why:** tracking dotfiles where they actually live (rather than symlinking
+them out of a single directory) is the whole point of the design, but it means
+normal git reflexes are actively wrong here. Treat any whole-tree operation as
+suspect, and show me the command and its blast radius before running it.
+
 ## Delegate Code Search to Subagents
 
 When getting bearings on scope in a large repo, dispatch a subagent (Explore / general-purpose) to do the grepping and file-reading and return only the distilled results. Do NOT run broad greps or bulk file Reads in the main context.
