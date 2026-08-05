@@ -46,10 +46,12 @@ as `toys <namespace> <command>`:
 
 ## Using this elsewhere
 
-**Cherry-pick it.** That is the recommended way to use this repo and, for most
-people, the only one worth bothering with. Nothing here assumes the rest of it,
-so browse the tree, take the config you want and leave the rest. You skip the
-bare-repo mechanics entirely, and with them the rest of this README.
+**Cherry-pick it** — in the ordinary sense, not `git cherry-pick`. That is the
+recommended way to use this repo and, for most people, the only one worth
+bothering with. Nothing here assumes the rest of it, so browse the tree, copy
+out the config you want and leave the rest. No clone required; reading it here
+on GitHub and pasting what you like is a perfectly good way to do this. You
+skip the bare-repo mechanics entirely, and with them the rest of this README.
 
 ### Installing the whole thing
 
