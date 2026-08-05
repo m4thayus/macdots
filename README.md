@@ -44,6 +44,38 @@ as `toys <namespace> <command>`:
 | **ffmpeg**, **backgrounds**, **text** | Media and text helpers |
 | **rails**, **talaria**, **thoth** | Project dev shortcuts |
 
+## Using this elsewhere
+
+**Cherry-pick it.** That is the recommended way to use this repo and, for most
+people, the only one worth bothering with. Nothing here assumes the rest of it,
+so browse the tree, take the config you want and leave the rest. You skip the
+bare-repo mechanics entirely, and with them the rest of this README.
+
+### Installing the whole thing
+
+Read this the way you would a build-from-source section: it exists for future
+me, and for anyone who already knows what a bare dotfiles repo does to a home
+directory. It is not the recommended path and it is not reversible in any
+casual sense — `$HOME` becomes a git work tree, which changes how git behaves
+there from then on.
+
+```bash
+git clone --bare git@github.com:m4thayus/macdots.git "$HOME/.macdots.git"
+git --git-dir="$HOME/.macdots.git" --work-tree="$HOME" checkout
+git --git-dir="$HOME/.macdots.git" --work-tree="$HOME" config status.showUntrackedFiles no
+```
+
+`checkout` refuses rather than clobbering anything already in `$HOME`; move
+those files aside or delete them, your call. The third line is belt-and-braces
+— `.local/bin/macdots` forces it anyway — but it makes the raw `git --git-dir=`
+form safe too, and you will be using that until `PATH` picks the script up.
+
+Then read the section below before doing anything else, because from that point
+on `$HOME` is a git work tree and that has consequences.
+
+All of this is offered as-is. It is shaped around my machine and my habits, so
+expect to adapt it rather than have it fit.
+
 ## Working in this repo
 
 `macdots` is a script at `.local/bin/macdots`, on `PATH`, so it works from any
@@ -61,9 +93,9 @@ published.
 > Anything that walks *untracked* files touches every file on the machine. That
 > is not merely slow: it has locked this machine hard enough to need a reboot.
 > Never run `macdots status -u` (or `-uall`, `--untracked-files=...`),
-> `add -A`, `add .` from `$HOME`, or `clean`. The repo sets
+> `add -A`, `add .` from `$HOME`, or `clean`. The wrapper forces
 > `status.showUntrackedFiles=no` so the bare defaults are instant and safe;
-> those flags defeat that. Add explicit paths, always.
+> those flags defeat it. Add explicit paths, always.
 
 Otherwise:
 

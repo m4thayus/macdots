@@ -48,4 +48,8 @@ case "$1" in
 		;;
 esac
 
-exec git --git-dir="$HOME/.macdots.git" --work-tree="$HOME" "$@"
+# showUntrackedFiles is forced here rather than left to repo-local config: that
+# config lives inside the git dir, so it is not tracked and a fresh clone would
+# come up without it. Baked in, the safe default travels with this script.
+exec git -c status.showUntrackedFiles=no \
+	--git-dir="$HOME/.macdots.git" --work-tree="$HOME" "$@"
