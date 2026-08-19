@@ -10,6 +10,31 @@ This applies to:
 - PR descriptions and commit messages
 - Any time I'm recording that something was deferred or chosen over an alternative
 
+## Comments in Code
+
+**Code trumps a comment.** Before writing one, ask whether the code can be renamed, restructured, or
+split so the comment becomes unnecessary. Treat every comment you reach for as a signal that the code
+beneath it falls short in some degree. Sometimes it doesn't and the comment is right. Often the honest
+fix is the name.
+
+**The carve-out is configuration.** A setting's wording is frequently opaque on its own terms, and its
+*why* is rarely derivable from the value. Comment config freely.
+
+A code comment states the rule the code follows now. It never narrates the change that produced it.
+Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old
+`@import`", "was harmless but", "used to". The diff and the commit message carry the change. The
+comment carries the rule.
+
+**One fact, one home.** A fact restated in a second file becomes a pointer to the first. The
+exception is load-bearing: a fact that keeps two files in sync belongs in both. Test it — could an
+editor of *this* file break the invariant without seeing the other one? Yes means replicate it. And
+prefer one rationale attached to the rule it justifies over a section header that re-explains the
+section beneath it.
+
+**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing is
+gone, and the next reader can't tell which half is still true. This pairs with Always Capture the Why
+rather than competing with it — keep the reason, drop the chronology.
+
 ## Write in Simplified Technical English (flavored)
 
 Default prose style for everything you write for a reader: review comments, explanations, commit
@@ -155,65 +180,22 @@ Two habits to drop on the way through: preemptively absolving the recipient ("so
 the rule correctly", "that's not on you"), and reaching for a specific example when a general
 statement is what was asked for.
 
-### Review comments: label the stance
+### Reviewing code
 
-Simplified Technical English fixes the sentence. It says nothing about how sure you are or whether
-the author has to act, and that gap is the other half of what makes a review hard to work through.
-So write every review comment in the [Conventional Comments](https://conventionalcomments.org/)
-format:
+**Invoke the `review-changes` skill before writing a single review comment.** It owns the whole
+procedure: resolving the target, verifying my claims independently, triage, where each finding goes,
+the [Conventional Comments](https://conventionalcomments.org/) format and its labels, and the
+Approve-versus-Request-Changes call. A review written without the skill is a review written without
+the format.
 
-```
-<label> [decoration]: <subject>
+**Notes-only while a review is running.** Produce findings. Don't edit files, run renames, or
+refactor, even when I say something imperative like "just do the crate shifting". An
+imperative-sounding phrase during a review describes the work, or calls it mechanical. It isn't
+authorization. Wait for "make the change" or a clear equivalent.
 
-<discussion>
-```
-
-The subject is one short line carrying the ask and nothing else. Reasoning, context, and next steps
-go below the blank line. That split is lead-with-the-verdict applied per comment, and it is the part
-that does the work — a label followed by one undifferentiated blob is the same comment with a prefix
-bolted on.
-
-Labels, and the distinction each one carries:
-- `issue:` — a specific problem with the code. Blocking unless it says otherwise.
-- `suggestion:` — an improvement to the code. Name the replacement, not just the objection. Add
-  `(blocking)` when the change is necessary rather than optional.
-- `question:` — a potential concern where you genuinely don't know. Not a rhetorical device for an
-  objection you have already formed.
-- `nitpick:` — trivial and preference-based. Always non-blocking. Covers typos and polish.
-- `thought:` — an idea that came out of reading the diff, not a request. Always non-blocking. Keep
-  it to a couple of lines.
-- `chore:` — process rather than code. Changelog entry, ticket link, screenshot.
-- `praise:` — worth keeping. No decoration.
-
-**Describe the change. Don't write it.** This governs every label, not just `suggestion:`. Name the
-approach, the existing helper to reach for, the invariant to preserve, or the case the current code
-misses. Never hand the author a drop-in patch or a paste-ready snippet.
-
-**Why:** a patch invites the author to accept it without reading it, so the code lands with nobody
-understanding why. It also moves the design decision from the person who owns the file to the person
-who skimmed it. A described change makes the author choose, which is the point of the review.
-
-Use a code fragment only where the shape resists prose — a type signature, a single expression, a
-function name. Keep it short enough that pasting it would not compile on its own.
-
-Decorations: `(blocking)`, `(non-blocking)`, `(if-minor)`. The last one hands the judgment to the
-author, who resolves it only if the fix stays small. Add a decoration only where the label leaves
-severity open, and never stack two. `nitpick:`, `thought:`, and `praise:` are non-blocking by
-definition, so decorating them is noise.
-
-Skip the spec's `todo:` and `note:` labels. `todo:` collides with `TODO` comments in code, which
-carry a different meaning to the team. `note:` is non-blocking by definition, so it is a decoration
-wearing a label's clothes.
-
-**Why:** the label does the work the prose was failing at. Unlabelled, the author has to
-reverse-engineer severity from tone — so a hedge reads as optional and a plain statement reads as a
-demand. Naming the stance lets the sentence stay plain and stops politeness from hiding the ask.
-
-**Volume is part of readability.** Fifteen labelled findings are still fifteen findings, and no
-rewrite fixes a review that says too much. Before showing me one: cut anything that only restates
-the diff, collapse repeats of the same point into one comment that names the other sites, and lead
-with the blocking items. If there are more than about three blocking issues, say so at the top
-instead of making me count.
+**Why this one rule and not the others:** a session can drift into reviewing without ever invoking a
+skill, and the cost of missing it lands outside the session as commits on a colleague's branch.
+Everything else in a review is recoverable before it's posted.
 
 ## Delegate Code Search to Subagents
 
