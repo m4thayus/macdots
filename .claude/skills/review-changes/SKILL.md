@@ -32,9 +32,9 @@ Run no Edit, no Write, and no `git mv` during a review. An imperative-sounding p
 describes the work. It does not authorize the work. "Just do the crate shifting" characterizes a
 change as mechanical. Only "make the change", or a clear equivalent, authorizes one.
 
-Detect whose branch it is before any edit. Run `git log <base>..HEAD --format='%an'`. If the user
-authored no commits, the branch belongs to someone else. Treat it as review mode until told
-otherwise.
+Detect whose branch it is before any edit. Run `git log <base>..HEAD --format='%an'`. If any name
+other than the user's appears, the branch is someone else's. Stay in review mode until told
+otherwise. A branch the user pushed one commit to is still not the user's branch.
 
 Self-review does not relax this rule on its own. Produce the findings first. Applying them is a
 separate step the user asks for.
@@ -44,7 +44,8 @@ conclusions the user can relay, not commits nobody asked for.
 
 **2. Post once.**
 
-Accumulate findings in a scratch file outside the repo. Never post per file as the walk proceeds.
+Accumulate findings in a scratch file under `/tmp`, never inside the work tree. Never post per file
+as the walk proceeds.
 Post the whole review in one pass at the end.
 
 **Why:** piecemeal comments fragment the review. They re-ping the author on every push. They lose
@@ -82,6 +83,18 @@ with the call you made. Never resolve one silently. Keep it brief and let the us
 A finding that flips the verdict is not an escalation. Recommend the verdict and let the user override
 it.
 
+## Write every artifact in Simplified Technical English
+
+`references/style.md` carries the rules for everything this skill produces. Read it before you write
+the body or a comment.
+
+Which artifact takes which mode.
+
+- **Strict.** A comment subject line, and every prompt you send a subagent. A wrong reading there
+  costs the author a round.
+- **Flavored.** The discussion under a subject, and the review body. Contractions and some range read
+  better there.
+
 ## Step 0. Resolve the target
 
 Resolve the target before reading any code. Use the first of these that applies.
@@ -101,7 +114,7 @@ Fail here on a bad ref or an empty diff. Do not fail inside a subagent.
 ## Step 1. Collect the author's claims
 
 Read the PR body, the commit messages, and the review-request text. Turn each claim into a row to
-verify. A claim is anything the author asserts about behaviour, scope, or the reason for a change.
+verify. A claim is anything the author asserts about behavior, scope, or the reason for a change.
 
 Verify by running something wherever you can. Reading the code is weaker evidence than executing it.
 Grep for the callers. Run the spec. Check whether the pattern the author says is new already exists
@@ -110,15 +123,20 @@ on main.
 Say in the body what you verified and how. That is the evidence for the verdict. A table helps when
 there are several claims, and it is not required.
 
-## Step 2. Fan out the axes
+## Step 2. Run the axes
 
-Run one subagent per axis. Never read the whole diff into the main context.
+Run every applicable axis. Deciding early that a change is "just" a rename is how the design-level
+findings get skipped.
 
-Run every applicable axis, even when the diff looks small or purely mechanical. Deciding early that a
-change is "just" a rename is how the design-level findings get skipped.
+**Scale the fan-out to the diff.** Where reading the whole diff is cheap, read it and run the axes
+yourself in one pass. Fan out one subagent per axis when the diff is too large to hold, or when an
+axis needs deep independent digging. The choice governs how the work gets dispatched. It never
+governs which questions get asked.
 
-Give every subagent the diff command, the commit list, and this instruction: report findings only,
-under 400 words, and no prose summary.
+Where you fan out, give every subagent the diff command, the commit list, and this instruction:
+report findings only, under 400 words, and no prose summary. Pass the absolute path to every
+reference file the axis needs, resolved from this skill's base directory. A subagent never sees this
+file, so a relative path and a pointer to a section both reach nothing.
 
 Require every finding to carry five fields.
 
@@ -130,13 +148,14 @@ Require every finding to carry five fields.
 
 Run these axes.
 
-- **Correctness.** Bugs, wrong behaviour, missing cases, swallowed errors, unhandled state.
+- **Correctness.** Bugs, wrong behavior, missing cases, swallowed errors, unhandled state.
 - **Claims.** Does the diff do what the author says it does? Report requirements that are missing or
-  partial, behaviour nobody asked for, and claims the code contradicts. Quote the claim per finding.
-- **Standards and smells.** Read `references/smell-baseline.md` and apply it. For language rules,
-  invoke the matching standards skill if present, and do not restate its rules:
-  `mercury-ruby-standards` for `.rb` and RSpec, `mercury-typescript-standards` for `.ts`, `.tsx`,
-  `.js`, and `.css`, `mercury-vitest-standards` for Vitest specs.
+  partial, behavior nobody asked for, and claims the code contradicts. Quote the claim per finding.
+- **Standards and smells.** Skip this axis on a prose-only diff, because Step 2b owns prose. Apply
+  `references/smells.md`. For language rules, invoke the matching standards skill if present,
+  and do not restate its rules: `mercury-ruby-standards` for `.rb` and RSpec,
+  `mercury-typescript-standards` for `.ts`, `.tsx`, `.js`, and `.css`, `mercury-vitest-standards` for
+  Vitest specs.
 - **Comments the diff adds.** See Step 2a.
 - **Docs prose.** Run this axis only when the diff touches `.md` or `.mdx`. See Step 2b.
 
@@ -148,13 +167,13 @@ Code can follow every standard and still implement the wrong thing.
 Sweep every comment the diff adds or changes. Look for four things.
 
 1. **Historical narration.** A comment states the rule the code follows now. It does not narrate the
-   change that produced it. Signature phrases to grep for: "now applies", "rather than", "under the
-   old", "was harmless but", "used to".
+   change that produced it. Signature phrases to grep for: "now applies", "under the old", "was
+   harmless but", "used to".
 2. **One fact, one home.** A fact restated in a second file becomes a pointer to the first.
 3. **Verbosity.** A paragraph where one sentence carries the rule.
 4. **A header that re-explains its section.** Prefer one rationale attached to the rule it justifies.
 
-**The exception to rule 2 is load-bearing.** A fact that keeps two files in sync belongs in both.
+**The exception to one fact, one home is load-bearing.** A fact that keeps two files in sync belongs in both.
 Test it: could an editor of *this* file break the invariant without seeing the other file? Yes means
 replicate the fact. No means make it a pointer.
 
@@ -165,8 +184,9 @@ Treat any comment that does not match what the code does as a correctness lead.
 
 Review changed prose on two axes, not one.
 
-First, style. Split unsplit seams at an em dash or a semicolon. Use active voice with a named actor.
-Use a numbered list for three or more steps. Use one term per concept.
+First, style. Check changed prose against `references/style.md`, and name the mode each changed
+file falls under. A violation in a file that sets the rule itself is the strongest form of this
+finding.
 
 Second, accuracy. Check every claim the prose makes against the code. A rewritten justification is a
 claim, not decoration. This axis finds factual errors, so never treat it as a style pass alone.
@@ -175,8 +195,8 @@ claim, not decoration. This axis finds factual errors, so never treat it as a st
 
 Reconcile what Step 2 returned. Do not re-run it.
 
-**Trust each axis on its own finding.** The subagent already did that verification. Repeating it in
-the main context defeats the fan-out and floods the context the fan-out protected.
+**Trust each axis on its own finding.** Where a subagent ran it, that verification is done. Repeating
+it in the main context defeats the fan-out and floods the context the fan-out protected.
 
 **Own the recommendation.** That part is yours, not the subagent's. Check every proposed fix against
 Step 5 before it becomes a comment. Watch for the retired symptom: a fix that resolves the visible
@@ -200,8 +220,8 @@ For each surviving finding, ask these five questions.
 | Is this a public API / library surface? | yes | no, closed app, internal use |
 | Does main already use the same pattern elsewhere without issues? | no | yes, not a new risk class |
 
-Real findings become comments. Theoretical findings either get dropped or become an adjacent note
-that says why. Defensive programming suits a system boundary. It does not suit internal code with a
+Real findings become comments. Drop a theoretical finding, or turn it into an adjacent note that says
+why it is theoretical. Defensive programming suits a system boundary. It does not suit internal code with a
 structural guarantee.
 
 The last row does the most work. "Main already does this" turns a finding into an adjacent note
@@ -247,7 +267,7 @@ confusion. Name the comments it refers to, or cut the sentence.
 
 ## Step 5. Write each comment
 
-Use the Conventional Comments format.
+Use the [Conventional Comments](https://conventionalcomments.org/) format.
 
 ```
 <label> [decoration]: <subject>
@@ -273,13 +293,18 @@ Labels, and the distinction each one carries:
 - `chore:` Process rather than code. A changelog entry, a ticket link, a screenshot.
 - `praise:` Worth keeping. No decoration.
 
-Decorations: `(blocking)`, `(non-blocking)`, `(if-minor)`. The last one hands the judgement to the
+**Why:** the label does the work the prose was failing at. Unlabelled, the author reverse-engineers
+severity from tone, so a hedge reads as optional and a plain statement reads as a demand. Naming the
+stance lets the sentence stay plain.
+
+Decorations: `(blocking)`, `(non-blocking)`, `(if-minor)`. The last one hands the judgment to the
 author, who resolves it only if the fix stays small. Add a decoration only where the label leaves
 severity open. Never stack two. Never decorate `nitpick:`, `thought:`, or `praise:`, because those
 are non-blocking by definition.
 
 Skip the `todo:` and `note:` labels from the specification. `todo:` collides with `TODO` comments in
-code. `note:` is non-blocking by definition, so it is a decoration wearing a label's clothes.
+code, which carry a different meaning to the team. `note:` is non-blocking by definition, so it is a
+decoration wearing a label's clothes.
 
 ### Describe the change. Do not write it.
 
@@ -300,9 +325,9 @@ A change request is a prompt. Reviews get pasted into an agent as a matter of co
 picks the mode the reader drops into.
 
 **Prescriptive framing produces execution mode.** A named fix gets good, well-scoped work. Its
-ceiling is exactly your own insight. It cannot find what no comment points at. Its failure is subtle:
-a correctly-scoped fix retires the only symptom of a defect, leaves the defect, and correctly reports
-that as someone else's problem.
+ceiling is exactly your own insight. It cannot find what no comment points at. Its failure is subtle.
+A correctly-scoped fix retires the only symptom of a defect. The defect stays, and the fixer correctly
+reports it as out of scope.
 
 **Diagnostic framing produces design mode.** Naming the problem and leaving the fix open finds things
 no comment pointed at. Its failure is a finding that is directionally real with a wrong
@@ -321,7 +346,7 @@ count.
 
 The deciding question is "is a re-review needed?" It is not "are there issues to fix?"
 
-**Approve, with notes,** when the issues are mechanical, scope judgements the author has better
+**Approve, with notes,** when the issues are mechanical, scope judgments the author has better
 context for, cleanup the author can execute unsupervised, naming opinions, or follow-up flags.
 
 **Request Changes** when the issues are architecture or design problems, real security or performance
@@ -340,6 +365,6 @@ Show the body and every comment. Wait for the go-ahead. Post once.
 - **Findings, never edits.** This skill diagnoses. `cleanup-pass` applies changes to code the user
   owns, and it keeps the post-merge re-scan that no review covers. Self-review runs this skill for
   the findings, then hands applying them to a separate explicit step.
-- **Judgement, not mechanics.** Whether tests, lint, and typecheck pass belongs to
+- **Judgment, not mechanics.** Whether tests, lint, and typecheck pass belongs to
   `verification-before-completion`.
 - **Language rules live in the standards skills.** Reference them. Never restate them.

@@ -21,9 +21,13 @@ fix is the name.
 *why* is rarely derivable from the value. Comment config freely.
 
 A code comment states the rule the code follows now. It never narrates the change that produced it.
-Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old
-`@import`", "was harmless but", "used to". The diff and the commit message carry the change. The
-comment carries the rule.
+Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old X",
+"was harmless but", "used to". The diff and the commit message carry the change. The comment carries
+the rule.
+
+**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing is
+gone, and the next reader can't tell which half is still true. This pairs with Always Capture the Why
+rather than competing with it — keep the reason, drop the chronology.
 
 **One fact, one home.** A fact restated in a second file becomes a pointer to the first. The
 exception is load-bearing: a fact that keeps two files in sync belongs in both. Test it — could an
@@ -31,17 +35,12 @@ editor of *this* file break the invariant without seeing the other one? Yes mean
 prefer one rationale attached to the rule it justifies over a section header that re-explains the
 section beneath it.
 
-**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing is
-gone, and the next reader can't tell which half is still true. This pairs with Always Capture the Why
-rather than competing with it — keep the reason, drop the chronology.
-
 ## Write in Simplified Technical English (flavored)
 
 Default prose style for everything you write for a reader: review comments, explanations, commit
 messages, status reports, docs, code comments. The standard is named so the rules are checkable
-instead of vibes — ASD-STE100 Simplified Technical English, in the "flavored" mode from
-[this skill](https://github.com/danyuchn/asd-ste100-skill): structural rules enforced, vocabulary
-rules as direction of travel only.
+instead of vibes — ASD-STE100 Simplified Technical English, in "flavored" mode: structural rules
+enforced, vocabulary rules as direction of travel only.
 
 **Lead with the verdict, then the reasoning.** Answer, recommendation, or bottom line in the first
 two sentences. Evidence and caveats after. If I only read the opening, I should already have the
@@ -183,10 +182,9 @@ statement is what was asked for.
 ### Reviewing code
 
 **Invoke the `review-changes` skill before writing a single review comment.** It owns the whole
-procedure: resolving the target, verifying my claims independently, triage, where each finding goes,
-the [Conventional Comments](https://conventionalcomments.org/) format and its labels, and the
-Approve-versus-Request-Changes call. A review written without the skill is a review written without
-the format.
+procedure, from resolving the target through to the Approve-versus-Request-Changes call, including the
+[Conventional Comments](https://conventionalcomments.org/) format every comment has to use. A review
+written without the skill is a review written without the format.
 
 **Notes-only while a review is running.** Produce findings. Don't edit files, run renames, or
 refactor, even when I say something imperative like "just do the crate shifting". An

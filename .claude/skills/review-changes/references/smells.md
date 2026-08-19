@@ -1,6 +1,6 @@
-# Smell baseline
+# Code smells
 
-A fixed set of design smells for the Standards axis. Source: Fowler, *Refactoring*, ch. 3.
+A fixed set of code smells for the Standards axis. Source: Fowler, *Refactoring*, ch. 3.
 
 This baseline applies even when the repo documents no standards of its own. Two rules bind it.
 
