@@ -169,13 +169,17 @@ Sweep every comment the diff adds or changes. Look for four things.
 1. **Historical narration.** A comment states the rule the code follows now. It does not narrate the
    change that produced it. Signature phrases to grep for: "now applies", "under the old", "was
    harmless but", "used to".
-2. **One fact, one home.** A fact restated in a second file becomes a pointer to the first.
+2. **One fact, one home.** A comment restating what another comment already owns should be a
+   pointer to that owner instead.
 3. **Verbosity.** A paragraph where one sentence carries the rule.
 4. **A header that re-explains its section.** Prefer one rationale attached to the rule it justifies.
 
-**The exception to one fact, one home is load-bearing.** A fact that keeps two files in sync belongs in both.
-Test it: could an editor of *this* file break the invariant without seeing the other file? Yes means
-replicate the fact. No means make it a pointer.
+**The exception to one fact, one home is the sync comment.** Sometimes this code silently depends on
+code elsewhere — a wire format, a shared schema, an ordering both ends assume, a constant another
+service parses. Then the comment belongs at both ends, and each copy names the other. The other end
+may be another file, another package, or another repo. Test it: could someone editing *this* code
+break the invariant without ever opening the other one? Yes means replicate the fact. No means make
+it a pointer.
 
 **This audit is not cosmetic.** Reading the comments closely is how a missing code finding surfaces.
 Treat any comment that does not match what the code does as a correctness lead.

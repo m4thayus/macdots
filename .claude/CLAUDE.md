@@ -10,31 +10,6 @@ This applies to:
 - PR descriptions and commit messages
 - Any time I'm recording that something was deferred or chosen over an alternative
 
-## Comments in Code
-
-**Code trumps a comment.** Before writing one, ask whether the code can be renamed, restructured, or
-split so the comment becomes unnecessary. Treat every comment you reach for as a signal that the code
-beneath it falls short in some degree. Sometimes it doesn't and the comment is right. Often the honest
-fix is the name.
-
-**The carve-out is configuration.** A setting's wording is frequently opaque on its own terms, and its
-*why* is rarely derivable from the value. Comment config freely.
-
-A code comment states the rule the code follows now. It never narrates the change that produced it.
-Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old X",
-"was harmless but", "used to". The diff and the commit message carry the change. The comment carries
-the rule.
-
-**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing is
-gone, and the next reader can't tell which half is still true. This pairs with Always Capture the Why
-rather than competing with it — keep the reason, drop the chronology.
-
-**One fact, one home.** A fact restated in a second file becomes a pointer to the first. The
-exception is load-bearing: a fact that keeps two files in sync belongs in both. Test it — could an
-editor of *this* file break the invariant without seeing the other one? Yes means replicate it. And
-prefer one rationale attached to the rule it justifies over a section header that re-explains the
-section beneath it.
-
 ## Write in Simplified Technical English (flavored)
 
 Default prose style for everything you write for a reader: review comments, explanations, commit
@@ -102,6 +77,39 @@ It never overrides Always Capture the Why — drop the padding, keep the because
 Conversation sheds the flat register, not the sentence structure. Skip both modes only where voice
 or persuasion is the point.
 
+## Comments in Code
+
+**Code trumps a comment.** Before writing one, ask whether the code can be renamed, restructured, or
+split so the comment becomes unnecessary. Treat every comment you reach for as a signal that the code
+beneath it falls short in some degree. Sometimes it doesn't and the comment is right. Often the honest
+fix is the name.
+
+**The carve-out is configuration.** A setting's wording is frequently opaque on its own terms, and its
+*why* is rarely derivable from the value. Comment config freely.
+
+A code comment states the rule the code follows now. It never narrates the change that produced it.
+Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old X",
+"was harmless but", "used to". The diff and the commit message carry the change. The comment carries
+the rule.
+
+**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing is
+gone, and the next reader can't tell which half is still true. This pairs with Always Capture the Why
+rather than competing with it — keep the reason, drop the chronology.
+
+**One fact, one home.** State a fact once. A comment that repeats what another comment already
+owns should shrink to a pointer at that owner.
+
+**The exception is the sync comment.** Sometimes this code silently depends on code elsewhere — a
+wire format, a shared schema, an ordering both ends assume, a constant another service parses. Then
+the comment goes at both ends, and each copy names the other. Test it: could someone editing *this*
+code break the invariant without ever opening the other one? Yes means write it twice.
+
+The other end can be another file, another package, or another repo. The further away it sits, the
+more the second copy earns its place, because nothing else links the two.
+
+**Attach the rationale to the rule it justifies.** Don't write a section header that re-explains the
+section beneath it.
+
 ## Boy Scout Rule (calibrated)
 
 Leave the files you touch better than you found them. When a change makes something redundant — a now-dead parameter, a vestigial wrapper, inert config, a no-longer-used export, an alias that just forwards — remove it in the same change. Before calling work done, re-scan the files you edited (and anything your change made redundant) for that adjacent cruft; treat it as part of verification, not an optional polish pass.
@@ -112,6 +120,34 @@ Leave the files you touch better than you found them. When a change makes someth
 - Incidental sameness isn't a reason to abstract; a thin wrapper that only saves typing isn't worth keeping.
 
 The recurring failure mode this guards against is leaving a half-done state after a change — and, after a merge that mixes someone else's work into files you refactored, assuming the cleanup "stuck" without re-checking. Re-scan; don't assume.
+
+## Prefer Built-in Tools Over Bash
+
+Reach for the file tools before the shell. Shell out only when no tool does the job.
+
+- Read a file → `Read`, not `cat` / `head` / `tail` / `sed -n`.
+- Search file contents → `Grep`, not `grep` / `rg` / `ag`.
+- Find files by name or pattern → `Glob`, not `find` / `ls -R`.
+- Change a file → `Edit` or `Write`, not `sed -i` / `awk` / a heredoc redirect.
+
+**Why:** Bash is the call that stops for approval, so `cat foo.rb` costs a round trip that `Read`
+does not. The tools also hand back line numbers, match context, and path filters that you would
+otherwise rebuild out of flags.
+
+Bash still owns everything with no tool equivalent: git, package managers, test runners, build
+commands, and pipelines that transform output. A plain `ls` of one directory is fine. Once the
+question becomes "which files match X", that's `Glob`.
+
+## Delegate Code Search to Subagents
+
+When getting bearings on scope in a large repo, dispatch a subagent (Explore / general-purpose) to do the grepping and file-reading and return only the distilled results. Do NOT run broad greps or bulk file Reads in the main context.
+
+**Why:** Broad searches shove a lot into the main context window. I run long, wide-ranging conversations rather than one-off tasks, and want the main window kept low (target well below 20%) so we can keep going without summarization. Getting-bearings work otherwise eats 7–10% up front.
+
+**How to apply:**
+- Broad / uncertain search (naming conventions, "where does X live", multi-file sweeps) → subagent, results only.
+- Single known lookup (file + rough line already known) → just Read the narrow slice directly; a subagent there is slower and buys nothing.
+- Large PR diff review → don't read the whole diff into the main context. Before doing so, ask whether it's worth it; default to dispatching subagents (per-file or per-area) that return findings only, then I reason over the findings. Read specific hunks directly only when a finding needs closer judgment. Small diffs where reading it all is cheap → just read it.
 
 ## `$HOME` Is a Git Work Tree
 
@@ -124,9 +160,9 @@ repo" section of `~/README.md` before running it.
   has locked it up badly enough to need a reboot. `status.showUntrackedFiles=no`
   plus an allowlist `~/.gitignore` keep the defaults safe; those flags defeat
   both. Add explicit paths, always — the repo is public.
-- **To enumerate files under `$HOME`, reach for `ls`/`fd`, not git.** Git here
-  is for the tracked set only — if the question is "what's in this directory",
-  git is the wrong tool and the expensive one.
+- **To enumerate files under `$HOME`, reach for `Glob` or `ls`/`fd`, not git.**
+  Git here is for the tracked set only — if the question is "what's in this
+  directory", git is the wrong tool and the expensive one.
 - Use `macdots`, never a hand-rolled `git --git-dir=$HOME/.macdots.git ...`.
   The wrapper carries the guard; the raw form silently bypasses it.
 - Pathspecs resolve against cwd, not `$HOME`. `cd ~` first or use full paths.
@@ -194,14 +230,3 @@ authorization. Wait for "make the change" or a clear equivalent.
 **Why this one rule and not the others:** a session can drift into reviewing without ever invoking a
 skill, and the cost of missing it lands outside the session as commits on a colleague's branch.
 Everything else in a review is recoverable before it's posted.
-
-## Delegate Code Search to Subagents
-
-When getting bearings on scope in a large repo, dispatch a subagent (Explore / general-purpose) to do the grepping and file-reading and return only the distilled results. Do NOT run broad greps or bulk file Reads in the main context.
-
-**Why:** Broad searches shove a lot into the main context window. I run long, wide-ranging conversations rather than one-off tasks, and want the main window kept low (target well below 20%) so we can keep going without summarization. Getting-bearings work otherwise eats 7–10% up front.
-
-**How to apply:**
-- Broad / uncertain search (naming conventions, "where does X live", multi-file sweeps) → subagent, results only.
-- Single known lookup (file + rough line already known) → just Read the narrow slice directly; a subagent there is slower and buys nothing.
-- Large PR diff review → don't read the whole diff into the main context. Before doing so, ask whether it's worth it; default to dispatching subagents (per-file or per-area) that return findings only, then I reason over the findings. Read specific hunks directly only when a finding needs closer judgment. Small diffs where reading it all is cheap → just read it.
