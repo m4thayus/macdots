@@ -117,3 +117,16 @@ the file. `.local/bin/macdots` additionally refuses the commands above.
 Neither layer is airtight — ignore rules do not untrack anything already
 committed, and a hand-rolled `git --git-dir=...` bypasses the wrapper entirely.
 They shrink the blast radius; they don't remove it.
+
+### Commit messages
+
+Always [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): subject`.
+
+- Types: `feat`, `fix`, `docs`, `refactor`, `chore`.
+- Scope is the tool the commit touches — `claude`, `macdots`, `tmux`, `toys`, `zsh`. Omit
+  it only when the change spans the repo.
+- Subject in the imperative, lowercase, no trailing period.
+
+**Why:** this work tree is a pile of unrelated configs, so a subject alone rarely says
+which tool a commit is about. The scope carries that, and it makes the log filterable by
+tool.
