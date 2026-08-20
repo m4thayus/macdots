@@ -123,22 +123,21 @@ on main.
 Say in the body what you verified and how. That is the evidence for the verdict. A table helps when
 there are several claims, and it is not required.
 
-## Step 2. Run the axes
+## Step 2. Dispatch the axes
 
-Run every applicable axis. Deciding early that a change is "just" a rename is how the design-level
-findings get skipped.
+One axis per subagent, so no axis sees another's reasoning. Deciding early that a change is "just" a
+rename is how the design-level findings get skipped.
 
-**Scale the fan-out to the diff.** Where reading the whole diff is cheap, read it and run the axes
-yourself in one pass. Fan out one subagent per axis when the diff is too large to hold, or when an
-axis needs deep independent digging. The choice governs how the work gets dispatched. It never
-governs which questions get asked.
+**Every subagent prompt carries four parts.**
 
-Where you fan out, give every subagent the diff command, the commit list, and this instruction:
-report findings only, under 400 words, and no prose summary. Pass the absolute path to every
-reference file the axis needs, resolved from this skill's base directory. A subagent never sees this
-file, so a relative path and a pointer to a section both reach nothing.
+1. The diff command and the commit list from Step 0.
+2. The absolute path to every reference file the axis names, resolved from this skill's base
+   directory. A subagent never sees this file, so a relative path reaches nothing.
+3. The axis brief below, verbatim.
+4. The finding contract below.
 
-Require every finding to carry five fields.
+**The finding contract.** Give every subagent these words: report findings only, under 400 words,
+and no prose summary. Every finding carries five fields.
 
 1. File and line.
 2. One sentence naming the defect.
@@ -146,61 +145,86 @@ Require every finding to carry five fields.
 4. Confidence, as `confirmed` or `plausible`.
 5. Whether main already does the same thing elsewhere.
 
-Run these axes.
+**A clean axis reports `no findings`.** Require those words. Silence and a clean pass read alike in
+the main context, so an axis that returned nothing at all has to be dispatched again.
 
-- **Correctness.** Bugs, wrong behavior, missing cases, swallowed errors, unhandled state.
-- **Claims.** Does the diff do what the author says it does? Report requirements that are missing or
-  partial, behavior nobody asked for, and claims the code contradicts. Quote the claim per finding.
-- **Standards and smells.** Skip this axis on a prose-only diff, because Step 2b owns prose. Apply
-  `references/smells.md`. For language rules, invoke the matching standards skill if present,
-  and do not restate its rules: `mercury-ruby-standards` for `.rb` and RSpec,
-  `mercury-typescript-standards` for `.ts`, `.tsx`, `.js`, and `.css`, `mercury-vitest-standards` for
-  Vitest specs.
-- **Comments the diff adds.** See Step 2a.
-- **Docs prose.** Run this axis only when the diff touches `.md` or `.mdx`. See Step 2b.
+### Pick the axis set
+
+Read the changed paths first: `git diff --name-only <base>...HEAD`. The paths pick the set.
+
+- **Prose-only diff**, where every changed path is `.md` or `.mdx`. Dispatch **Claims** and
+  **Prose**. Nothing else, because the diff holds no code to be wrong and no comment to audit.
+- **Any other diff.** Dispatch **Correctness**, **Claims**, **Standards**, and **Comments**. Add
+  **Prose** where the diff also touches `.md` or `.mdx`.
+
+Dispatch every axis the set names, including one whose subject looks thin. An axis with nothing to
+say costs one `no findings` line.
+
+### The axis briefs
+
+**Correctness.**
+
+> Report bugs, wrong behavior, missing cases, swallowed errors, and unhandled state in this diff.
+> Read the code around a changed hunk before you judge the hunk.
+
+**Claims.** Paste the claims you collected in Step 1.
+
+> Report requirements in these claims that the diff misses or half-implements, behavior nobody asked
+> for, and claims the code contradicts. Quote the claim in each finding.
+
+**Standards.** Pass `references/smells.md`.
+
+> Apply the smells reference to this diff. Invoke the matching standards skill for the languages the
+> diff touches, and do not restate its rules: `mercury-ruby-standards` for `.rb` and RSpec,
+> `mercury-typescript-standards` for `.ts`, `.tsx`, `.js`, and `.css`, `mercury-vitest-standards` for
+> Vitest specs.
+
+**Comments.** Pass `references/style.md`.
+
+> Sweep every comment this diff adds or changes. Report five things.
+>
+> 1. **Historical narration.** A comment states the rule the code follows now. It does not narrate
+>    the change that produced it. Signature phrases to grep for: "now applies", "under the old",
+>    "was harmless but", "used to".
+> 2. **One fact, one home.** A comment restating what another comment already owns should be a
+>    pointer to that owner instead.
+> 3. **Verbosity.** A paragraph where one sentence carries the rule.
+> 4. **A header that re-explains its section.** Prefer one rationale attached to the rule it
+>    justifies.
+> 5. **Style.** Apply the style reference in flavored mode. A changed comment takes the same
+>    structural rules as a review comment, because the next maintainer reads it the same way.
+>
+> The exception to one fact, one home is the sync comment. Sometimes this code silently depends on
+> code elsewhere: a wire format, a shared schema, an ordering both ends assume, a constant another
+> service parses. Then the comment belongs at both ends, and each copy names the other. The other
+> end may be another file, another package, or another repo. Test it: could someone editing *this*
+> code break the invariant without ever opening the other one? Yes means replicate the fact. No
+> means make it a pointer.
+>
+> This audit is not cosmetic. Reading the comments closely is how a missing code finding surfaces.
+> Treat any comment that does not match what the code does as a correctness lead.
+
+**Prose.** Pass `references/style.md`.
+
+> Check the changed prose two ways, not one.
+>
+> First, style. Check the changed prose against the style reference, and name the mode each changed
+> file falls under. A violation in a file that sets the rule itself is the strongest form of this
+> finding.
+>
+> Second, accuracy. Check every claim the prose makes against the code. A rewritten justification is
+> a claim, not decoration. This check finds factual errors, so never treat the pass as style alone.
 
 Report the axes separately. Do not merge them, because one axis passing can hide another failing.
 Code can follow every standard and still implement the wrong thing.
-
-### Step 2a. The comment audit
-
-Sweep every comment the diff adds or changes. Look for four things.
-
-1. **Historical narration.** A comment states the rule the code follows now. It does not narrate the
-   change that produced it. Signature phrases to grep for: "now applies", "under the old", "was
-   harmless but", "used to".
-2. **One fact, one home.** A comment restating what another comment already owns should be a
-   pointer to that owner instead.
-3. **Verbosity.** A paragraph where one sentence carries the rule.
-4. **A header that re-explains its section.** Prefer one rationale attached to the rule it justifies.
-
-**The exception to one fact, one home is the sync comment.** Sometimes this code silently depends on
-code elsewhere — a wire format, a shared schema, an ordering both ends assume, a constant another
-service parses. Then the comment belongs at both ends, and each copy names the other. The other end
-may be another file, another package, or another repo. Test it: could someone editing *this* code
-break the invariant without ever opening the other one? Yes means replicate the fact. No means make
-it a pointer.
-
-**This audit is not cosmetic.** Reading the comments closely is how a missing code finding surfaces.
-Treat any comment that does not match what the code does as a correctness lead.
-
-### Step 2b. The docs prose pass
-
-Review changed prose on two axes, not one.
-
-First, style. Check changed prose against `references/style.md`, and name the mode each changed
-file falls under. A violation in a file that sets the rule itself is the strongest form of this
-finding.
-
-Second, accuracy. Check every claim the prose makes against the code. A rewritten justification is a
-claim, not decoration. This axis finds factual errors, so never treat it as a style pass alone.
 
 ## Step 3. Triage
 
 Reconcile what Step 2 returned. Do not re-run it.
 
-**Trust each axis on its own finding.** Where a subagent ran it, that verification is done. Repeating
-it in the main context defeats the fan-out and floods the context the fan-out protected.
+**Trust each axis on its own finding.** The subagent that ran the axis already did that
+verification. Repeating it in the main context refills the context that one axis per subagent kept
+clear.
 
 **Own the recommendation.** That part is yours, not the subagent's. Check every proposed fix against
 Step 5 before it becomes a comment. Watch for the retired symptom: a fix that resolves the visible
@@ -254,7 +278,9 @@ code is the context.
 
 1. The verdict.
 2. The evidence for it, from Step 1.
-3. The count of comments.
+3. The count of inline comments, `praise:` and `thought:` excluded. Where that count is zero, say
+   you read the whole diff and found nothing to change, and name every axis that came back with no
+   findings.
 
 Do not rank the findings in the body, and do not name a worst one. The inline comments carry that.
 
@@ -349,6 +375,11 @@ count.
 ## Step 6. Choose the verdict
 
 The deciding question is "is a re-review needed?" It is not "are there issues to fix?"
+
+**Approve, clean,** when no inline comment asks the author for anything. Only `praise:` and
+`thought:` belong here, because neither carries a request. A `nitpick:` does carry one, even though
+it never blocks. The axis list in the body is what separates a clean approval from a shallow one,
+so Step 4 makes it the body's third part.
 
 **Approve, with notes,** when the issues are mechanical, scope judgments the author has better
 context for, cleanup the author can execute unsupervised, naming opinions, or follow-up flags.
