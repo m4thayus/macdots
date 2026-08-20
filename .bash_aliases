@@ -14,6 +14,18 @@ alias be="bundle exec"
 # that walk all of $HOME. See ~/README.md.
 alias macdots="$HOME/.local/bin/macdots"
 
+# Claude with agent teams, on its own tmux server (-L) so the fan-out panes stay
+# out of the session you launched from. Layout lives in claude.conf. Teams stay
+# off in settings.json, which keeps their context cost a per-launch choice.
+# printf %q keeps quoted flag values intact, since tmux takes one command string.
+cmux() {
+  local cmd=claude arg
+  for arg in "$@"; do cmd+=" $(printf '%q' "$arg")"; done
+  TMUX= tmux -L claude -f ~/.config/tmux/claude.conf \
+    new-session -A -s "${PWD##*/}" -c "$PWD" \
+    -e CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 "$cmd"
+}
+
 alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
 alias pmux="tmux source-file ~/.config/tmux/prose \; attach"
 alias hgmux="tmux source-file ~/.config/tmux/mercury \; attach"

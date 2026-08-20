@@ -1,7 +1,4 @@
 {
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
   "permissions": {
     "defaultMode": "auto"
   },
@@ -56,5 +53,5 @@
   "awaySummaryEnabled": false,
   "autoUpdatesChannel": "stable",
   "autoDreamEnabled": true,
-  "teammateMode": "auto"
+  "teammateMode": "tmux"
 }
