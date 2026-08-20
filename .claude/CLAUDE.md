@@ -84,8 +84,10 @@ split so the comment becomes unnecessary. Treat every comment you reach for as a
 beneath it falls short in some degree. Sometimes it doesn't and the comment is right. Often the honest
 fix is the name.
 
-**The carve-out is configuration.** A setting's wording is frequently opaque on its own terms, and its
-*why* is rarely derivable from the value. Comment config freely.
+**Configuration gets a lighter bar.** A setting's wording is frequently opaque on its own terms, and
+its *why* is rarely derivable from the value, so a comment there earns its place more easily. Every
+rule in this section still applies, just less tightly. A config comment can still be redundant or
+bloated.
 
 A code comment states the rule the code follows now. It never narrates the change that produced it.
 Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old X",

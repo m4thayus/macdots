@@ -15,13 +15,17 @@ This skill owns the conduct of a review. That means five things.
 4. Writing each comment.
 5. Choosing the verdict.
 
-It does not own applying fixes. See **Boundaries**.
+It does not own applying fixes.
 
-**The output is a draft, never a posted review.** Assemble the body and every comment. Show them.
-Wait for approval. Posting is the user's decision every time.
+**Name the two texts apart.** The author's text on the pull request is the **PR description**. The
+top-level comment of the review you draft is the **review body**. Never say "the body" unqualified,
+in either artifact or in the session.
 
-**The audience is the author, not the user running the review.** Write every line of the body and
-every comment for the person who wrote the code. Anything addressed to the user belongs in the
+**The output is a draft, never a posted review.** Assemble the review body and every comment. Show
+them. Wait for approval. Posting is the user's decision every time.
+
+**The audience is the author, not the user running the review.** Write every line of the review body
+and every comment for the person who wrote the code. Anything addressed to the user belongs in the
 session instead, because the author has no use for it and no context for it.
 
 ## Four rules that bind the whole pass
@@ -56,7 +60,7 @@ as a set of type errors. Post that as a standalone comment. Nothing else qualifi
 
 **3. Show the wording before it goes out. Every time.**
 
-Draft the body and every comment. Show them inline. Ask before calling `gh pr review`,
+Draft the review body and every comment. Show them inline. Ask before calling `gh pr review`,
 `gh pr comment`, or any equivalent. This applies to follow-up thread replies too. "Post it"
 authorizes the action, not the wording.
 
@@ -86,7 +90,7 @@ it.
 ## Write every artifact in Simplified Technical English
 
 `references/style.md` carries the rules for everything this skill produces. Read it before you write
-the body or a comment.
+the review body or a comment.
 
 Which artifact takes which mode.
 
@@ -111,17 +115,34 @@ commit list with `git log <base>..HEAD --oneline`.
 
 Fail here on a bad ref or an empty diff. Do not fail inside a subagent.
 
-## Step 1. Collect the author's claims
+## Step 1. Read the PR: the claims, then the metadata
 
-Read the PR body, the commit messages, and the review-request text. Turn each claim into a row to
-verify. A claim is anything the author asserts about behavior, scope, or the reason for a change.
+**The claims.** Read the PR description, the commit messages, and the review-request text. Turn each
+claim into a row to verify. A claim is anything the author asserts about behavior, scope, or the
+reason for a change.
 
 Verify by running something wherever you can. Reading the code is weaker evidence than executing it.
 Grep for the callers. Run the spec. Check whether the pattern the author says is new already exists
 on main.
 
-Say in the body what you verified and how. That is the evidence for the verdict. A table helps when
-there are several claims, and it is not required.
+Say in the review body what you verified and how. That is the evidence for the verdict. A table
+helps when there are several claims, and it is not required.
+
+**The suites are not a claim.** "Specs pass", "lint is clean", and "typecheck passes" get no
+verification row. Run them yourself anyway while the axes work, per Step 2, and surface only a
+failure.
+
+**The metadata.** Three questions about the pull request itself, not about the diff.
+
+1. Does the PR description still describe the diff? A description written against an earlier revision
+   is common, and the author cannot see the drift from inside the branch.
+2. Is a label the repo expects missing? Run `gh label list` for what exists and
+   `gh pr view --json labels` for what is set. A blast-radius or a notable-change label is the common
+   miss, because each is a judgment call nobody makes at open time.
+3. Has a label gone stale? Nobody revisits a label after the PR opens. A `chore` or a `refactor` that
+   grew into a behavior change now needs the label a feature takes.
+
+None of the three anchors to a line of code, so all three belong in the review body. See Step 4.
 
 ## Step 2. Dispatch the axes
 
@@ -181,18 +202,25 @@ say costs one `no findings` line.
 
 **Comments.** Pass `references/style.md`.
 
-> Sweep every comment this diff adds or changes. Report five things.
+> Sweep every comment this diff adds or changes. Report six things.
 >
-> 1. **Historical narration.** A comment states the rule the code follows now. It does not narrate
+> 1. **A comment the code should have made unnecessary.** Code trumps a comment. Where a rename, a
+>    restructure, or a split would remove the need for the comment, report that change instead. Often
+>    the honest fix is the name.
+> 2. **Historical narration.** A comment states the rule the code follows now. It does not narrate
 >    the change that produced it. Signature phrases to grep for: "now applies", "under the old",
 >    "was harmless but", "used to".
-> 2. **One fact, one home.** A comment restating what another comment already owns should be a
+> 3. **One fact, one home.** A comment restating what another comment already owns should be a
 >    pointer to that owner instead.
-> 3. **Verbosity.** A paragraph where one sentence carries the rule.
-> 4. **A header that re-explains its section.** Prefer one rationale attached to the rule it
+> 4. **Verbosity.** A paragraph where one sentence carries the rule.
+> 5. **A header that re-explains its section.** Prefer one rationale attached to the rule it
 >    justifies.
-> 5. **Style.** Apply the style reference in flavored mode. A changed comment takes the same
+> 6. **Style.** Apply the style reference in flavored mode. A changed comment takes the same
 >    structural rules as a review comment, because the next maintainer reads it the same way.
+>
+> Configuration takes a lighter pass. A setting's wording is frequently opaque on its own terms, and
+> its *why* is rarely derivable from the value, so a comment there earns its place more easily. Still
+> read it. Report one that is genuinely redundant or bloated, and do not go hunting for one.
 >
 > The exception to one fact, one home is the sync comment. Sometimes this code silently depends on
 > code elsewhere: a wire format, a shared schema, an ordering both ends assume, a constant another
@@ -217,6 +245,19 @@ say costs one `no findings` line.
 
 Report the axes separately. Do not merge them, because one axis passing can hide another failing.
 Code can follow every standard and still implement the wrong thing.
+
+### Run the mechanical checks while the axes work
+
+The dispatch has gone out, so run the repo's spec suite, linter, typechecker, and build yourself in
+the meantime. Where a check needs a setup you do not have, say so in the session and move on.
+
+Surface a check only when it fails. A green run earns no line anywhere. A failure is blocking, and it
+goes near the top of the review body, per Step 4. Where the failure points at a line, add an inline
+comment for the detail as well.
+
+**Why:** taking "specs pass" on trust assumes CI ran that check and ran it green. A check can be
+missing from the CI config, and CI itself has outages. Running it here costs wall-clock time nobody
+was using, and it catches both.
 
 ## Step 3. Triage
 
@@ -274,23 +315,30 @@ discussion. Five history sites become one comment, not five.
 **Every finding is an inline comment.** Anchor it to the line that shows the problem, because the
 code is the context.
 
-**Keep the body to three things.**
+**The review body has three fixed parts and two conditional ones.**
 
 1. The verdict.
-2. The evidence for it, from Step 1.
-3. The count of inline comments, `praise:` and `thought:` excluded. Where that count is zero, say
+2. **Where a check from Step 2 failed:** one line per failing check, labelled `issue:` and blocking.
+   Name the check and what it reports. A failing suite is a fact about the whole PR, so it never
+   sits only in an inline comment. The location detail is what the inline comment carries.
+3. The evidence for the verdict, from Step 1.
+4. The count of inline comments, `praise:` and `thought:` excluded. Where that count is zero, say
    you read the whole diff and found nothing to change, and name every axis that came back with no
    findings.
+5. **Where Step 1's metadata pass found something:** each metadata finding, one line each, labelled
+   from the Step 5 list.
 
-Do not rank the findings in the body, and do not name a worst one. The inline comments carry that.
+Do not rank the axis findings in the review body, and do not name a worst one. The inline comments
+carry that.
 
-**A concern the user raised never gets answered in the body.** Answer it to the user, in the session.
-Where it turned out to be a real defect, it becomes an ordinary inline comment, judged on its merits
-like any other. Where it turned out to be nothing, the author has no use for the answer.
+**A concern the user raised never gets answered in the review body.** Answer it to the user, in the
+session. Where it turned out to be a real defect, it becomes an ordinary inline comment, judged on
+its merits like any other. Where it turned out to be nothing, the author has no use for the answer.
 
-**The body never restates a finding.** Apply this test to every body sentence: could this be a
-comment on a file? If yes, move it. A body sentence that reads as a finding is a finding. Praise is
-a finding too, so anchor it on the file it praises.
+**The review body never restates a finding.** Apply this test to every sentence in it: could this be
+a comment on a file? If yes, move it. A sentence that reads as a finding is a finding. Praise is a
+finding too, so anchor it on the file it praises. A metadata finding has no file to anchor to, which
+is why the review body is where it goes.
 
 **No aggregate hand-waving.** A sentence like "two of them are passes rather than defects" adds
 confusion. Name the comments it refers to, or cut the sentence.
@@ -376,30 +424,25 @@ count.
 
 The deciding question is "is a re-review needed?" It is not "are there issues to fix?"
 
-**Approve, clean,** when no inline comment asks the author for anything. Only `praise:` and
-`thought:` belong here, because neither carries a request. A `nitpick:` does carry one, even though
-it never blocks. The axis list in the body is what separates a clean approval from a shallow one,
-so Step 4 makes it the body's third part.
+**Approve, clean,** when nothing in the review asks the author for anything, the review body
+included. Only `praise:` and `thought:` belong here, because neither carries a request. A `nitpick:`
+does carry one, even though it never blocks. The axis list in the review body is what separates a
+clean approval from a shallow one, so Step 4 makes it the third part.
 
 **Approve, with notes,** when the issues are mechanical, scope judgments the author has better
-context for, cleanup the author can execute unsupervised, naming opinions, or follow-up flags.
+context for, cleanup the author can execute unsupervised, naming opinions, follow-up flags, a stale
+PR description, or a label that is missing or wrong.
 
 **Request Changes** when the issues are architecture or design problems, real security or performance
 concerns, notable functionality gaps, non-trivial UI redesigns, or large rewrites. Also request
 changes when you genuinely need to see the next iteration to confirm the fix landed.
+
+A failing check from Step 2 is always Request Changes. Whether the suite went green is exactly what
+the next iteration has to show.
 
 Default to Approve when in doubt. Request Changes on mechanical cleanup imposes a re-review tax the
 situation does not warrant.
 
 ## Step 7. Show, then post
 
-Show the body and every comment. Wait for the go-ahead. Post once.
-
-## Boundaries
-
-- **Findings, never edits.** This skill diagnoses. `cleanup-pass` applies changes to code the user
-  owns, and it keeps the post-merge re-scan that no review covers. Self-review runs this skill for
-  the findings, then hands applying them to a separate explicit step.
-- **Judgment, not mechanics.** Whether tests, lint, and typecheck pass belongs to
-  `verification-before-completion`.
-- **Language rules live in the standards skills.** Reference them. Never restate them.
+Show the review body and every comment. Wait for the go-ahead. Post once.
