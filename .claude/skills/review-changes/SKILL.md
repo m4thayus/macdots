@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Use when reviewing code changes. Covers a PR, a branch, a diff, changes since a commit, and your own work before you open a PR. Produces findings, inline comments in Conventional Comments format, and an Approve or Request Changes verdict. It never edits the code. Triggers on "review this PR", "review #1234", "review my branch", "review changes since main", "look at this PR", "request changes", and a self-review before opening a PR.
+description: Use when reviewing code changes. Covers a PR, a branch, a diff, changes since a commit, and your own work before you open a PR. Produces findings, inline comments in Conventional Comments format, and an Approve or Request Changes verdict. It never edits the code. Triggers on "review this PR", "review #1234", "review my branch", "review changes since main", "look at this PR", "request changes", "re-review", a later round on a PR you already reviewed, and a self-review before opening a PR.
 ---
 
 # Review Changes
@@ -17,9 +17,10 @@ This skill owns the conduct of a review. That means five things.
 
 It does not own applying fixes.
 
-**Name the two texts apart.** The author's text on the pull request is the **PR description**. The
-top-level comment of the review you draft is the **review body**. Never say "the body" unqualified,
-in either artifact or in the session.
+**Name the three texts apart.** The author's text on the pull request is the **PR description**. The
+top-level comment of the review you draft is the **review body**. The top-level comment of a review
+an earlier round left is a **prior review body**. Never say "the body" unqualified, in either
+artifact or in the session.
 
 **The output is a draft, never a posted review.** Assemble the review body and every comment. Show
 them. Wait for approval. Posting is the user's decision every time.
@@ -80,9 +81,15 @@ Raise these in the session. Never write them into the draft.
    inline `issue:` buries a design disagreement in a line annotation.
 3. **Two axes contradict each other and reading the hunk does not settle it.** Ask rather than
    picking one.
+4. **A prior round needs a call you do not own.** The author pushed back and did not change the
+   code, or another reviewer contradicts one of your prior comments. See the routing table in
+   Step 3.
 
 **Report the conflicts you did settle.** Give each cross-axis contradiction one line in the session,
 with the call you made. Never resolve one silently. Keep it brief and let the user ask for the detail.
+
+**Report the prior threads you dropped.** Give each silently-ignored thread the label rules dropped
+one line in the session. The author has no use for it, and the user may disagree with the drop.
 
 A finding that flips the verdict is not an escalation. Recommend the verdict and let the user override
 it.
@@ -114,6 +121,17 @@ Confirm the base ref resolves and the diff is not empty. Capture one diff comman
 commit list with `git log <base>..HEAD --oneline`.
 
 Fail here on a bad ref or an empty diff. Do not fail inside a subagent.
+
+**Then check for prior rounds.** Review history changes the axis set, so detect it here rather than
+part-way through.
+
+1. `gh pr view <n> --json reviews` for the prior review bodies.
+2. `gh api repos/{owner}/{repo}/pulls/<n>/comments` for every inline thread.
+3. `gh api user --jq .login` for your own login, so the Prior Round axis can tell your prior comments
+   from another reviewer's.
+
+Write the prior review bodies and the threads to the `/tmp` scratch file. Say in the session whether this is a
+first pass or a re-review.
 
 ## Step 1. Read the PR: the claims, then the metadata
 
@@ -155,7 +173,8 @@ rename is how the design-level findings get skipped.
 2. The absolute path to every reference file the axis names, resolved from this skill's base
    directory. A subagent never sees this file, so a relative path reaches nothing.
 3. The axis brief below, verbatim.
-4. The finding contract below.
+4. The finding contract below. Prior Round is the exception, because its brief carries its own
+   output shape.
 
 **The finding contract.** Give every subagent these words: report findings only, under 400 words,
 and no prose summary. Every finding carries five fields.
@@ -177,6 +196,8 @@ Read the changed paths first: `git diff --name-only <base>...HEAD`. The paths pi
   **Prose**. Nothing else, because the diff holds no code to be wrong and no comment to audit.
 - **Any other diff.** Dispatch **Correctness**, **Claims**, **Standards**, and **Comments**. Add
   **Prose** where the diff also touches `.md` or `.mdx`.
+
+Add **Prior Round** to either set where Step 0 found prior review rounds.
 
 Dispatch every axis the set names, including one whose subject looks thin. An axis with nothing to
 say costs one `no findings` line.
@@ -243,6 +264,44 @@ say costs one `no findings` line.
 > Second, accuracy. Check every claim the prose makes against the code. A rewritten justification is
 > a claim, not decoration. This check finds factual errors, so never treat the pass as style alone.
 
+**Prior Round.** Dispatch only where Step 0 found prior rounds. Pass the `/tmp` file holding the
+prior review bodies and the threads, and pass your own login.
+
+> Report one disposition for every prior thread. Run three checks.
+>
+> 1. **Every reply that claims a fix.** Verify it against the current code. A reply is a claim, and a
+>    claimed fix the code does not show is the strongest finding a later round produces.
+> 2. **Every prior comment of ours.** Ask whether it is still correct, given what the diff now shows.
+>    A prior comment that was wrong needs a retraction, and no other axis looks for one.
+> 3. **Every other reviewer's position.** Report it as data. Do not adjudicate it, because the user
+>    decides where two reviewers disagree.
+>
+> Read every thread. Do not sample.
+>
+> This axis reports dispositions rather than defects, so the finding contract does not apply. Each
+> row carries four fields.
+>
+> 1. The thread.
+> 2. How hard the prior comment asked: **blocking**, **optional**, or **trivial**. Judge it from the
+>    wording where the comment carries no marker, because reviewers write in their own conventions.
+> 3. The disposition, from the list below.
+> 4. The evidence.
+>
+> The dispositions.
+>
+> - Fixed as asked.
+> - Claimed fixed, and the code does not show it.
+> - Fixed differently, and it works.
+> - Fixed differently, and it breaks something else.
+> - Our prior comment was wrong.
+> - The author pushed back and did not change it.
+> - Another reviewer contradicts our prior comment.
+> - Another reviewer agrees with our prior comment.
+> - Ignored in silence, meaning no reply and no change.
+>
+> Say what each disposition rests on. Where an alternative fix reads better than the one we asked
+> for, say so. Where two dispositions both fit, name both and say which you lean to.
+
 Report the axes separately. Do not merge them, because one axis passing can hide another failing.
 Code can follow every standard and still implement the wrong thing.
 
@@ -300,6 +359,36 @@ rather than a defect in this diff.
 The loop itself signals that both findings are probably theoretical. Triage them rather than
 oscillating.
 
+**Route the Prior Round rows.** They are exempt from the drop rule above, because a disposition is
+not a defect and carries no failure scenario. The axis reports what it saw, and it does not choose a
+destination.
+
+| Disposition | Destination |
+|---|---|
+| Fixed as asked | nowhere |
+| Claimed fixed, and the code does not show it | re-raise |
+| Fixed differently, and it works | nowhere, unless the alternative is worth naming |
+| Fixed differently, and it breaks something else | re-raise |
+| Our prior comment was wrong | retract |
+| The author pushed back and did not change it | session |
+| Another reviewer contradicts our prior comment | session |
+| Another reviewer agrees with our prior comment | nowhere |
+| Ignored in silence | how hard we asked decides, below |
+
+**Ignored in silence.** How hard the prior comment asked decides. A non-blocking ask left the change
+optional, so re-raising it removes the option.
+
+| How hard we asked | The label, where the comment was ours | Destination |
+|---|---|---|
+| Blocking | `issue:`, `suggestion: (blocking)` | re-raise |
+| Optional | `suggestion:` | one line, non-blocking |
+| Trivial | `suggestion: (if-minor)`, `nitpick:`, `thought:` | drop, and note it in the session |
+
+**Reconcile this round against the other reviewers.** Prior Round reported their positions, so check
+every finding you are keeping against them. A finding that contradicts a position goes to the
+session, not the draft. A finding another reviewer already made gets cut, or shrinks to one line
+agreeing with theirs.
+
 **Calibrate the confidence you write.** State the observation and the reasoning. Do not dress
 uncertainty as a ruling. A finding you are 60% on must read as 60%. Separate "this is wrong" from
 "this looks off, check me".
@@ -314,6 +403,10 @@ discussion. Five history sites become one comment, not five.
 
 **Every finding is an inline comment.** Anchor it to the line that shows the problem, because the
 code is the context.
+
+**A re-raise or a retraction is a reply on the original thread.** The thread carries the history a
+fresh comment would orphan. Where the thread takes no reply, because it is resolved or outdated or
+the prior comment was a prior review body, post one PR-level comment instead and link the original.
 
 **The review body has three fixed parts and two conditional ones.**
 
@@ -380,6 +473,9 @@ author, who resolves it only if the fix stays small. Add a decoration only where
 severity open. Never stack two. Never decorate `nitpick:`, `thought:`, or `praise:`, because those
 are non-blocking by definition.
 
+**A retraction takes no label.** It is a reply that names what it retracts and why. Do not restate
+the original comment, because the thread above it already carries the text.
+
 Skip the `todo:` and `note:` labels from the specification. `todo:` collides with `TODO` comments in
 code, which carry a different meaning to the team. `note:` is non-blocking by definition, so it is a
 decoration wearing a label's clothes.
@@ -438,7 +534,8 @@ concerns, notable functionality gaps, non-trivial UI redesigns, or large rewrite
 changes when you genuinely need to see the next iteration to confirm the fix landed.
 
 A failing check from Step 2 is always Request Changes. Whether the suite went green is exactly what
-the next iteration has to show.
+the next iteration has to show. A prior blocking finding still unfixed is Request Changes on the same
+logic.
 
 Default to Approve when in doubt. Request Changes on mechanical cleanup imposes a re-review tax the
 situation does not warrant.
