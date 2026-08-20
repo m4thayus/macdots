@@ -84,6 +84,8 @@ Raise these in the session. Never write them into the draft.
 4. **A prior round needs a call you do not own.** The author pushed back and did not change the
    code, or another reviewer contradicts one of your prior comments. See the routing table in
    Step 3.
+5. **The diff introduces a pattern the repo has no prior art for, and no rule covers it.** Whether
+   the team agreed to it is not answerable from the repo. See Step 3.
 
 **Report the conflicts you did settle.** Give each cross-axis contradiction one line in the session,
 with the call you made. Never resolve one silently. Keep it brief and let the user ask for the detail.
@@ -143,8 +145,8 @@ Verify by running something wherever you can. Reading the code is weaker evidenc
 Grep for the callers. Run the spec. Check whether the pattern the author says is new already exists
 on main.
 
-Say in the review body what you verified and how. That is the evidence for the verdict. A table
-helps when there are several claims, and it is not required.
+Say in the review body which claims you verified and how. That is the evidence for the verdict, and
+it covers the claims only. A table helps when there are several claims, and it is not required.
 
 **The suites are not a claim.** "Specs pass", "lint is clean", and "typecheck passes" get no
 verification row. Run them yourself anyway while the axes work, per Step 2, and surface only a
@@ -173,8 +175,8 @@ rename is how the design-level findings get skipped.
 2. The absolute path to every reference file the axis names, resolved from this skill's base
    directory. A subagent never sees this file, so a relative path reaches nothing.
 3. The axis brief below, verbatim.
-4. The finding contract below. Prior Round is the exception, because its brief carries its own
-   output shape.
+4. The finding contract below. Precedent and Prior Round are the exceptions, because each brief
+   carries its own output shape.
 
 **The finding contract.** Give every subagent these words: report findings only, under 400 words,
 and no prose summary. Every finding carries five fields.
@@ -194,8 +196,8 @@ Read the changed paths first: `git diff --name-only <base>...HEAD`. The paths pi
 
 - **Prose-only diff**, where every changed path is `.md` or `.mdx`. Dispatch **Claims** and
   **Prose**. Nothing else, because the diff holds no code to be wrong and no comment to audit.
-- **Any other diff.** Dispatch **Correctness**, **Claims**, **Standards**, and **Comments**. Add
-  **Prose** where the diff also touches `.md` or `.mdx`.
+- **Any other diff.** Dispatch **Correctness**, **Claims**, **Standards**, **Precedent**, and
+  **Comments**. Add **Prose** where the diff also touches `.md` or `.mdx`.
 
 Add **Prior Round** to either set where Step 0 found prior review rounds.
 
@@ -216,10 +218,42 @@ say costs one `no findings` line.
 
 **Standards.** Pass `references/smells.md`.
 
-> Apply the smells reference to this diff. Invoke the matching standards skill for the languages the
-> diff touches, and do not restate its rules: `mercury-ruby-standards` for `.rb` and RSpec,
+> Read the diff first as someone fluent in its language and its framework. Ask whether the standard
+> library, the framework, or a dependency the repo already loads does what this code hand-rolls.
+> Report a hand-rolled equivalent of a built-in, a house pattern the code sidesteps, and a call whose
+> name overstates what it does.
+>
+> Verify the equivalence before you report it. Run both against the edge cases, and name the cases
+> you ran. A built-in that is nearly equivalent is a different finding from one that is equivalent.
+>
+> No reference lists this, because fluency is the whole documented surface of a language and its
+> framework rather than a rule set.
+>
+> Then apply the smells reference to this diff. Invoke the matching standards skill for the languages
+> the diff touches, and do not restate its rules: `mercury-ruby-standards` for `.rb` and RSpec,
 > `mercury-typescript-standards` for `.ts`, `.tsx`, `.js`, and `.css`, `mercury-vitest-standards` for
 > Vitest specs.
+
+**Precedent.**
+
+> Report what the repo already does, and what it has never done. Run two sweeps.
+>
+> 1. **No prior art.** What does this diff introduce that the repo has nothing like? A file kind, a
+>    directory, a layer, a naming shape, an export pattern, a dependency.
+> 2. **Prior art.** What does this diff do that the repo already does elsewhere? Name the other
+>    sites.
+>
+> A search that returns only the new file is the finding.
+>
+> Report prior art as fact, and do not rule on it. Prior art makes a thing precedented. It does not
+> make the thing right, and its absence does not make a thing wrong.
+>
+> This axis reports observations rather than defects, so the finding contract does not apply. Each
+> row carries three fields.
+>
+> 1. The thing, as the diff introduces it or repeats it.
+> 2. The search you ran, so the reader can judge it.
+> 3. What the search returned.
 
 **Comments.** Pass `references/style.md`.
 
@@ -307,10 +341,16 @@ Code can follow every standard and still implement the wrong thing.
 
 ### Run the mechanical checks while the axes work
 
-The dispatch has gone out, so run the repo's spec suite, linter, typechecker, and build yourself in
-the meantime. Where a check needs a setup you do not have, say so in the session and move on.
+The dispatch has gone out, so run the repo's checks yourself in the meantime. Run every kind of
+check, not the one nearest the diff: the spec suite, the linter, the typechecker, and the build.
+Narrowing a suite to the paths the diff touches is fine. Skipping a whole kind of check is not.
 
-Surface a check only when it fails. A green run earns no line anywhere. A failure is blocking, and it
+Run `gh pr checks <n>` as well. The local run and the CI status are both checks, and neither replaces
+the other. A local run catches a check the CI config never runs. CI catches a failure in an
+environment you do not have. Where a check needs a setup you lack, say so in the session, and name
+the CI result you fell back on.
+
+Surface a check only when it fails, locally or on CI. A green run earns no line anywhere. A failure is blocking, and it
 goes near the top of the review body, per Step 4. Where the failure points at a line, add an inline
 comment for the detail as well.
 
@@ -338,7 +378,10 @@ it when the hunk does not settle it.
 Drop any finding with no concrete failure scenario. A finding that needs an artificial test setup to
 happen is theoretical.
 
-For each surviving finding, ask these five questions.
+**Precedent and Prior Round are exempt from that rule.** An observation and a disposition are not
+defects, so no failure scenario attaches to either. Route those rows below.
+
+For each surviving finding, ask these four questions.
 
 | Question | Real | Theoretical |
 |---|---|---|
@@ -346,22 +389,31 @@ For each surviving finding, ask these five questions.
 | Is this at a system boundary (user input, external API)? | yes | no, internal code with structural guarantees |
 | Does a structural constraint prevent it? (OS modal, event loop, type system) | no | yes |
 | Is this a public API / library surface? | yes | no, closed app, internal use |
-| Does main already use the same pattern elsewhere without issues? | no | yes, not a new risk class |
 
 Real findings become comments. Drop a theoretical finding, or turn it into an adjacent note that says
 why it is theoretical. Defensive programming suits a system boundary. It does not suit internal code with a
 structural guarantee.
 
-The last row does the most work. "Main already does this" turns a finding into an adjacent note
-rather than a defect in this diff.
-
 **The circular finding trap.** If the fix for one finding would trigger the opposite finding, stop.
 The loop itself signals that both findings are probably theoretical. Triage them rather than
 oscillating.
 
-**Route the Prior Round rows.** They are exempt from the drop rule above, because a disposition is
-not a defect and carries no failure scenario. The axis reports what it saw, and it does not choose a
-destination.
+**Use what Precedent reported.** It decides who owns a fix, and what a finding covers. It never
+decides whether a finding is real, or how severe it is.
+
+| What Precedent found | Destination |
+|---|---|
+| No prior art, and no rule against it | session, because "was this agreed?" is not answerable from the repo |
+| No prior art, and a rule against it | inline comment, citing the rule |
+| Prior art, and an axis flagged it | inline comment, naming where else the pattern appears |
+
+A bug main also has is the same bug. Prior art changes what the comment says, not what it asks for.
+Say that the pattern predates this diff, and that the fix reaches past it.
+
+Ask what a finding actually is before you reach for prior art. A finding rewritten around the points
+that survive it is frequently the wrong finding.
+
+**Route the Prior Round rows.** The axis reports what it saw, and it does not choose a destination.
 
 | Disposition | Destination |
 |---|---|
