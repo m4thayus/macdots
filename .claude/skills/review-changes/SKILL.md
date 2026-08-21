@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Use when reviewing code changes. Covers a PR, a branch, a diff, changes since a commit, and your own work before you open a PR. Produces findings, inline comments in Conventional Comments format, and an Approve or Request Changes verdict. It never edits the code. Triggers on "review this PR", "review #1234", "review my branch", "review changes since main", "look at this PR", "request changes", "re-review", a later round on a PR you already reviewed, and a self-review before opening a PR.
+description: Use when reviewing code changes. Covers a PR, a branch, a diff, changes since a commit, and your own work before you open a PR. Produces findings, inline comments in Conventional Comments format, and an Approve, Request Changes, or Comment verdict. It never edits the code. Triggers on "review this PR", "review #1234", "review my branch", "review changes since main", "look at this PR", "request changes", "re-review", a later round on a PR you already reviewed, and a self-review before opening a PR.
 ---
 
 # Review Changes
@@ -86,6 +86,8 @@ Raise these in the session. Never write them into the draft.
    Step 3.
 5. **The diff introduces a pattern the repo has no prior art for, and no rule covers it.** Whether
    the team agreed to it is not answerable from the repo. See Step 3.
+6. **This is the third round on the same PR.** The rounds have stopped being about mechanics. See
+   Step 6.
 
 **Report the conflicts you did settle.** Give each cross-axis contradiction one line in the session,
 with the call you made. Never resolve one silently. Keep it brief and let the user ask for the detail.
@@ -570,27 +572,77 @@ count.
 
 ## Step 6. Choose the verdict
 
-The deciding question is "is a re-review needed?" It is not "are there issues to fix?"
+The deciding question is "do I have to see the next iteration myself?" It is not "are there issues
+to fix?" and it is not "how bad is the worst finding?"
 
-**Approve, clean,** when nothing in the review asks the author for anything, the review body
-included. Only `praise:` and `thought:` belong here, because neither carries a request. A `nitpick:`
-does carry one, even though it never blocks. The axis list in the review body is what separates a
-clean approval from a shallow one, so Step 4 makes it the third part.
+A blocking inline comment already holds the author accountable. It marks a finding fix-before-merge
+without asking to see the fix. Severity picks the comment label. It does not pick the verdict.
 
-**Approve, with notes,** when the issues are mechanical, scope judgments the author has better
-context for, cleanup the author can execute unsupervised, naming opinions, follow-up flags, a stale
-PR description, or a label that is missing or wrong.
+**Why:** the team honours a blocking comment. Request Changes on top of one buys no extra guarantee,
+and it costs the author a round-trip.
 
-**Request Changes** when the issues are architecture or design problems, real security or performance
-concerns, notable functionality gaps, non-trivial UI redesigns, or large rewrites. Also request
-changes when you genuinely need to see the next iteration to confirm the fix landed.
+### The ladder
 
-A failing check from Step 2 is always Request Changes. Whether the suite went green is exactly what
-the next iteration has to show. A prior blocking finding still unfixed is Request Changes on the same
-logic.
+Each rung asks more of the author than the one below it. Take the lowest rung that holds.
 
-Default to Approve when in doubt. Request Changes on mechanical cleanup imposes a re-review tax the
-situation does not warrant.
+**1. Approve, clean.** Nothing in the review asks the author for anything, the review body included.
+Only `praise:` and `thought:` belong here, because neither carries a request. A `nitpick:` does carry
+one, even though it never blocks. The axis list in the review body is what separates a clean approval
+from a shallow one, so Step 4 makes it the third part.
+
+**2. Approve, with notes.** The review asks for things, and none of them needs you to see the result.
+Blocking comments live on this rung. A review that found real problems with known fixes lands here,
+and that is the normal shape.
+
+**3. Request Changes.** The next iteration is the thing you need to see. One of these has to hold.
+
+- A check from Step 2 fails. Whether the suite goes green is a fact only the next run shows.
+- The fix has no agreed shape. You disputed the approach, so what lands is not predictable.
+- A reply cannot confirm the fix. Only the diff shows it.
+
+Your own prior blocking finding, still unfixed and unanswered, holds this rung on the same logic. You
+asked once already, so the next iteration is still the thing you need to see.
+
+Then ask what round this is. The bar rises steeply, not by one step each time.
+
+| Round | What this rung needs |
+|-------|----------------------|
+| 1 | A case holds. Ordinary, and cheap. |
+| 2 | A case holds, and one sentence names what the next iteration settles. |
+| 3 | Nothing qualifies. Stop, and raise it with the user. |
+
+**Why:** each round costs a full re-read from someone who already read the diff. A PR that reaches a
+third round is no longer arguing about mechanics. It is arguing about design, the two sides are
+flip-flopping, and a comment thread will not settle it. Name a venue that can: a call, a design
+discussion, a conversation with the author. Rung 4 can carry that ask, or post no review and take it
+up directly.
+
+**4. Comment.** A fix is not what you want. A change can be soundly built and still be the wrong
+change. Approving endorses it, and Request Changes asks for a next iteration you cannot describe,
+because the open question is whether to do this at all.
+
+Raise it with the user before you draft anything. A wrong premise or a wrong scope is a conversation,
+not a review artifact.
+
+### Another reviewer's open finding is data
+
+The reviewer who raised a finding owns it. First come, first served. They decide whether it gates,
+and their decision stands whichever way it went. Report it, per the Prior Round axis.
+
+It tells you nothing about your own verdict, in either direction. A finding they gated on is not a
+reason for you to gate. One they approved over is not a reason for you to let it go. You can agree
+with their point, say so, and still need no round-trip of your own.
+
+Gating on their finding also takes it out of their hands. A Request Changes blocks the merge by
+itself, so it overrides the Approve they gave with the finding open.
+
+### Name no verdict until every axis reports
+
+Wait for all dispatched axes, even for a provisional call in the session. A late axis reverses an
+early verdict, and the reversal reads as indecision rather than as new evidence.
+
+Default to the lowest rung that holds. Rung 3 levies a re-review tax. Say what the tax buys, or do
+not levy it.
 
 ## Step 7. Show, then post
 
