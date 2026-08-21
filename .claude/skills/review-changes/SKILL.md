@@ -721,21 +721,25 @@ ahead of its replies points the author at something they cannot find.
 Pass the payload as a file with `--input`, because a comment body carries backticks and pipes that do
 not survive a shell argument. Write that file from the `/tmp` scratch file.
 
-### Read the payload back before you send it
+### Read the payload back as raw text
 
-Assemble the file, then print the bodies out of the file and show that output.
+Assemble the file, then print it back through the shell and show that output.
 
 ```sh
-jq -r '.comments[] | "\(.path):\(.line)\n\(.body)\n---"' <payload>
+jq -r '"--- body ---", .body,
+       (.comments[] | "--- \(.path) \(.start_line // .line):\(.line) ---", .body)' <payload>
 ```
 
-Those bytes are what the author reads. The final go-ahead attaches to them, not to the draft earlier
-in the session.
+Those bytes are what the author reads, anchors included. The final go-ahead attaches to them, not to
+the draft earlier in the session.
 
-**Why:** the session rendering of a comment presents it. It is not the comment. Backticks that make a
-subject line legible in chat ship as a code span that swallows the label, and a subject carrying its
-own backticks ships as several broken ones. Nothing downstream catches this, because the draft looked
-right in chat for exactly the reason it is wrong in the payload.
+**Why through the shell.** Your message text renders as markdown. Shell output does not. Backticks
+that made a subject line legible in chat vanish into a code span there and print literally here.
+GitHub renders them the way chat did, as one code span that swallows the label. Re-printing the draft
+in a message shows you the same rendering that hid the problem the first time.
 
-A blocked write does not do this job. The block gates the call, and the call is opaque. Read the
-payload back whether the write runs here or the user pastes it.
+This checks fidelity, not correctness. It confirms that what ships is what the user approved, and it
+catches a dropped comment or a wrong anchor. It says nothing about whether a finding is right.
+
+A block on the write is a separate matter. It gates the call, and the call is opaque either way, so
+run this read-back whether the write runs here or the user pastes it.
