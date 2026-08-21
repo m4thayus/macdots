@@ -104,15 +104,42 @@ rather than competing with it — keep the reason, drop the chronology.
 owns should shrink to a pointer at that owner.
 
 **The exception is the sync comment.** Sometimes this code silently depends on code elsewhere — a
-wire format, a shared schema, an ordering both ends assume, a constant another service parses. Then
-the comment goes at both ends, and each copy names the other. Test it: could someone editing *this*
-code break the invariant without ever opening the other one? Yes means write it twice.
+wire format, an ordering both ends assume, a constant another service parses. Then the comment goes
+at both ends, and each copy names the other. Test it: could someone editing *this* code break the
+invariant without ever opening the other one? Yes means write it twice.
 
 The other end can be another file, another package, or another repo. The further away it sits, the
 more the second copy earns its place, because nothing else links the two.
 
+**It is the weakest way to keep two ends in sync, so look for a mechanism first.** A shared schema
+both ends generate from, a constant one end imports rather than copies, a contract test that fails on
+drift. A comment cannot fail. Reach for it when nothing can enforce the link, which happens often —
+across languages especially. Common does not make it the default.
+
+**An invariant earns a sync comment. A name does not.** The test is whether drift breaks something.
+Rename a model on one side of an API boundary and nothing breaks, so a comment pairing the two names
+records an obligation nobody owes, and it drifts in silence. See Systems Name Themselves.
+
 **Attach the rationale to the rule it justifies.** Don't write a section header that re-explains the
 section beneath it.
+
+## Systems Name Themselves
+
+Every application owns its vocabulary — model names, table names, class hierarchies. Two systems that
+exchange data are still two systems. One side's normalization, indexing and hierarchy answer its own
+requirements, so borrowing its names imports a design decision made for someone else's problem.
+
+The pull to copy a name across is strong, because both ends describe the same real thing and one
+shared name is cheap and greppable. Resist it. A matching name implies a contract nobody wrote, and
+the next reader treats it as one.
+
+**The API boundary is the contract.** REST, GraphQL, the wire format — what crosses it is what the
+two ends owe each other. Identifiers do not cross. Either side renames without forcing a migration on
+the other, which is the whole point.
+
+**A real contract goes in code.** Where a name genuinely is part of it — a discriminator value, a
+serialized key, an enum another service parses — state it as a shared schema, a generated type, or an
+imported constant. That makes it an invariant, and an invariant is what earns the sync comment.
 
 ## Boy Scout Rule (calibrated)
 

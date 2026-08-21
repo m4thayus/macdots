@@ -679,12 +679,8 @@ not levy it.
 
 ## Step 7. Show, then post
 
-Show the review body and every comment. Wait for the go-ahead.
-
-**The chat rendering presents the comment. It is not the comment.** Backticks that make a subject
-line legible in the session are display only. Build every payload from the `/tmp` scratch file, never
-from the text you showed. A subject wrapped in backticks renders the label and the subject as one
-code span, and a subject carrying its own backticks renders as several broken ones.
+Show the review body and every comment. Wait for the go-ahead. That go-ahead covers the wording. The
+payload gets its own check below.
 
 **Re-fetch immediately before `gh pr review`.** Nothing pauses the PR while you review it, and
 nothing pauses it while you wait for the go-ahead. A long pass makes the Step 0 snapshot stale.
@@ -725,5 +721,21 @@ ahead of its replies points the author at something they cannot find.
 Pass the payload as a file with `--input`, because a comment body carries backticks and pipes that do
 not survive a shell argument. Write that file from the `/tmp` scratch file.
 
-Expect to hand the command to the user rather than run it. A write to a remote is exactly the call
-rule 3 exists to gate.
+### Read the payload back before you send it
+
+Assemble the file, then print the bodies out of the file and show that output.
+
+```sh
+jq -r '.comments[] | "\(.path):\(.line)\n\(.body)\n---"' <payload>
+```
+
+Those bytes are what the author reads. The final go-ahead attaches to them, not to the draft earlier
+in the session.
+
+**Why:** the session rendering of a comment presents it. It is not the comment. Backticks that make a
+subject line legible in chat ship as a code span that swallows the label, and a subject carrying its
+own backticks ships as several broken ones. Nothing downstream catches this, because the draft looked
+right in chat for exactly the reason it is wrong in the payload.
+
+A blocked write does not do this job. The block gates the call, and the call is opaque. Read the
+payload back whether the write runs here or the user pastes it.
