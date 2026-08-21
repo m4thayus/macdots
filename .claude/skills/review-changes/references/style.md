@@ -1,10 +1,10 @@
 # Writing style
 
-Write every review artifact in Simplified Technical English, the ASD-STE100 standard. The standard is
-named so the rules stay checkable instead of becoming taste. This file carries the rules. The skill
-decides which artifact takes which mode.
+These rules are Simplified Technical English, the ASD-STE100 standard. The standard is named so they
+stay checkable instead of becoming taste. Write every review artifact in them, and judge changed
+prose and code comments against them. The two modes are defined at the end.
 
-These rules set a baseline for written work. A project's own standards override them where the two
+They set a baseline for written work. A project's own standards override them where the two
 conflict. They never govern conversation with a user, because a user's own configuration decides
 that.
 
