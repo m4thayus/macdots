@@ -359,13 +359,12 @@ The dispatch has gone out, so run the repo's checks yourself in the meantime. Ru
 check, not the one nearest the diff: the spec suite, the linter, the typechecker, and the build.
 Narrowing a suite to the paths the diff touches is fine. Skipping a whole kind of check is not.
 
-**Run every project a check defines, not the default invocation.** A typechecker configured with
-several project files checks only the project you name, and the obvious one frequently excludes the
-specs. A root config with an empty `files` list checks nothing and exits zero. List the project
-files, then run every one that covers a changed path.
+**Take each command from the repo, not from habit.** The CI workflow, the git hooks and the package
+scripts already declare how this project runs its checks. An invocation you compose yourself can
+cover less ground than the declared one and still exit zero, which reads as green over the gap.
 
-Read the project's memory for a verification recipe before you invent one. A repo that carries a trap
-like this usually has it written down already.
+Where the repo declares several commands for one kind of check, run all of them. A split
+configuration usually exists because one target excludes what another covers.
 
 Run `gh pr checks <n>` as well. The local run and the CI status are both checks, and neither replaces
 the other. A local run catches a check the CI config never runs. CI catches a failure in an
