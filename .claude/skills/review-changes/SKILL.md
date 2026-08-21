@@ -124,8 +124,9 @@ Resolve the target before reading any code. Use the first of these that applies.
 4. Ambiguous, or not a git repo. Ask. Do not guess a target.
 
 **Check out the target before anything else reads it.** The axes verify by executing, not by reading
-alone. Checks runs the repo's suites, Standards runs a built-in against the edge cases, and Claims
-runs the spec. All of it reads the working tree, so the tree has to hold the code under review.
+alone. Checks runs the suites the repo declares. Standards runs a built-in against the edge cases.
+Claims runs the one case behind an author's assertion. All of it reads the working tree, so the tree
+has to hold the code under review.
 
 **A dirty tree stops the review.** Name what is uncommitted and ask. Never stash, and never check
 out over uncommitted work. This holds for a self-review too. Uncommitted work is not reviewable,
