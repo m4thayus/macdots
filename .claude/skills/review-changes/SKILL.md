@@ -594,4 +594,25 @@ situation does not warrant.
 
 ## Step 7. Show, then post
 
-Show the review body and every comment. Wait for the go-ahead. Post once.
+Show the review body and every comment. Wait for the go-ahead.
+
+**Re-fetch immediately before `gh pr review`.** Nothing pauses the PR while you review it, and
+nothing pauses it while you wait for the go-ahead. A long pass makes the Step 0 snapshot stale.
+Re-run the Step 0 prior-round commands, and add
+`gh pr view <n> --json state,reviewDecision,headRefOid`.
+
+Reconcile the result against the drafted findings.
+
+1. Another reviewer already made a point you drafted. Drop your comment, and reply on their thread
+   instead.
+2. `headRefOid` moved. Always say so in the session, and name what moved. Run
+   `git log <old-oid>..<new-oid> --oneline`, then `git diff <old-oid>..<new-oid>` over the files your
+   findings cite. Judge by the cited lines, not by the file list. A merge from the base branch churns
+   whole files while leaving every finding intact.
+   - Your cited lines are untouched. Say so, and post.
+   - The author already fixed a finding you drafted. Drop that one, and post the rest.
+   - Neither case above applies. Stop, and let the user choose between a full Step 0 round, a
+     re-check of the touched findings only, and posting as drafted.
+3. The PR merged or closed. Stop, and raise it with the user.
+
+Show the revised set and get a fresh go-ahead when anything changed. Post once.
