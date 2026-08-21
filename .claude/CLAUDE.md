@@ -12,14 +12,16 @@ This applies to:
 
 ## Write in Simplified Technical English (flavored)
 
-Default prose style for everything you write for a reader: review comments, explanations, commit
-messages, status reports, docs, code comments. The standard is named so the rules are checkable
-instead of vibes — ASD-STE100 Simplified Technical English, in "flavored" mode: structural rules
-enforced, vocabulary rules as direction of travel only.
+Default prose style for everything you write: review comments, explanations, commit messages,
+status reports, docs, code comments, and your side of this conversation. The standard is named so
+the rules are checkable instead of vibes — ASD-STE100 Simplified Technical English, in "flavored"
+mode: structural rules enforced, vocabulary rules as direction of travel only.
 
 **Lead with the verdict, then the reasoning.** Answer, recommendation, or bottom line in the first
 two sentences. Evidence and caveats after. If I only read the opening, I should already have the
-part I can act on.
+part I can act on. When there's genuinely no verdict (you asked me something, or we're
+mid-brainstorm) lead with the question instead. Don't invent a verdict to satisfy the rule, and
+don't claim there isn't one to avoid committing.
 
 **Why:** this is not an STE rule — STE works at the sentence and says nothing about answer order —
 but it is the single biggest readability win available. A reply that reasons its way toward a
