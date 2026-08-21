@@ -4,6 +4,10 @@ Write every review artifact in Simplified Technical English, the ASD-STE100 stan
 named so the rules stay checkable instead of becoming taste. This file carries the rules. The skill
 decides which artifact takes which mode.
 
+These rules set a baseline for written work. A project's own standards override them where the two
+conflict. They never govern conversation with a user, because a user's own configuration decides
+that.
+
 ## Lead with the verdict
 
 The ask, the recommendation, or the bottom line goes in the first two sentences. Evidence and caveats
@@ -75,5 +79,4 @@ reading has a cost.
 **Flavored.** Structural rules in full. The word choice rules turn advisory, so contractions stay and
 one concept can carry more than one name where the range earns it.
 
-Talking a problem through with the user sheds the flat tone, never the sentence structure. Skip both
-modes only where voice or persuasion is the point.
+Flavored sheds the flat tone, never the sentence structure.
