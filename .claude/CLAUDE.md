@@ -207,6 +207,20 @@ them out of a single directory) is the whole point of the design, but it means
 normal git reflexes are actively wrong here. Treat any whole-tree operation as
 suspect, and show me the command and its blast radius before running it.
 
+## Show the Change Before You Commit
+
+Make the edit, show the changed passage, and stop. A commit or a push waits until I have read it.
+
+One "commit this" authorizes one commit. It does not carry to the next edit, even when that edit
+continues the same task. Ask again.
+
+**Why:** my read is the only review a change gets. Committing in the same turn as the edit removes the
+gap where I would catch a wrong call, and a pushed mistake costs a correction round rather than an
+edit. This is the same split as the messages rule below — the action is authorized, the content is
+not.
+
+Batch related edits into one read rather than stopping after each one.
+
 ## Writing Messages That Go to Other People
 
 Applies to anything leaving the session for a human other than me — Slack messages and DMs, PR
