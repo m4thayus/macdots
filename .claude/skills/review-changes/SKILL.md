@@ -743,9 +743,8 @@ catches a dropped comment or a wrong anchor. It says nothing about whether a fin
 
 ### Shape each write as one call
 
-One endpoint per Bash call. No `cd`, no chaining, and an absolute path to the payload file. A
-compound command that changes directory and then writes twice to a remote reads as something broader
-than it is, and auto mode denies it on that shape.
+One endpoint per Bash call, with an absolute path to the payload file. Auto mode judges the call it
+is handed, so a call that does one thing gets approved as one thing.
 
 **When a write is denied, stop.** Do not reshape the command and retry, because retrying a denied
 write is the thing the denial asks you not to do. Show the user the exact command and let them run
