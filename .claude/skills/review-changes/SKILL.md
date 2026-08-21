@@ -741,5 +741,13 @@ in a message shows you the same rendering that hid the problem the first time.
 This checks fidelity, not correctness. It confirms that what ships is what the user approved, and it
 catches a dropped comment or a wrong anchor. It says nothing about whether a finding is right.
 
-A block on the write is a separate matter. It gates the call, and the call is opaque either way, so
-run this read-back whether the write runs here or the user pastes it.
+### Shape each write as one call
+
+One endpoint per Bash call. No `cd`, no chaining, and an absolute path to the payload file. A
+compound command that changes directory and then writes twice to a remote reads as something broader
+than it is, and auto mode denies it on that shape.
+
+**When a write is denied, stop.** Do not reshape the command and retry, because retrying a denied
+write is the thing the denial asks you not to do. Show the user the exact command and let them run
+it. Nothing is lost: the wording is approved and the payload is already read back.
+
