@@ -611,6 +611,14 @@ are non-blocking by definition.
 **A retraction takes no label.** It is a reply that names what it retracts and why. Do not restate
 the original comment, because the thread above it already carries the text.
 
+**Address a person by `@login`, at least once per reply.** This covers a reply to the author and a
+reply to another reviewer, a retraction included. Use the plain name after the first `@login` in the
+same reply, never instead of it.
+
+**Why:** GitHub notifies on the mention, not on the name. A reply that only writes "Sam" reaches
+nobody who is not already watching the thread, and a re-raise the author never sees is a re-raise
+that costs a round.
+
 Skip the `todo:` and `note:` labels from the specification. `todo:` collides with `TODO` comments in
 code, which carry a different meaning to the team. `note:` is non-blocking by definition, so it is a
 decoration wearing a label's clothes.
