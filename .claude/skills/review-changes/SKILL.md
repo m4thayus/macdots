@@ -139,13 +139,21 @@ landed there yet. A finding read off the default branch comes back confirmed and
 **Then check for prior rounds.** Review history changes the axis set, so detect it here rather than
 part-way through.
 
-1. `gh pr view <n> --json reviews` for the prior review bodies.
-2. `gh api repos/{owner}/{repo}/pulls/<n>/comments` for every inline thread.
-3. `gh api user --jq .login` for your own login, so the Prior Round axis can tell your prior comments
-   from another reviewer's.
+Dispatch a Haiku subagent for the fetch. The thread JSON grows with the review history, and none of
+it belongs in this context.
 
-Write the prior review bodies and the threads to the `/tmp` scratch file. Say in the session whether this is a
-first pass or a re-review.
+> Run both commands for pull request <n> in <owner>/<repo>.
+>
+> 1. `gh pr view <n> --json reviews` for the prior review bodies.
+> 2. `gh api repos/{owner}/{repo}/pulls/<n>/comments` for every inline thread.
+>
+> Write both results to the `/tmp` scratch file at <path>. Then report three things and nothing
+> else: whether any prior review exists, how many inline threads there are, and the path you wrote.
+
+Run `gh api user --jq .login` yourself, because one line of output costs more to delegate than to
+fetch. The Prior Round axis needs it to tell your prior comments from another reviewer's.
+
+Say in the session whether this is a first pass or a re-review.
 
 ## Step 1. Read the PR: the claims, then the metadata
 
@@ -161,8 +169,8 @@ Say in the review body which claims you verified and how. That is the evidence f
 it covers the claims only. A table helps when there are several claims, and it is not required.
 
 **The suites are not a claim.** "Specs pass", "lint is clean", and "typecheck passes" get no
-verification row. Run them yourself anyway while the axes work, per Step 2, and surface only a
-failure.
+verification row. The Checks axis runs them anyway, per Step 2, and only a failure reaches the
+review.
 
 **The metadata.** Three questions about the pull request itself, not about the diff.
 
@@ -180,6 +188,16 @@ None of the three anchors to a line of code, so all three belong in the review b
 
 One axis per subagent, so no axis sees another's reasoning. Deciding early that a change is "just" a
 rename is how the design-level findings get skipped.
+
+**Set the model on every dispatch.** An axis inherits the session model where the dispatch names
+none, so a whole review runs on Opus. Split it by what the axis needs.
+
+- **Opus.** Correctness, Claims, Standards, and Prior Round. Each one rules on unfamiliar code, and a
+  weaker model there returns a confident wrong finding.
+- **Sonnet.** Precedent, Comments, and Prose. Each one works from an explicit brief against bounded
+  input, so the brief carries the reasoning rather than the model.
+- **Haiku.** Checks. It runs the commands the repo declares and reports what came back, so it judges
+  nothing.
 
 **Every subagent prompt carries these parts.**
 
@@ -201,17 +219,19 @@ and no prose summary. Every finding carries five fields.
 4. Confidence, as `confirmed` or `plausible`.
 5. Whether main already does the same thing elsewhere.
 
-**A clean axis reports `no findings`.** Require those words. Silence and a clean pass read alike in
-the main context, so an axis that returned nothing at all has to be dispatched again.
+**A clean axis reports an explicit negative.** Require the words its brief names: `no findings` for
+most, `no failures` for Checks. Silence and a clean pass read alike in the main context, so an axis
+that returned nothing at all has to be dispatched again.
 
 ### Pick the axis set
 
 Read the changed paths first: `git diff --name-only <base>...HEAD`. The paths pick the set.
 
-- **Prose-only diff**, where every changed path is `.md` or `.mdx`. Dispatch **Claims** and
-  **Prose**. Nothing else, because the diff holds no code to be wrong and no comment to audit.
-- **Any other diff.** Dispatch **Correctness**, **Claims**, **Standards**, **Precedent**, and
-  **Comments**. Add **Prose** where the diff also touches `.md` or `.mdx`.
+- **Prose-only diff**, where every changed path is `.md` or `.mdx`. Dispatch **Claims**, **Prose**,
+  and **Checks**. A markdown linter and a spell check are checks. Nothing else, because the diff
+  holds no code to be wrong and no comment to audit.
+- **Any other diff.** Dispatch **Correctness**, **Claims**, **Standards**, **Precedent**,
+  **Comments**, and **Checks**. Add **Prose** where the diff also touches `.md` or `.mdx`.
 
 Add **Prior Round** to either set where Step 0 found prior review rounds.
 
@@ -313,6 +333,32 @@ say costs one `no findings` line.
 > Second, accuracy. Check every claim the prose makes against the code. A rewritten justification is
 > a claim, not decoration. This check finds factual errors, so never treat the pass as style alone.
 
+**Checks.** Pass the pull request number.
+
+> Run every kind of check this repo declares, not the one nearest the diff: the spec suite, the
+> linter, the typechecker, and the build. Narrowing a suite to the paths the diff touches is fine.
+> Skipping a whole kind of check is not.
+>
+> Take each command from the repo, not from habit. The CI workflow, the git hooks and the package
+> scripts already declare how this project runs its checks. An invocation you compose yourself can
+> cover less ground than the declared one and still exit zero, which reads as green over the gap.
+>
+> Where the repo declares several commands for one kind of check, run all of them. A split
+> configuration usually exists because one target excludes what another covers.
+>
+> Run `gh pr checks <n>` as well. The local run and the CI status are both checks, and neither
+> replaces the other. A local run catches a check the CI config never runs. CI catches a failure in
+> an environment you do not have.
+>
+> This axis reports process results rather than defects, so the finding contract does not apply.
+> Report a failure only, locally or on CI, and give each one three fields.
+>
+> 1. The command, as the repo declares it.
+> 2. The failing target, named closely enough to comment on the line.
+> 3. Whether it failed locally, on CI, or both.
+>
+> Report any check you could not run, and name the setup it needed.
+
 **Prior Round.** Dispatch only where Step 0 found prior rounds. Pass the `/tmp` file holding the
 prior review bodies and the threads, and pass your own login.
 
@@ -354,32 +400,6 @@ prior review bodies and the threads, and pass your own login.
 Report the axes separately. Do not merge them, because one axis passing can hide another failing.
 Code can follow every standard and still implement the wrong thing.
 
-### Run the mechanical checks while the axes work
-
-The dispatch has gone out, so run the repo's checks yourself in the meantime. Run every kind of
-check, not the one nearest the diff: the spec suite, the linter, the typechecker, and the build.
-Narrowing a suite to the paths the diff touches is fine. Skipping a whole kind of check is not.
-
-**Take each command from the repo, not from habit.** The CI workflow, the git hooks and the package
-scripts already declare how this project runs its checks. An invocation you compose yourself can
-cover less ground than the declared one and still exit zero, which reads as green over the gap.
-
-Where the repo declares several commands for one kind of check, run all of them. A split
-configuration usually exists because one target excludes what another covers.
-
-Run `gh pr checks <n>` as well. The local run and the CI status are both checks, and neither replaces
-the other. A local run catches a check the CI config never runs. CI catches a failure in an
-environment you do not have. Where a check needs a setup you lack, say so in the session, and name
-the CI result you fell back on.
-
-Surface a check only when it fails, locally or on CI. A green run earns no line anywhere. A failure is blocking, and it
-goes near the top of the review body, per Step 4. Where the failure points at a line, add an inline
-comment for the detail as well.
-
-**Why:** taking "specs pass" on trust assumes CI ran that check and ran it green. A check can be
-missing from the CI config, and CI itself has outages. Running it here costs wall-clock time nobody
-was using, and it catches both.
-
 ## Step 3. Triage
 
 Reconcile what Step 2 returned. Do not re-run it.
@@ -400,8 +420,10 @@ it when the hunk does not settle it.
 Drop any finding with no concrete failure scenario. A finding that needs an artificial test setup to
 happen is theoretical.
 
-**Precedent and Prior Round are exempt from that rule.** An observation and a disposition are not
-defects, so no failure scenario attaches to either. Route those rows below.
+**Precedent, Prior Round and Checks are exempt from that rule, for two different reasons.** An
+observation and a disposition are not defects, so no failure scenario attaches to either. A check
+failure is the opposite case. It already happened, so the run is its failure scenario and nothing
+about it is theoretical. Route all three below.
 
 For each surviving finding, ask these four questions.
 
@@ -434,6 +456,10 @@ Say that the pattern predates this diff, and that the fix reaches past it.
 
 Ask what a finding actually is before you reach for prior art. A finding rewritten around the points
 that survive it is frequently the wrong finding.
+
+**Route the Checks rows.** Every failure is blocking, and it goes near the top of the review body.
+Where the failing target points at a line, add an inline comment for the detail as well. Where the
+axis could not run a check, say so in the session, and name the CI result you fell back on.
 
 **Route the Prior Round rows.** The axis reports what it saw, and it does not choose a destination.
 
