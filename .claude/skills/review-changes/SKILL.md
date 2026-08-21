@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Use when reviewing code changes. Covers a PR, a branch, a diff, changes since a commit, and your own work before you open a PR. Produces findings, inline comments in Conventional Comments format, and an Approve, Request Changes, or Comment verdict. It never edits the code, but it does check out the target, so run one review at a time in a repo. Triggers on "review this PR", "review #1234", "review my branch", "review changes since main", "look at this PR", "request changes", "re-review", a later round on a PR you already reviewed, and a self-review before opening a PR.
+description: Use when reviewing code changes. Covers a PR, a branch, a diff, changes since a commit, and your own work before you open a PR. Produces findings, inline comments in Conventional Comments format, and an Approve, Request Changes, or Comment verdict. It never edits the code, but it does check out the target, so run one review at a time in a working tree. Open a second worktree to review without stopping other work. Triggers on "review this PR", "review #1234", "review my branch", "review changes since main", "look at this PR", "request changes", "re-review", a later round on a PR you already reviewed, and a self-review before opening a PR.
 ---
 
 # Review Changes
@@ -123,8 +123,9 @@ Resolve the target before reading any code. Use the first of these that applies.
 3. No PR for the branch. Diff against the merge-base, and say that is what you are reviewing.
 4. Ambiguous, or not a git repo. Ask. Do not guess a target.
 
-**Check out the target before anything else reads it.** The Checks axis runs the repo's suites
-against the working tree, so the tree has to hold the code under review.
+**Check out the target before anything else reads it.** The axes verify by executing, not by reading
+alone. Checks runs the repo's suites, Standards runs a built-in against the edge cases, and Claims
+runs the spec. All of it reads the working tree, so the tree has to hold the code under review.
 
 **A dirty tree stops the review.** Name what is uncommitted and ask. Never stash, and never check
 out over uncommitted work. This holds for a self-review too. Uncommitted work is not reviewable,
