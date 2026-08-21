@@ -477,18 +477,18 @@ discussion. Five history sites become one comment, not five.
 **Every finding is an inline comment.** Anchor it to the line that shows the problem, because the
 code is the context.
 
-**An anchor has to sit inside a diff hunk.** GitHub rejects every other line. Check the hunk before
-you choose. Where one line will not carry the point, use a multi-line anchor, `start_line` and
-`line`, bracketing the whole construct. A comment about a type that anchors to one field reads as a
-comment about that field.
+**An anchor has to sit inside a diff hunk.** GitHub rejects every other line, so check the hunk
+before you choose.
 
-Where no line in range shows the problem, anchor at the nearest line inside a hunk and name the real
-line in prose. That changes how the comment is written, so settle it here rather than while
-assembling the payload.
+**Anchor to the line that names the subject.** Where the declaration sits outside every hunk, pick an
+in-hunk line that references it and name the declaration in prose. A comment about a type that
+anchors to some unrelated field reads as a comment about that field.
 
-**Get the anchor right before you post.** A `PATCH` changes a comment's body, never its line. Moving
-an anchor costs a delete and a re-post, which drops the comment out of its review and re-notifies the
-author.
+Prefer one line to a range. GitHub renders a range comment at its last line, and the line that names
+the subject can sit outside the preview shown there.
+
+Naming a line in prose changes how the comment is written, so settle the anchor here rather than
+while assembling the payload.
 
 **A re-raise or a retraction is a reply on the original thread.** The thread carries the history a
 fresh comment would orphan. Where the thread takes no reply, because it is resolved or outdated or
@@ -680,6 +680,15 @@ not levy it.
 
 Show the review body and every comment. Wait for the go-ahead. That go-ahead covers the wording. The
 payload gets its own check below.
+
+**Head each comment with a link, not a bare path.**
+
+```
+[app/javascript/src/viewers/types/base.ts:45](https://github.com/<owner>/<repo>/blob/<sha>/app/javascript/src/viewers/types/base.ts#L45)
+```
+
+Pin `<sha>` to the head commit so the link cannot drift while the user reads. The user opens the line
+in one click, which is what they do anyway to judge a comment.
 
 **Re-fetch immediately before `gh pr review`.** Nothing pauses the PR while you review it, and
 nothing pauses it while you wait for the go-ahead. A long pass makes the Step 0 snapshot stale.
