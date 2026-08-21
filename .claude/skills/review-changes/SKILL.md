@@ -228,7 +228,8 @@ say costs one `no findings` line.
 **Claims.** Paste the claims you collected in Step 1.
 
 > Report requirements in these claims that the diff misses or half-implements, behavior nobody asked
-> for, and claims the code contradicts. Quote the claim in each finding.
+> for, and claims the code contradicts. Quote the claim in each finding. Where a claim and the code
+> disagree, say which of the two is wrong.
 
 **Standards.** Pass `references/smells.md`.
 
@@ -489,6 +490,16 @@ the subject can sit outside the preview shown there.
 
 Naming a line in prose changes how the comment is written, so settle the anchor here rather than
 while assembling the payload.
+
+**A claim the code contradicts has two possible defects. Place it by which one.** Where the code is
+wrong, that is an ordinary inline comment. Where the code is right and the claim is wrong, the defect
+is a sentence in the description, so it goes in the review body with the metadata findings.
+
+Lead that one with the claim. Quote it, say what verification found, and name the fix as correcting
+the description. Code detail goes underneath as evidence.
+
+**Why:** leading with the code analysis reads as "your change is broken". The author defends an
+implementation that was never in question, and a one-sentence documentation fix costs a round-trip.
 
 **A re-raise or a retraction is a reply on the original thread.** The thread carries the history a
 fresh comment would orphan. Where the thread takes no reply, because it is resolved or outdated or
