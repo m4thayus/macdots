@@ -53,6 +53,9 @@ Accumulate findings in a scratch file under `/tmp`, never inside the work tree. 
 as the walk proceeds.
 Post the whole review in one pass at the end.
 
+One pass is not one call. A re-raise or a retraction is a reply on its own thread, per Step 4, and no
+thread reply can ride inside a review submission. Step 7 carries the order.
+
 **Why:** piecemeal comments fragment the review. They re-ping the author on every push. They lose
 the big-picture framing that makes one considered pass readable.
 
@@ -61,9 +64,9 @@ as a set of type errors. Post that as a standalone comment. Nothing else qualifi
 
 **3. Show the wording before it goes out. Every time.**
 
-Draft the review body and every comment. Show them inline. Ask before calling `gh pr review`,
-`gh pr comment`, or any equivalent. This applies to follow-up thread replies too. "Post it"
-authorizes the action, not the wording.
+Draft the review body and every comment. Show them inline. Ask before any call that writes to the
+PR, `gh pr review`, `gh pr comment` and `gh api` with a POST or a PATCH alike. This applies to
+follow-up thread replies too. "Post it" authorizes the action, not the wording.
 
 **4. Never let another tool post or edit for you.**
 
@@ -126,6 +129,13 @@ commit list with `git log <base>..HEAD --oneline`.
 
 Fail here on a bad ref or an empty diff. Do not fail inside a subagent.
 
+**Then check whether the diff depends on a sibling repo.** A PR in a multi-repo series frequently
+reads code that lives in another repo's unmerged branch. Where it does, find that PR, fetch its head,
+and record the exact SHA. Carry the SHA into every subagent prompt, per Step 2.
+
+The sibling's default branch is the wrong source, because the change the diff depends on has not
+landed there yet. A finding read off the default branch comes back confirmed and wrong.
+
 **Then check for prior rounds.** Review history changes the axis set, so detect it here rather than
 part-way through.
 
@@ -171,7 +181,7 @@ None of the three anchors to a line of code, so all three belong in the review b
 One axis per subagent, so no axis sees another's reasoning. Deciding early that a change is "just" a
 rename is how the design-level findings get skipped.
 
-**Every subagent prompt carries four parts.**
+**Every subagent prompt carries these parts.**
 
 1. The diff command and the commit list from Step 0.
 2. The absolute path to every reference file the axis names, resolved from this skill's base
@@ -179,6 +189,8 @@ rename is how the design-level findings get skipped.
 3. The axis brief below, verbatim.
 4. The finding contract below. Precedent and Prior Round are the exceptions, because each brief
    carries its own output shape.
+5. **Where Step 0 found a sibling-repo dependency:** the repo, the PR number, and the SHA to read.
+   State that the default branch is not the source.
 
 **The finding contract.** Give every subagent these words: report findings only, under 400 words,
 and no prose summary. Every finding carries five fields.
@@ -347,6 +359,14 @@ The dispatch has gone out, so run the repo's checks yourself in the meantime. Ru
 check, not the one nearest the diff: the spec suite, the linter, the typechecker, and the build.
 Narrowing a suite to the paths the diff touches is fine. Skipping a whole kind of check is not.
 
+**Run every project a check defines, not the default invocation.** A typechecker configured with
+several project files checks only the project you name, and the obvious one frequently excludes the
+specs. A root config with an empty `files` list checks nothing and exits zero. List the project
+files, then run every one that covers a changed path.
+
+Read the project's memory for a verification recipe before you invent one. A repo that carries a trap
+like this usually has it written down already.
+
 Run `gh pr checks <n>` as well. The local run and the CI status are both checks, and neither replaces
 the other. A local run catches a check the CI config never runs. CI catches a failure in an
 environment you do not have. Where a check needs a setup you lack, say so in the session, and name
@@ -457,6 +477,19 @@ discussion. Five history sites become one comment, not five.
 
 **Every finding is an inline comment.** Anchor it to the line that shows the problem, because the
 code is the context.
+
+**An anchor has to sit inside a diff hunk.** GitHub rejects every other line. Check the hunk before
+you choose. Where one line will not carry the point, use a multi-line anchor, `start_line` and
+`line`, bracketing the whole construct. A comment about a type that anchors to one field reads as a
+comment about that field.
+
+Where no line in range shows the problem, anchor at the nearest line inside a hunk and name the real
+line in prose. That changes how the comment is written, so settle it here rather than while
+assembling the payload.
+
+**Get the anchor right before you post.** A `PATCH` changes a comment's body, never its line. Moving
+an anchor costs a delete and a re-post, which drops the comment out of its review and re-notifies the
+author.
 
 **A re-raise or a retraction is a reply on the original thread.** The thread carries the history a
 fresh comment would orphan. Where the thread takes no reply, because it is resolved or outdated or
@@ -648,6 +681,11 @@ not levy it.
 
 Show the review body and every comment. Wait for the go-ahead.
 
+**The chat rendering presents the comment. It is not the comment.** Backticks that make a subject
+line legible in the session are display only. Build every payload from the `/tmp` scratch file, never
+from the text you showed. A subject wrapped in backticks renders the label and the subject as one
+code span, and a subject carrying its own backticks renders as several broken ones.
+
 **Re-fetch immediately before `gh pr review`.** Nothing pauses the PR while you review it, and
 nothing pauses it while you wait for the go-ahead. A long pass makes the Step 0 snapshot stale.
 Re-run the Step 0 prior-round commands, and add
@@ -668,3 +706,24 @@ Reconcile the result against the drafted findings.
 3. The PR merged or closed. Stop, and raise it with the user.
 
 Show the revised set and get a fresh go-ahead when anything changed. Post once.
+
+### Post the thread replies first, then the review
+
+Each thread reply needs its own call, and none of them can be part of the review submission. Post
+them first. The review body counts the inline comments, re-raises included, so a body that lands
+ahead of its replies points the author at something they cannot find.
+
+`gh pr review` takes a body and nothing else, so it cannot post an anchored inline comment. Reach for
+`gh api` instead.
+
+1. One reply per prior thread:
+   `POST /repos/{owner}/{repo}/pulls/{n}/comments/{comment_id}/replies`.
+2. The review, body and every inline comment in one call:
+   `POST /repos/{owner}/{repo}/pulls/{n}/reviews`, with `event`, `body`, and a `comments` array of
+   `path`, `line`, optional `start_line`, `side`, and `body`.
+
+Pass the payload as a file with `--input`, because a comment body carries backticks and pipes that do
+not survive a shell argument. Write that file from the `/tmp` scratch file.
+
+Expect to hand the command to the user rather than run it. A write to a remote is exactly the call
+rule 3 exists to gate.
