@@ -141,6 +141,31 @@ the other, which is the whole point.
 serialized key, an enum another service parses — state it as a shared schema, a generated type, or an
 imported constant. That makes it an invariant, and an invariant is what earns the sync comment.
 
+## Shortest Name That Stays Unambiguous
+
+Applies to filenames and module-level names. Naming inside code — variables, classes, methods — is
+a separate rule, and this one does not loosen it.
+
+Prefer one word. Add a qualifier only when the short name would collide or mislead where it is
+read. `mercury`, not `mercury-shared` — a folder's siblings already supply "shared".
+
+**Why:** one word carries no separator, so it sidesteps the casing question entirely. `mercury`
+reads the same in kebab, snake and camel. A second word forces a choice, and the right choice
+varies by repo. A qualifier that restates its own context is also noise in every reference, and
+names get read far more often than they get written.
+
+When a second word is unavoidable, match the convention already in that directory rather than
+importing one. Adding a word and shortening a word are separate questions — spell each word out in
+full, so `handler`, never `hdlr`.
+
+**No date prefixes in filenames.** Name a file after its subject. A second version is
+`pr2281-review-round2`, not a new date. Keep a date in the name only where the date *is* the
+identity — a daily note, a standup, a dated meeting.
+
+**Why:** the filesystem already tracks modification time, and a date in frontmatter is queryable
+where a date in a filename is not. The deciding reason is linking: `[[pr2281-review]]` reads as a
+reference and `[[2026-07-31-eng63-tsc-gate-review-handoff]]` does not.
+
 ## Boy Scout Rule (calibrated)
 
 Leave the files you touch better than you found them. When a change makes something redundant — a now-dead parameter, a vestigial wrapper, inert config, a no-longer-used export, an alias that just forwards — remove it in the same change. Before calling work done, re-scan the files you edited (and anything your change made redundant) for that adjacent cruft; treat it as part of verification, not an optional polish pass.
