@@ -1,4 +1,31 @@
 {
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/memory-index.sh\"",
+            "timeout": 5,
+            "statusMessage": "Loading memory index..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/memory-recall.sh\"",
+            "timeout": 10,
+            "statusMessage": "Recalling from memory..."
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "defaultMode": "auto"
   },

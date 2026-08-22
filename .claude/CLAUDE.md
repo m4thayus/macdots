@@ -204,8 +204,20 @@ When getting bearings on scope in a large repo, dispatch a subagent (Explore / g
 
 ## Picking a Basic Memory Scope
 
-Agent memory lives in Basic Memory over MCP, split into six named scopes. **Nothing routes a
-session to a scope automatically.** Pass `project` on every call, and decide it again on the next.
+Agent memory lives in Basic Memory over MCP, split into six named scopes. Two hooks reach it for
+you, both scoped to `personal`, `mercury`, and the repo scope matching cwd:
+
+- `SessionStart` prints every note title in those scopes. **That index is the complete list, so a
+  fact absent from it is absent from the store** — write it rather than search for it.
+- `UserPromptSubmit` runs your message through hybrid search and injects the top hit per scope,
+  with its path. Relevant notes arrive on their own, so don't reach for `search_notes` first.
+
+**Reading a note whose path a hook printed is a plain file read.** Retrieval needed the tool.
+Fetching does not.
+
+**Writes still go through `write_note` or `edit_note`, never `Edit` or `Write`** — the file tools
+leave the search index stale. Neither hook passes `project` for you, and a fact belonging to a
+scope the hooks did not load still goes to that scope.
 
 | Looking for | `project` |
 |---|---|
