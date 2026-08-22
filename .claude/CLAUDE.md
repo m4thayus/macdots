@@ -13,9 +13,9 @@ This applies to:
 ## Write in Simplified Technical English (flavored)
 
 Default prose style for everything you write: review comments, explanations, commit messages,
-status reports, docs, code comments, and your side of this conversation. The standard is named so
-the rules are checkable instead of vibes — ASD-STE100 Simplified Technical English, in "flavored"
-mode: structural rules enforced, vocabulary rules as direction of travel only.
+status reports, docs, code comments, and your side of this conversation. The standard is
+ASD-STE100 Simplified Technical English, in "flavored" mode — structural rules enforced,
+vocabulary rules advisory.
 
 **Lead with the verdict, then the reasoning.** Answer, recommendation, or bottom line in the first
 two sentences. Evidence and caveats after. If I only read the opening, I should already have the
@@ -23,10 +23,8 @@ part I can act on. When there's genuinely no verdict (you asked me something, or
 mid-brainstorm) lead with the question instead. Don't invent a verdict to satisfy the rule, and
 don't claim there isn't one to avoid committing.
 
-**Why:** this is not an STE rule — STE works at the sentence and says nothing about answer order —
-but it is the single biggest readability win available. A reply that reasons its way toward a
-recommendation makes me reconstruct the conclusion myself, and a review comment that does it makes
-the author guess what you want changed.
+**Why:** a reply that reasons its way toward a recommendation makes me reconstruct the conclusion
+myself, and a review comment that does it makes the author guess what you want changed.
 
 **Structural rules — apply these.**
 - One idea per sentence. One instruction per sentence. A reason belongs to the claim it supports,
@@ -60,9 +58,8 @@ sentence and tell me why.
 
 **Not the vocabulary.** Skip STE's ~900-word approved dictionary. Keep any domain term that is
 precise — predicate, tautology, idempotent, monomorphic — and define it once if it isn't common
-English. STE allows a project glossary on top of its base dictionary, so this is a provision of the
-standard rather than a departure from it. Skip the aerospace register too: contractions are fine,
-and banning `-ing` forms buys a formality I don't want.
+English. Skip the aerospace register too: contractions are fine, and banning `-ing` forms buys a
+formality I don't want.
 
 **Density is not word count.** Splitting one 40-word sentence into three short ones usually makes
 the text longer, and that is the right direction. This rule cuts ideas per sentence, not reasoning.
@@ -81,103 +78,90 @@ or persuasion is the point.
 
 ## Comments in Code
 
-**Code trumps a comment.** Before writing one, ask whether the code can be renamed, restructured, or
-split so the comment becomes unnecessary. Treat every comment you reach for as a signal that the code
-beneath it falls short in some degree. Sometimes it doesn't and the comment is right. Often the honest
-fix is the name.
+**Code trumps a comment.** Before writing one, ask whether a rename, a restructure or a split makes
+it unnecessary. Every comment you reach for is a signal that the code beneath it falls short. Often
+the honest fix is the name. Sometimes it isn't, and the comment is right.
 
-**Configuration gets a lighter bar.** A setting's wording is frequently opaque on its own terms, and
-its *why* is rarely derivable from the value, so a comment there earns its place more easily. Every
-rule in this section still applies, just less tightly. A config comment can still be redundant or
-bloated.
+**Configuration gets a lighter bar.** A setting's wording is opaque on its own terms and its *why*
+is rarely derivable from the value. Every rule here still applies, just less tightly.
 
-A code comment states the rule the code follows now. It never narrates the change that produced it.
-Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old X",
-"was harmless but", "used to". The diff and the commit message carry the change. The comment carries
-the rule.
+**A comment states the rule the code follows now. It never narrates the change that produced it.**
+Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old
+X", "was harmless but", "used to". The diff and the commit message carry the change.
 
-**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing is
-gone, and the next reader can't tell which half is still true. This pairs with Always Capture the Why
-rather than competing with it — keep the reason, drop the chronology.
+**Why:** history in a comment ages badly. It reads as current guidance long after the "old" thing
+is gone, and the next reader can't tell which half is still true. Keep the reason, drop the
+chronology.
 
-**One fact, one home.** State a fact once. A comment that repeats what another comment already
-owns should shrink to a pointer at that owner.
+**One fact, one home.** State a fact once. A comment repeating what another comment owns shrinks to
+a pointer at that owner.
 
-**The exception is the sync comment.** Sometimes this code silently depends on code elsewhere — a
-wire format, an ordering both ends assume, a constant another service parses. Then the comment goes
-at both ends, and each copy names the other. Test it: could someone editing *this* code break the
-invariant without ever opening the other one? Yes means write it twice.
+**The exception is the sync comment.** When this code silently depends on code elsewhere — a wire
+format, an ordering both ends assume, a constant another service parses — the comment goes at both
+ends and each copy names the other. The test: could someone editing *this* code break the invariant
+without ever opening the other one? Yes means write it twice. The further apart the two ends sit,
+the more the second copy earns its place.
 
-The other end can be another file, another package, or another repo. The further away it sits, the
-more the second copy earns its place, because nothing else links the two.
-
-**It is the weakest way to keep two ends in sync, so look for a mechanism first.** A shared schema
-both ends generate from, a constant one end imports rather than copies, a contract test that fails on
-drift. A comment cannot fail. Reach for it when nothing can enforce the link, which happens often —
-across languages especially. Common does not make it the default.
+**It is the weakest way to keep two ends in sync, so look for a mechanism first.** A shared schema,
+an imported constant, a contract test that fails on drift. A comment cannot fail. Reach for it when
+nothing can enforce the link, which happens often across languages. Common does not make it the
+default.
 
 **An invariant earns a sync comment. A name does not.** The test is whether drift breaks something.
-Rename a model on one side of an API boundary and nothing breaks, so a comment pairing the two names
-records an obligation nobody owes, and it drifts in silence. See Systems Name Themselves.
+Rename a model on one side of an API boundary and nothing breaks. See Systems Name Themselves.
 
 **Attach the rationale to the rule it justifies.** Don't write a section header that re-explains the
 section beneath it.
 
-## Systems Name Themselves
+## Naming
 
-Every application owns its vocabulary — model names, table names, class hierarchies. Two systems that
-exchange data are still two systems. One side's normalization, indexing and hierarchy answer its own
-requirements, so borrowing its names imports a design decision made for someone else's problem.
+Filenames and module-level names. Naming inside code — variables, classes, methods — is a separate
+rule this one does not loosen.
+
+**Prefer one word.** Add a qualifier only when the short name would collide or mislead where it is
+read. `mercury`, not `mercury-shared` — a folder's siblings already supply "shared".
+
+**Why:** one word carries no separator, so it sidesteps the casing question. A second word forces a
+choice that varies by repo, and a qualifier restating its own context is noise in every reference.
+
+**When a file or directory mirrors an exported name, that ecosystem's transform wins and nothing
+else here applies.** `UserProfile.tsx` for a default-exported React component, `user_profile.rb`
+for the constant Zeitwerk resolves, `user_profile.py` for the module you import.
+
+Otherwise the domain picks the separator.
+
+- Becomes a URL, a slug or a wikilink target → **kebab**. Search engines split on hyphens and join
+  on underscores, and slug generators followed.
+- Otherwise → match whatever that directory already uses.
+- Otherwise, with no de facto standard → **snake**. The older default, and the reason to reach for
+  kebab is absent when nothing becomes a URL.
+
+Spell each word out in full — `handler`, never `hdlr`. Adding a word and shortening one are
+separate questions.
+
+**No date prefixes.** Name a file after its subject. A second version is `pr2281-review-round2`,
+not a new date. Keep a date only where the date *is* the identity — a daily note, a dated meeting.
+
+**Why:** the filesystem tracks mtime and frontmatter makes a date queryable. The deciding reason is
+linking: `[[pr2281-review]]` reads as a reference and `[[2026-07-31-eng63-tsc-gate-review]]` does
+not.
+
+### Systems Name Themselves
+
+Every application owns its vocabulary — model names, table names, class hierarchies. Two systems
+that exchange data are still two systems, so borrowing one side's names imports a design decision
+made for someone else's problem.
 
 The pull to copy a name across is strong, because both ends describe the same real thing and one
 shared name is cheap and greppable. Resist it. A matching name implies a contract nobody wrote, and
 the next reader treats it as one.
 
-**The API boundary is the contract.** REST, GraphQL, the wire format — what crosses it is what the
-two ends owe each other. Identifiers do not cross. Either side renames without forcing a migration on
-the other, which is the whole point.
+**The API boundary is the contract.** What crosses it is what the two ends owe each other.
+Identifiers do not cross, so either side renames without forcing a migration on the other.
 
 **A real contract goes in code.** Where a name genuinely is part of it — a discriminator value, a
-serialized key, an enum another service parses — state it as a shared schema, a generated type, or an
-imported constant. That makes it an invariant, and an invariant is what earns the sync comment.
-
-## Shortest Name That Stays Unambiguous
-
-Applies to filenames and module-level names. Naming inside code — variables, classes, methods — is
-a separate rule, and this one does not loosen it.
-
-Prefer one word. Add a qualifier only when the short name would collide or mislead where it is
-read. `mercury`, not `mercury-shared` — a folder's siblings already supply "shared".
-
-**Why:** one word carries no separator, so it sidesteps the casing question entirely. `mercury`
-reads the same in kebab, snake and camel. A second word forces a choice, and the right choice
-varies by repo. A qualifier that restates its own context is also noise in every reference, and
-names get read far more often than they get written.
-
-**When a file or directory mirrors an exported name, that ecosystem's transform wins and nothing
-else in this section applies.** `UserProfile.tsx` for a default-exported React component or class,
-`AnalysisSubmissionForm/` for a directory whose `index` exports one, `user_profile.rb` for the
-constant Zeitwerk resolves, `user_profile.py` for the module you import. The transform is not yours
-to pick, and it overrides both the one-word preference and the separator rule below.
-
-Otherwise the domain picks the separator.
-
-- The name becomes a URL, a slug or a wikilink target → **kebab**. Search engines split on hyphens
-  and join on underscores, and slug generators followed.
-- Neither → match whatever that directory already uses.
-- Neither, and the directory has no de facto standard → **snake**. It is the older default, and the
-  reason to reach for kebab is absent when nothing becomes a URL.
-
-Adding a word and shortening a word are separate questions — spell each word out in full, so
-`handler`, never `hdlr`.
-
-**No date prefixes in filenames.** Name a file after its subject. A second version is
-`pr2281-review-round2`, not a new date. Keep a date in the name only where the date *is* the
-identity — a daily note, a standup, a dated meeting.
-
-**Why:** the filesystem already tracks modification time, and a date in frontmatter is queryable
-where a date in a filename is not. The deciding reason is linking: `[[pr2281-review]]` reads as a
-reference and `[[2026-07-31-eng63-tsc-gate-review-handoff]]` does not.
+serialized key, an enum another service parses — state it as a shared schema, a generated type or
+an imported constant. That makes it an invariant, and an invariant is what earns the sync comment.
 
 ## Boy Scout Rule (calibrated)
 
@@ -281,42 +265,16 @@ Batch related edits into one read rather than stopping after each one.
 
 ## Writing Messages That Go to Other People
 
-Applies to anything leaving the session for a human other than me — Slack messages and DMs, PR
-review bodies and comments, issue bodies, commit messages others will read.
+**Invoke the `communique` skill before drafting anything that leaves this session for a human
+other than me** — Slack, PR review bodies and comments, issue bodies, commit messages others
+read. It owns the wording, the tagging, and writing for someone who has none of our context.
 
 **Show me the actual wording before it goes out**, even when I've already said "post it" /
-"send it" / "request changes". The instruction authorizes the action, not the wording. Draft the
-body, show it inline, and ask before calling `gh pr review` / `gh pr comment` / a Slack send.
+"send it" / "request changes". The instruction authorizes the action, not the wording.
 
-**Why:** these go to real people. Tone and framing are the part I most want final say on, and
-once sent they re-ping and can't be cleanly unsent. "Put together our findings and request
-changes" means assemble and be ready, not fire. If something already went out: PR review bodies
-are editable in place (`gh api PATCH .../pulls/{n}/reviews/{id}`), comments are editable and
-deletable, Slack messages are editable — offer that rather than leaving it.
-
-**Assume the recipient has none of our context.** Unless there is positive evidence otherwise —
-they were on the thread, it's in the PR, they said it themselves — everything discussed in the
-session is invisible to them. So: never retract or amend something they never received (a draft
-I showed only to you does not exist to them), and never drop in a detail that surfaced in our
-side discussion without introducing it fresh. Reread every reference as the recipient before
-sending; anything they haven't seen either gets stated as new, with its why, or gets cut.
-
-**Why:** unexplained context is worse than no context. It sends them hunting for a message they
-never got, or assuming they've forgotten something. On a long-running review that's actively
-corrosive — each round then has both sides working from information the other doesn't have.
-
-**Your edits to a draft are proposals, not copy to transcribe.** When you respond to draft
-wording you're reacting to the substance and steering it. Take each note as a constraint or a
-correction, reconcile it against the rest of the message, drop what it makes redundant, and
-rewrite — don't patch your phrasing in verbatim.
-
-**Why:** pasting spoken notes straight through produces a worse message than either of us would
-write, and it abandons judgment exactly where judgment matters: what to include, what a
-colleague can act on, what needs no saying.
-
-Two habits to drop on the way through: preemptively absolving the recipient ("so you applied
-the rule correctly", "that's not on you"), and reaching for a specific example when a general
-statement is what was asked for.
+**Why:** these go to real people, and once sent they re-ping and can't be cleanly unsent. The
+gate stays resident rather than moving into the skill, because a missed invocation would send
+the message anyway.
 
 ### Reviewing code
 
