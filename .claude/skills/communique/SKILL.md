@@ -65,6 +65,21 @@ makes redundant, and rewrite.
 write. It abandons judgment exactly where judgment matters — what to include, what a colleague
 can act on, what needs no saying.
 
+## Commit messages
+
+Conventional Commits, in every repo.
+
+    type(scope): subject
+
+- **Types in use:** `feat`, `fix`, `docs`, `refactor`, `chore`, `style`, `build`. Pick the one
+  that describes the change, not the files it touched.
+- **Scope** is lowercase and names the area — `claude`, `tmux`, `viewer`, `auth`. Omit it when
+  the change is repo-wide.
+- **Subject** is lowercase and imperative, with no trailing period.
+- **Mercury repos append the Linear ref** where one exists: `fix(auth): skip Bearer token
+  validation in Thoth proxy controller (ENG-70)`. GitHub adds the PR number on squash merge, so
+  never write that yourself.
+
 ## Two habits to drop on the way through
 
 1. Preemptively absolving the recipient. "So you applied the rule correctly", "that's not on you".
