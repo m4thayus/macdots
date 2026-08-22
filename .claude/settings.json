@@ -52,6 +52,7 @@
   },
   "awaySummaryEnabled": false,
   "autoUpdatesChannel": "stable",
+  "autoMemoryEnabled": false,
   "autoDreamEnabled": true,
   "teammateMode": "tmux"
 }

@@ -68,6 +68,13 @@
 !/.claude/settings.json
 !/.claude/skills/
 
+# Basic Memory — config only. Index, log, model cache and watch state are all
+# disposable. `cloud_api_key` must stay null in a public repo; OAuth tokens go
+# to basic-memory-cloud.json, which stays ignored.
+!/.basic-memory/
+/.basic-memory/*
+!/.basic-memory/config.json
+
 # Version pins
 !/.bundle/
 /.bundle/*

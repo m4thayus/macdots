@@ -218,6 +218,26 @@ When getting bearings on scope in a large repo, dispatch a subagent (Explore / g
 - Single known lookup (file + rough line already known) → just Read the narrow slice directly; a subagent there is slower and buys nothing.
 - Large PR diff review → don't read the whole diff into the main context. Before doing so, ask whether it's worth it; default to dispatching subagents (per-file or per-area) that return findings only, then I reason over the findings. Read specific hunks directly only when a finding needs closer judgment. Small diffs where reading it all is cheap → just read it.
 
+## Picking a Basic Memory Scope
+
+Agent memory lives in Basic Memory over MCP, split into six named scopes. **Nothing routes a
+session to a scope automatically.** Pass `project` on every call, and decide it again on the next.
+
+| Looking for | `project` |
+|---|---|
+| How I work, what I prefer, corrections I have given | `personal` |
+| Team conventions, colleagues' handles and IDs, external repos | `mercury` |
+| A codebase's state, its open threads, its repo-specific feedback | `talaria`, `thoth`, `psychopomp` |
+| Dotfiles, shell, editor, terminal, agent config | `macdots` |
+
+A fact about a person belongs in `personal` or `mercury` even when it surfaced inside a repo.
+
+Each call reads one scope and never the others, so a question spanning a repo and a person takes
+two searches. Searching the repo alone returns nothing and looks like an answer.
+
+`~/Vault/README.md` is canonical for the rest — note format, naming, and the gotchas that fail
+silently rather than erroring.
+
 ## `$HOME` Is a Git Work Tree
 
 My dotfiles are a bare repo whose work tree is **all of `$HOME`**, driven by
