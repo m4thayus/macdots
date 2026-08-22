@@ -154,9 +154,22 @@ reads the same in kebab, snake and camel. A second word forces a choice, and the
 varies by repo. A qualifier that restates its own context is also noise in every reference, and
 names get read far more often than they get written.
 
-When a second word is unavoidable, match the convention already in that directory rather than
-importing one. Adding a word and shortening a word are separate questions — spell each word out in
-full, so `handler`, never `hdlr`.
+**When a file or directory mirrors an exported name, that ecosystem's transform wins and nothing
+else in this section applies.** `UserProfile.tsx` for a default-exported React component or class,
+`AnalysisSubmissionForm/` for a directory whose `index` exports one, `user_profile.rb` for the
+constant Zeitwerk resolves, `user_profile.py` for the module you import. The transform is not yours
+to pick, and it overrides both the one-word preference and the separator rule below.
+
+Otherwise the domain picks the separator.
+
+- The name becomes a URL, a slug or a wikilink target → **kebab**. Search engines split on hyphens
+  and join on underscores, and slug generators followed.
+- Neither → match whatever that directory already uses.
+- Neither, and the directory has no de facto standard → **snake**. It is the older default, and the
+  reason to reach for kebab is absent when nothing becomes a URL.
+
+Adding a word and shortening a word are separate questions — spell each word out in full, so
+`handler`, never `hdlr`.
 
 **No date prefixes in filenames.** Name a file after its subject. A second version is
 `pr2281-review-round2`, not a new date. Keep a date in the name only where the date *is* the
