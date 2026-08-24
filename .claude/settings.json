@@ -1,4 +1,7 @@
 {
+  "permissions": {
+    "defaultMode": "auto"
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -40,9 +43,6 @@
       }
     ]
   },
-  "permissions": {
-    "defaultMode": "auto"
-  },
   "statusLine": {
     "type": "command",
     "command": "wt list statusline --format=claude-code"
@@ -62,7 +62,8 @@
     "talaria-naming-conventions@private-agent-plugins": true,
     "mercury-cleanup-pass@private-agent-plugins": true,
     "slack@claude-plugins-official": true,
-    "mattpocock-skills@claude-plugins-official": true
+    "mattpocock-skills@claude-plugins-official": true,
+    "white-room@white-room": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -87,6 +88,13 @@
       "source": {
         "source": "git",
         "url": "git@github.com:mercuryanalytics/private-agent-plugins.git"
+      },
+      "autoUpdate": true
+    },
+    "white-room": {
+      "source": {
+        "source": "github",
+        "repo": "m4thayus/white-room"
       },
       "autoUpdate": true
     }

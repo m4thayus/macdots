@@ -13,6 +13,7 @@ splitw -h -c "$MERCURY_BASE_PATH/livelabs"
 splitw -v -c "$MERCURY_BASE_PATH/psychopomp"
 send-keys -t 1 'toys github prune local' Enter
 send-keys -t 2 'toys github prune local' Enter
+new-window -n white-room -c "$HOME/Projects/white-room"
 new-window -n production -c "$HOME"
 selectw -t 0
 

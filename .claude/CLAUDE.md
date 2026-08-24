@@ -277,9 +277,9 @@ Batch related edits into one read rather than stopping after each one.
 
 ## Writing Messages That Go to Other People
 
-**Invoke the `communique` skill before drafting anything that leaves this session for a human
-other than me** — Slack, PR review bodies and comments, issue bodies, commit messages others
-read. It owns the wording, the tagging, and writing for someone who has none of our context.
+**Invoke the `white-room:communique` skill before drafting anything that leaves this session for
+a human other than me** — Slack, PR review bodies and comments, issue bodies, commit messages
+others read. It owns the wording, the tagging, and writing for someone who has none of our context.
 
 **Show me the actual wording before it goes out**, even when I've already said "post it" /
 "send it" / "request changes". The instruction authorizes the action, not the wording.
@@ -288,12 +288,16 @@ read. It owns the wording, the tagging, and writing for someone who has none of 
 gate stays resident rather than moving into the skill, because a missed invocation would send
 the message anyway.
 
+**`white-room:communique` and `white-room:review-changes` both live in `m4thayus/white-room`, not
+in this repo.** Rename either one there and the invocation named here stops resolving, with nothing
+to catch it.
+
 ### Reviewing code
 
-**Invoke the `review-changes` skill before writing a single review comment.** It owns the whole
-procedure, from resolving the target through to the Approve-versus-Request-Changes call, including the
-[Conventional Comments](https://conventionalcomments.org/) format every comment has to use. A review
-written without the skill is a review written without the format.
+**Invoke the `white-room:review-changes` skill before writing a single review comment.** It owns
+the whole procedure, from resolving the target through to the Approve-versus-Request-Changes call,
+including the [Conventional Comments](https://conventionalcomments.org/) format every comment has
+to use. A review written without the skill is a review written without the format.
 
 **Notes-only while a review is running.** Produce findings. Don't edit files, run renames, or
 refactor, even when I say something imperative like "just do the crate shifting". An
