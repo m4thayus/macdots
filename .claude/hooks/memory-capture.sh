@@ -140,7 +140,9 @@ A fact belonging to a scope not named above still goes to that scope.
 ## Mechanics
 
 Use `write_note` and `edit_note` only. `Edit` and `Write` leave the search index stale.
-`~/Vault/README.md` holds the note format. Say in one line what you wrote, then stop.
+Pass `directory="/"`. A note belongs at its scope's root, and a vault-relative path here files it
+where the session-start index cannot see it. `~/Vault/README.md` holds the note format and owns
+that rule. Say in one line what you wrote, then stop.
 EOF
 } >&2
 
