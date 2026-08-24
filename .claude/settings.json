@@ -32,7 +32,9 @@
             "type": "command",
             "command": "bash \"$HOME/.claude/hooks/memory-capture.sh\"",
             "timeout": 5,
-            "statusMessage": "Checking for anything worth remembering..."
+            "asyncRewake": true,
+            "rewakeMessage": "Memory capture hook, not an error:",
+            "rewakeSummary": "Memory capture: is anything here worth remembering?"
           }
         ]
       }

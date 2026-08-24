@@ -3,8 +3,14 @@
 # something, whether it produced a durable fact — and to write it if so.
 #
 # Stop is the only event that can do this. SessionEnd and PreCompact both discard their output, so
-# neither can ask the model for anything; SessionEnd fires when the model is already gone. Stop
-# blocks the turn and its stderr reaches the model, which is the whole mechanism.
+# neither can ask the model for anything; SessionEnd fires when the model is already gone. Exit 2 on
+# Stop sends this script's stderr to the model, which is the whole mechanism.
+#
+# The Stop entry in settings.json sets `asyncRewake`, so exit 2 wakes the model in a fresh turn
+# instead of blocking the current one. That is what keeps the prompt out of the transcript: the user
+# sees the one-line `rewakeSummary` and the model still receives every line below. Drop those keys
+# and the prompt renders in full, labelled a Stop hook error. `rewakeMessage` and `rewakeSummary`
+# are marked @internal in 2.1.231, so recheck them after a Claude Code upgrade.
 #
 # The trigger is not discretionary. The write is, and that split is deliberate: model discretion
 # measured zero when it had to decide to look, and a discretionary trigger is what this replaces.
@@ -92,7 +98,7 @@ printf '%s fire session=%s turn=%s scopes="%s"\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$session" "$n" "$(scopes_here)" >>"$LOG"
 
 {
-printf '# Automatic memory capture\n\nScopes in play here: %s\n' "$(scopes_here)"
+printf '\n# Automatic memory capture\n\nScopes in play here: %s\n' "$(scopes_here)"
 cat <<'EOF'
 
 This session has run long enough to have settled something. Decide whether it did, write at most
