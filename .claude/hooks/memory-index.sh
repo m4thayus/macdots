@@ -10,6 +10,8 @@
 
 . "$HOME/.claude/hooks/memory-scope.sh"
 
+[ -t 0 ] || HOOK_CWD=$(jq -r '.cwd // ""' 2>/dev/null)
+
 # ponytail: a note with no `title:` line is omitted. See --check below.
 list_scope() {
   local dir body count

@@ -32,10 +32,15 @@ scope_dir() {
   esac
 }
 
-# The scopes in play: the cross-cutting pair, plus the repo scope when cwd names one and it is not
-# already in the pair.
+# The scopes in play: the cross-cutting pair, plus the repo scope when the working directory names
+# one and it is not already in the pair.
+#
+# The directory comes from the hook payload, and $PWD is only the fallback. $PWD is where the hook
+# process happened to start, which agrees with the session today. Preferring the payload keeps them
+# agreeing if that stops being true, and a wrong scope fails silently — recall searches the wrong
+# store and returns a plausible miss.
 scopes_here() {
-  local repo; repo=$(repo_scope "$PWD")
+  local repo; repo=$(repo_scope "${HOOK_CWD:-$PWD}")
   case " $ALWAYS " in *" $repo "*) repo="" ;; esac
   echo "$ALWAYS $repo"
 }
