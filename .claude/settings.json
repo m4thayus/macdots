@@ -24,6 +24,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/memory-capture.sh\"",
+            "timeout": 5,
+            "statusMessage": "Checking for anything worth remembering..."
+          }
+        ]
+      }
     ]
   },
   "permissions": {
