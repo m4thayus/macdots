@@ -79,3 +79,40 @@ tool 'hls' do
     BASH
   end
 end
+
+tool 'watermark' do
+  desc 'Burn a text watermark into a video'
+
+  required_arg :input, complete: :file_system
+  required_arg :text
+  flag :opacity, '-o [ALPHA]', '--opacity [ALPHA]',
+       default: 0.6, accept: Float
+  flag :position, '-p [WHERE]', '--position [WHERE]',
+       default: 'center', complete_values: %w[top center bottom]
+
+  # `x=(W-tw)/2` — Centres horizontally, tw being the rendered text width.
+  # `fontsize=H/15` — Scales with the source, so the watermark reads the same on any resolution.
+  # `fontcolor=white@#{opacity}` — Alpha rides on the colour, not a separate flag.
+  # `-c:a copy` — Only the video changes, so the audio passes through untouched.
+
+  def run
+    directory = File.dirname(input)
+    output = File.join(directory, "#{File.basename(input, File.extname(input))}.watermark.mp4")
+
+    y = case position
+        when 'top' then 'H/10'
+        when 'bottom' then 'H*0.9-th'
+        else 'H/2'
+        end
+
+    # ponytail: no escaping, so a colon or apostrophe in the text breaks the filter.
+    # Quote it in drawtext's own syntax if that ever comes up.
+    exec <<~BASH
+      ffmpeg -i #{input} \\
+      -vf "drawtext=text='#{text}':x=(W-tw)/2:y=#{y}:fontsize=H/15:fontcolor=white@#{opacity}" \\
+      -c:v libx264 -crf 23 -preset slow \\
+      -c:a copy \\
+      #{output}
+    BASH
+  end
+end
