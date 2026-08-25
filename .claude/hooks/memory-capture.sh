@@ -94,6 +94,8 @@ above still goes to that scope.
 - A repo scope also takes what you worked out yourself: durable project state, a decision and its
   reason, an open thread, or a fact about the codebase and its tooling.
 
+A fact about a person belongs in `personal` or `mercury` even when it surfaced inside a repo.
+
 Skip what the transcript, the git history, the code, the docs or a skill already carries. A memory
 points at the owning skill rather than restating it. Skip session summaries. Notes are topical
 atoms, and a note spanning several topics matches no query well. When the session-start index

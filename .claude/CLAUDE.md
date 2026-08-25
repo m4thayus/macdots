@@ -174,23 +174,6 @@ Leave the files you touch better than you found them. When a change makes someth
 
 The recurring failure mode this guards against is leaving a half-done state after a change — and, after a merge that mixes someone else's work into files you refactored, assuming the cleanup "stuck" without re-checking. Re-scan; don't assume.
 
-## Prefer Built-in Tools Over Bash
-
-Reach for the file tools before the shell. Shell out only when no tool does the job.
-
-- Read a file → `Read`, not `cat` / `head` / `tail` / `sed -n`.
-- Search file contents → `Grep`, not `grep` / `rg` / `ag`.
-- Find files by name or pattern → `Glob`, not `find` / `ls -R`.
-- Change a file → `Edit` or `Write`, not `sed -i` / `awk` / a heredoc redirect.
-
-**Why:** Bash is the call that stops for approval, so `cat foo.rb` costs a round trip that `Read`
-does not. The tools also hand back line numbers, match context, and path filters that you would
-otherwise rebuild out of flags.
-
-Bash still owns everything with no tool equivalent: git, package managers, test runners, build
-commands, and pipelines that transform output. A plain `ls` of one directory is fine. Once the
-question becomes "which files match X", that's `Glob`.
-
 ## Delegate Code Search to Subagents
 
 When getting bearings on scope in a large repo, dispatch a subagent (Explore / general-purpose) to do the grepping and file-reading and return only the distilled results. Do NOT run broad greps or bulk file Reads in the main context.
@@ -202,34 +185,11 @@ When getting bearings on scope in a large repo, dispatch a subagent (Explore / g
 - Single known lookup (file + rough line already known) → just Read the narrow slice directly; a subagent there is slower and buys nothing.
 - Large PR diff review → don't read the whole diff into the main context. Before doing so, ask whether it's worth it; default to dispatching subagents (per-file or per-area) that return findings only, then I reason over the findings. Read specific hunks directly only when a finding needs closer judgment. Small diffs where reading it all is cheap → just read it.
 
-## Picking a Basic Memory Scope
+## Basic Memory
 
-Agent memory lives in Basic Memory over MCP, split into six named scopes. Two hooks reach it for
-you, both scoped to `personal`, `mercury`, and the repo scope matching cwd:
-
-- `SessionStart` prints every note title in those scopes. **That index is the complete list, so a
-  fact absent from it is absent from the store** — write it rather than search for it.
-- `UserPromptSubmit` runs your message through hybrid search and injects the top hit per scope,
-  with its path. Relevant notes arrive on their own, so don't reach for `search_notes` first.
-
-**Reading a note whose path a hook printed is a plain file read.** Retrieval needed the tool.
-Fetching does not.
-
-**Writes still go through `write_note` or `edit_note`, never `Edit` or `Write`** — the file tools
-leave the search index stale. Neither hook passes `project` for you, and a fact belonging to a
-scope the hooks did not load still goes to that scope.
-
-| Looking for | `project` |
-|---|---|
-| How I work, what I prefer, corrections I have given | `personal` |
-| Team conventions, colleagues' handles and IDs, external repos | `mercury` |
-| A codebase's state, its open threads, its repo-specific feedback | `talaria`, `thoth`, `psychopomp` |
-| Dotfiles, shell, editor, terminal, agent config | `macdots` |
-
-A fact about a person belongs in `personal` or `mercury` even when it surfaced inside a repo.
-
-Each call reads one scope and never the others, so a question spanning a repo and a person takes
-two searches. Searching the repo alone returns nothing and looks like an answer.
+Agent memory lives in Basic Memory over MCP. Three hooks reach it for you, and they print the
+scopes in play, the note index, and the notes matching your message. The routing rules arrive with
+those values, so nothing about scope selection is resident here.
 
 `~/Vault/README.md` is canonical for the rest — note format, naming, and the gotchas that fail
 silently rather than erroring.
