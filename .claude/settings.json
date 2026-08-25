@@ -91,7 +91,10 @@
     }
   },
   "awaySummaryEnabled": false,
-  "autoCompactWindow": 200000,
+  "autoCompactWindow": 350000,
+  "skillOverrides": {
+    "claude-api": "off"
+  },
   "autoUpdatesChannel": "stable",
   "autoMemoryEnabled": false,
   "autoDreamEnabled": true,
