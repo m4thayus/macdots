@@ -174,16 +174,29 @@ Leave the files you touch better than you found them. When a change makes someth
 
 The recurring failure mode this guards against is leaving a half-done state after a change — and, after a merge that mixes someone else's work into files you refactored, assuming the cleanup "stuck" without re-checking. Re-scan; don't assume.
 
-## Delegate Code Search to Subagents
+## Delegate Search to Subagents
 
-When getting bearings on scope in a large repo, dispatch a subagent (Explore / general-purpose) to do the grepping and file-reading and return only the distilled results. Do NOT run broad greps or bulk file Reads in the main context.
+When you need bearings — in a repo, in the vault, in a log, anywhere — dispatch `Explore` to do the
+grepping and file-reading and hand back only the distilled result. Do NOT run broad greps or bulk
+Reads in the main context. `general-purpose` is for when the task needs writes or a tool `Explore`
+lacks.
 
-**Why:** Broad searches shove a lot into the main context window. I run long, wide-ranging conversations rather than one-off tasks, and want the main window kept low (target well below 20%) so we can keep going without summarization. Getting-bearings work otherwise eats 7–10% up front.
+**Why:** a broad search eats the main context window, and I run long conversations rather than
+one-off tasks. Keep the main window well below 20% so we don't hit summarization. Getting-bearings
+work otherwise costs 7–10% up front.
 
 **How to apply:**
-- Broad / uncertain search (naming conventions, "where does X live", multi-file sweeps) → subagent, results only.
-- Single known lookup (file + rough line already known) → just Read the narrow slice directly; a subagent there is slower and buys nothing.
-- Large PR diff review → don't read the whole diff into the main context. Before doing so, ask whether it's worth it; default to dispatching subagents (per-file or per-area) that return findings only, then I reason over the findings. Read specific hunks directly only when a finding needs closer judgment. Small diffs where reading it all is cheap → just read it.
+- Broad or uncertain search (naming conventions, "where does X live", multi-file sweeps) → subagent, result only.
+- Single known lookup (file and rough line already known) → Read the narrow slice yourself. A subagent is slower there and buys nothing.
+- Large PR diff → don't read the whole thing into the main context. Default to subagents per file or per area that return findings only, then I reason over the findings. Read a specific hunk directly when a finding needs closer judgment. Small diff that's cheap to read → just read it.
+
+**Pick the subagent's model per search, and say which tier you picked.**
+- Fixed pattern, fixed output shape, no judgement about what counts as a hit → `haiku`.
+- Some judgement, bounded scope — one subsystem, one convention → `sonnet`.
+- The target is described rather than named, or a miss is expensive → leave it on the default.
+
+`Explore` also takes a breadth. Say "medium" for a couple of directories and "very thorough" for a
+whole-repo sweep.
 
 ## Basic Memory
 
