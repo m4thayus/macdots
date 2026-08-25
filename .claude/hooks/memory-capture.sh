@@ -1,53 +1,38 @@
 #!/bin/bash
-# Stop hook: automatic capture. Asks the model, once a session has run long enough to have settled
-# something, whether it produced a durable fact — and to write it if so.
+# UserPromptSubmit hook: automatic capture. Asks the model, on every turn, whether the turn taught it
+# a durable fact — and to write it if so.
 #
-# Stop is the only event that can do this. SessionEnd and PreCompact both discard their output, so
-# neither can ask the model for anything; SessionEnd fires when the model is already gone. Exit 2 on
-# Stop sends this script's stderr to the model, which is the whole mechanism.
+# The question arrives as context before the model composes the reply, which is where the built-in
+# auto memory's equivalent sits. Stop can also reach the model, by exit 2, but only after the turn it
+# asks about has already ended.
 #
-# The Stop entry in settings.json sets `asyncRewake`, so exit 2 wakes the model in a fresh turn
-# instead of blocking the current one. That is what keeps the prompt out of the transcript: the user
-# sees the one-line `rewakeSummary` and the model still receives every line below. Drop those keys
-# and the prompt renders in full, labelled a Stop hook error. `rewakeMessage` and `rewakeSummary`
-# are marked @internal in 2.1.231, so recheck them after a Claude Code upgrade.
-#
-# The trigger is not discretionary. The write is, and that split is deliberate: model discretion
-# measured zero when it had to decide to look, and a discretionary trigger is what this replaces.
-# Deciding yes or no against an explicit question is a different act from remembering to ask it.
+# There is no gate, because a gate can only count turns and worth is a property of content. The bar
+# in the text below is the whole filter. A turn threshold also silently skipped every short session:
+# measured across 13 sessions, 5 never reached turn 6.
 
 set -u
 . "$HOME/.claude/hooks/memory-scope.sh"
 
-STATE="$HOME/.claude/.memory-capture"
-# The log sits beside the state directory rather than inside it, because the pruning find below
-# would delete it during any week the hook did not fire — destroying the evidence that it did not.
 LOG="$HOME/.claude/.memory-capture.log"
 
-# Stop fires once per assistant turn, so counting fires counts turns without touching the
-# transcript. Transcript bytes were the obvious proxy and a bad one — tool results dominate, so a
-# single large grep outweighs a whole conversation.
-#
-# 6 is the median session length across 176 transcripts, and the quartile below it is one-shot
-# questions that settle nothing. Repeating every 12 keeps a long session from capturing turn 6 and
-# then nothing across the next forty. The counter only rises, so a fire can never re-match itself.
-FIRST=6
-EVERY=12
-
-# Sessions and fires come from this hook's own log, organic writes from the transcripts. No single
-# number means anything: sessions without fires says no session ran long enough, fires without
-# writes says the bar rejects everything, and no sessions at all says the hook never ran. All three
-# look like a tidy store from the outside.
+# Turns are the denominator for the write count. Zero writes has three causes that look identical
+# from outside: the hook never ran, no session got far enough, or the bar rejects everything.
+# Sessions and turns beside writes separate all three.
 if [ "${1:-}" = --stats ]; then
   python3 - "$LOG" <<'READOUT'
 import collections, glob, json, os, sys
 
-sessions, fires = collections.Counter(), collections.Counter()
+sessions, turns = collections.defaultdict(set), collections.Counter()
 try:
     with open(sys.argv[1]) as fh:
         for line in fh:
-            day, _, kind = line.partition(" ")
-            (fires if kind.startswith("fire") else sessions)[day[:10]] += 1
+            # Lines a gated version of this hook wrote count neither sessions nor turns. They stay on
+            # disk as the record of what the gate did, and they measured fires rather than turns.
+            fields = line.split()
+            if len(fields) < 3 or fields[1] != "turn":
+                continue
+            turns[fields[0][:10]] += 1
+            sessions[fields[0][:10]].add(fields[2])
 except OSError:
     pass
 
@@ -70,10 +55,11 @@ for path in glob.glob(os.path.expanduser("~/.claude/projects/*/*.jsonl")):
                 if name.startswith("mcp__basic-memory__") and name.split("__")[-1] in WRITES:
                     writes[(record.get("timestamp") or "?")[:10]] += 1
 
-print(f"{'date':12}{'sessions':>10}{'fires':>7}{'writes':>8}")
-for day in sorted(set(sessions) | set(fires) | set(writes)):
-    print(f"{day:12}{sessions[day]:>10}{fires[day]:>7}{writes[day]:>8}")
-print(f"{'total':12}{sum(sessions.values()):>10}{sum(fires.values()):>7}{sum(writes.values()):>8}")
+print(f"{'date':12}{'sessions':>10}{'turns':>7}{'writes':>8}")
+for day in sorted(set(sessions) | set(turns) | set(writes)):
+    print(f"{day:12}{len(sessions[day]):>10}{turns[day]:>7}{writes[day]:>8}")
+print(f"{'total':12}{len(set().union(*sessions.values()) if sessions else set()):>10}"
+      f"{sum(turns.values()):>7}{sum(writes.values()):>8}")
 READOUT
   exit 0
 fi
@@ -83,67 +69,38 @@ session=$(printf '%s' "$IN" | jq -r '.session_id // "nosession"')
 HOOK_CWD=$(printf '%s' "$IN" | jq -r '.cwd // ""')
 [ -d "$MEM" ] || exit 0
 
-mkdir -p "$STATE"
-find "$STATE" -type f -mtime +7 -delete 2>/dev/null
-f="$STATE/$session"
-n=$(( $(cat "$f" 2>/dev/null || echo 0) + 1 ))
-echo "$n" >"$f"
-[ "$n" -eq 1 ] &&
-  printf '%s session id=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$session" >>"$LOG"
+printf '%s turn %s scopes="%s"\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$session" "$(scopes_here)" >>"$LOG"
 
-[ "$n" -ge "$FIRST" ] || exit 0
-[ $(( (n - FIRST) % EVERY )) -eq 0 ] || exit 0
-
-printf '%s fire session=%s turn=%s scopes="%s"\n' \
-  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$session" "$n" "$(scopes_here)" >>"$LOG"
-
+# The bar splits by scope, and the split is stated generically so a new repo scope needs no edit
+# here. The two lines below name the scopes in play, and the bullets refer to their kind.
 {
-printf '\n# Automatic memory capture\n\nScopes in play here: %s\n' "$(scopes_here)"
+printf '\n# Memory capture\n\nCross-cutting scopes: %s\n' "$ALWAYS"
+repo=$(repo_here)
+[ -n "$repo" ] && printf 'Repo scope: %s\n' "$repo"
 cat <<'EOF'
 
-This session has run long enough to have settled something. Decide whether it did, write at most
-two notes, then stop.
+Did this turn teach you a durable fact? A fact is durable when it stays true and useful in a month,
+in another session, for someone who was not here.
 
-**Writing nothing is the common and correct outcome.** Most sessions produce no durable fact. An
-empty capture costs one line. A worthless note is permanent and makes every later search worse.
+**Writing nothing is the common and correct outcome.** Most turns teach none. An empty check costs
+nothing, and a worthless note is permanent and makes every later search worse.
 
-## The bar
+What qualifies differs by scope. Route a fact by its subject, so a fact about a scope not named
+above still goes to that scope.
 
-Write a fact only if it stays true and useful in a month, in another session, for someone who was
-not here. That means one of:
+- A cross-cutting scope takes only what Matt told you or corrected you on in the message above, and
+  only where it generalises past this task.
+- A repo scope also takes what you worked out yourself: durable project state, a decision and its
+  reason, an open thread, or a fact about the codebase and its tooling.
 
-- A preference or a correction Matt gave that generalises past this task.
-- A convention, a handle, an ID, or a fact about a person or a tool.
-- Durable project state — an open thread, or a decision and the reason behind it.
+Skip what the transcript, the git history, the code, the docs or a skill already carries. A memory
+points at the owning skill rather than restating it. Skip session summaries. Notes are topical
+atoms, and a note spanning several topics matches no query well. When the session-start index
+already names the note, `edit_note` it rather than adding a second one.
 
-Do not write:
-
-- What this session did. The transcript and the git history hold it already.
-- Anything the code, the docs or a skill already carries. Rules live in skills, and a memory points
-  at the owning skill rather than restating it.
-- A session summary. One note per thread is the wrong shape here: notes are topical atoms, and a
-  note spanning several topics averages into an embedding that matches no query well.
-- Anything the session-start index already names, unless this session changed it. Then `edit_note`
-  that note instead of writing a second one.
-
-## Scope
-
-Route by subject, not by working directory.
-
-- Matt's own preferences and habits → `personal`
-- Team conventions, handles, IDs, external repos → `mercury`
-- A codebase's state and its repo-specific feedback → that repo's scope
-- Dotfiles, shell, editor, terminal, agent config → `macdots`
-
-A fact belonging to a scope not named above still goes to that scope.
-
-## Mechanics
-
-Use `write_note` and `edit_note` only. `Edit` and `Write` leave the search index stale.
-Pass `directory="/"`. A note belongs at its scope's root, and a vault-relative path here files it
-where the session-start index cannot see it. `~/Vault/README.md` holds the note format and owns
-that rule. Say in one line what you wrote, then stop.
+Write at most two notes. Use `write_note` or `edit_note` only, because `Edit` and `Write` leave the
+search index stale. Pass `directory="/"`, or the note lands where the session-start index cannot see
+it. Say in one line what you wrote, then get on with the reply.
 EOF
-} >&2
-
-exit 2
+}

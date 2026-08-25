@@ -24,20 +24,11 @@
             "command": "bash \"$HOME/.claude/hooks/memory-recall.sh\"",
             "timeout": 10,
             "statusMessage": "Recalling from memory..."
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
+          },
           {
             "type": "command",
             "command": "bash \"$HOME/.claude/hooks/memory-capture.sh\"",
-            "timeout": 5,
-            "asyncRewake": true,
-            "rewakeMessage": "Memory capture hook, not an error:",
-            "rewakeSummary": "Memory capture: is anything here worth remembering?"
+            "timeout": 5
           }
         ]
       }
