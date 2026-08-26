@@ -2,37 +2,8 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup|resume|clear|compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/hooks/memory-index.sh\"",
-            "timeout": 5,
-            "statusMessage": "Loading memory index..."
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/hooks/memory-recall.sh\"",
-            "timeout": 10,
-            "statusMessage": "Recalling from memory..."
-          },
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/hooks/memory-capture.sh\"",
-            "timeout": 5
-          }
-        ]
-      }
-    ]
+  "skillOverrides": {
+    "claude-api": "off"
   },
   "statusLine": {
     "type": "command",
@@ -54,7 +25,8 @@
     "mercury-cleanup-pass@private-agent-plugins": true,
     "slack@claude-plugins-official": true,
     "mattpocock-skills@claude-plugins-official": true,
-    "white-room@white-room": true
+    "white-room@white-room": true,
+    "phylactery@phylactery": false
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -88,13 +60,17 @@
         "repo": "m4thayus/white-room"
       },
       "autoUpdate": true
+    },
+    "phylactery": {
+      "source": {
+        "source": "github",
+        "repo": "m4thayus/phylactery"
+      },
+      "autoUpdate": true
     }
   },
-  "awaySummaryEnabled": false,
   "autoCompactWindow": 363000,
-  "skillOverrides": {
-    "claude-api": "off"
-  },
+  "awaySummaryEnabled": false,
   "autoUpdatesChannel": "stable",
   "autoMemoryEnabled": false,
   "autoDreamEnabled": true,
