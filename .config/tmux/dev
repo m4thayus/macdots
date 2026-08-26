@@ -8,15 +8,15 @@ splitw -h -c "$MERCURY_BASE_PATH/talaria" "bin/dev"
 send-keys -t 0 'toys github prune local' Enter
 new-window -n thoth -c "$MERCURY_BASE_PATH/thoth"
 send-keys 'toys github prune local' Enter
+new-window -n personal -c "$HOME/Projects/phylactery"
+splitw -h -c "$HOME/Projects/white-room"
+send-keys -t 0 'toys github prune local' Enter
+send-keys -t 1 'toys github prune local' Enter
 new-window -n mercury -c "$HOME/Projects/mercury"
 splitw -h -c "$MERCURY_BASE_PATH/livelabs"
 splitw -v -c "$MERCURY_BASE_PATH/psychopomp"
 send-keys -t 1 'toys github prune local' Enter
 send-keys -t 2 'toys github prune local' Enter
-new-window -n m4thayus -c "$HOME/Projects/phylactery"
-splitw -h -c "$HOME/Projects/white-room"
-send-keys -t 0 'toys github prune local' Enter
-send-keys -t 1 'toys github prune local' Enter
 new-window -n production -c "$HOME"
 selectw -t 0
 
