@@ -56,6 +56,14 @@
       "local_sync_path": null,
       "bisync_initialized": false,
       "last_sync": null
+    },
+    "phylactery": {
+      "path": "/Users/matt/Vault/memory/repos/phylactery",
+      "mode": "local",
+      "workspace_id": null,
+      "local_sync_path": null,
+      "bisync_initialized": false,
+      "last_sync": null
     }
   },
   "default_project": "personal",

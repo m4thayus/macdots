@@ -74,5 +74,7 @@
   "autoUpdatesChannel": "stable",
   "autoMemoryEnabled": false,
   "autoDreamEnabled": true,
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
   "teammateMode": "tmux"
 }
