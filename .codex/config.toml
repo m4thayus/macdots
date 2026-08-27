@@ -1,0 +1,29 @@
+personality = "pragmatic"
+model = "gpt-5.4"
+[projects."/Users/matt/Projects/mercury/talaria"]
+trust_level = "trusted"
+
+[projects."/Users/matt/Projects/mercury/thoth"]
+trust_level = "trusted"
+
+[projects."/Users/matt/Projects/mercury/hg-dev-home"]
+trust_level = "trusted"
+
+[projects."/Users/matt/Projects/mercury/Mercury-Tools"]
+trust_level = "untrusted"
+
+[projects."/Users/matt/Projects/quicksilver"]
+trust_level = "untrusted"
+
+[projects."/Users/matt/.config/nvim"]
+trust_level = "untrusted"
+
+[projects."/Users/matt/Projects/mercury/psychopomp"]
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
+[mcp_servers.basic-memory]
+command = "basic-memory"
+args = ["mcp"]

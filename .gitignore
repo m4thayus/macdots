@@ -69,6 +69,13 @@
 !/.claude/skills/
 !/.claude/hooks/
 
+# Codex — config only. AGENTS.md is a symlink to CLAUDE.md, since Codex reads it
+# the way Claude reads that one. `auth.json` holds credentials and stays ignored.
+!/.codex/
+/.codex/*
+!/.codex/AGENTS.md
+!/.codex/config.toml
+
 # Basic Memory — config only. Index, log, model cache and watch state are all
 # disposable. `cloud_api_key` must stay null in a public repo; OAuth tokens go
 # to basic-memory-cloud.json, which stays ignored.
