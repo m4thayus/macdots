@@ -212,6 +212,20 @@ the command and its blast radius before running it.
   weakness for anyone reading back through history. Rules in tracked docs must
   name specifics to function. History does not.
 
+## Never Print a Secret
+
+Reading a credential store prints the secret unless you stop it. The flag that answers "does this
+exist" is often the same flag that dumps the value, and one store usually holds every credential at
+once.
+
+- Presence — use the form that prints metadata only.
+- Shape — pipe the value into a parser that emits key names and lengths.
+- A value you need — hold it in a shell variable inside one command. Never echo it.
+
+**Why:** tool output lands in the transcript, which sits on disk and goes to the API. There is no
+unsend, so the remedy is rotating every credential the read exposed. The `mcp-token-revocation`
+memory carries the specifics and the recovery.
+
 ## Show the Change Before You Commit
 
 Make the edit, show the changed passage, and stop. A commit or a push waits until I have read it.
