@@ -237,10 +237,6 @@ others read. It owns the wording, the tagging, and writing for someone who has n
 **Why:** once sent, a message re-pings and can't be cleanly unsent. The gate stays resident rather
 than moving into the skill, because a missed invocation would send the message anyway.
 
-**`white-room:communique` and `white-room:review-changes` both live in `m4thayus/white-room`, not
-in this repo.** Rename either one there and the invocation named here stops resolving, with nothing
-to catch it.
-
 ### Reviewing code
 
 **Invoke the `white-room:review-changes` skill before writing a single review comment.** It owns
