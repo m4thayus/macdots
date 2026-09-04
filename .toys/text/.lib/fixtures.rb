@@ -63,3 +63,27 @@ module Fixtures
     'macroman' => 'MACROMAN', 'mixed-utf8-macroman' => 'MACROMAN'
   }.freeze
 end
+
+# Text that survived a full mangle cycle: written as UTF-8, read back as CP1252,
+# written out again. Detect flags these so a file that means them literally can
+# be caught before convert quietly repairs it.
+module Fixtures
+  MANGLED = {
+    'she said “no” and left…' => %w[“ …],
+    'café for £42' => %w[é £],
+    'naïve — really' => %w[ï —],
+    "I’m out" => ['’']
+  }.freeze
+
+  # Honest text that must never be mistaken for a mangle, including the adjacent
+  # accents that are the obvious false positive.
+  CLEAN = ['créé', 'Þú', 'Ääöü', 'café', 'she said “no”', "I’m out", 'naïve — really'].freeze
+
+  def self.mangle(str)
+    str.b.encode('UTF-8', 'CP1252', undef: :replace, replace: '')
+  end
+end
+
+module Fixtures
+  def self.count = ALL.size + MANGLED.size + CLEAN.size
+end
