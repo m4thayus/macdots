@@ -1,0 +1,27 @@
+# Ported from .config/alacritty/alacritty.toml. Alacritty stays the primary
+# terminal, so keep the two configs in step when either one changes.
+
+theme = Kanagawa Dragon
+
+# The shipped Kanagawa Dragon inverts foreground and background for selection.
+# These are the selection colors Alacritty uses.
+selection-background = #2d4f67
+selection-foreground = #c8c093
+
+# Alacritty carried these as indexed_colors 16 and 17.
+palette = 16=#ffa066
+palette = 17=#ff5d62
+
+font-family = Cascadia Code NF
+font-style = SemiLight
+font-style-bold = SemiBold
+font-style-italic = SemiLight Italic
+font-style-bold-italic = SemiBold Italic
+font-size = 14
+
+window-padding-x = 6
+window-padding-y = 6
+window-padding-balance = true
+
+# Fullscreen and search keep Ghostty's defaults, which are the reverse of the
+# Alacritty bindings: cmd+f searches, cmd+ctrl+f goes fullscreen.

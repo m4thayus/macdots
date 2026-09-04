@@ -12,7 +12,7 @@ Configuration for my (macOS-based) dev environment, managed as a bare git repo
 
 | Area | Tooling | Config |
 | --- | --- | --- |
-| Terminal emulator | kitty, alacritty | `.config/kitty`, `.config/alacritty` |
+| Terminal emulator | alacritty, ghostty | `.config/alacritty`, `.config/ghostty` |
 | Multiplexer | tmux | `.config/tmux` |
 | Editor | neovim — Lua config, `init.lua` + `lua/`, lazy.nvim | `.config/nvim` |
 | Window management | Amethyst | `.amethyst.yml` |
