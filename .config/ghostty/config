@@ -1,5 +1,7 @@
-# Ported from .config/alacritty/alacritty.toml. Alacritty stays the primary
-# terminal, so keep the two configs in step when either one changes.
+# Colors and metrics came from .config/alacritty/alacritty.toml and still match
+# it. The italic pairing below does not, and cannot: alacritty takes one font
+# family with per-style faces, so a second family for italics has no equivalent
+# there. Expect the two terminals to differ on comments.
 
 theme = Kanagawa Dragon
 
@@ -15,9 +17,28 @@ palette = 17=#ff5d62
 font-family = Cascadia Code NF
 font-style = SemiLight
 font-style-bold = SemiBold
-font-style-italic = SemiLight Italic
-font-style-bold-italic = SemiBold Italic
 font-size = 14
+
+# Hangul, which Cascadia does not cover. D2Coding is the Korean coding standard
+# and holds an exact 2:1 Hangul-to-Latin advance width, so the cell grid stays
+# aligned through Korean comments and box drawing.
+font-family = D2Coding
+
+# Italic comes from Victor Mono for its cursive letterforms. The nvim config sets
+# italic on comments and diagnostic virtual text only, and turns it off for
+# keywords and builtins, so the cursive lands there and nowhere else.
+#
+# The style has to be named: Victor Mono ships Italic (cursive) and Oblique
+# (slanted roman) as separate faces, and the default would take the wrong one.
+# Medium sits right against Cascadia SemiLight. Victor Mono runs light for its
+# nominal weight, so the numbers do not line up and the eye is the judge.
+font-family-italic = Victor Mono
+font-style-italic = Medium Italic
+
+# Bold italic would otherwise fall back to Cascadia and break the pairing
+# mid-line. Bold is Victor Mono's heaviest italic, two steps above Medium.
+font-family-bold-italic = Victor Mono
+font-style-bold-italic = Bold Italic
 
 window-padding-x = 6
 window-padding-y = 6
