@@ -4,7 +4,8 @@ TERM = "alacritty"
 [font]
 size = 14.0
 
-# Mirrors .config/ghostty/config. Ghostty is primary; keep the two in step.
+# Mirrors .config/ghostty/config, which carries the reasoning for the pairing.
+# Ghostty is primary. Keep the two in step.
 [font.normal]
 family = "Cascadia Code NF"
 style = "SemiLight"
@@ -13,18 +14,13 @@ style = "SemiLight"
 family = "Cascadia Code NF"
 style = "SemiBold"
 
-# Italic comes from Victor Mono for its cursive letterforms. The nvim config
-# sets italic on comments and diagnostic virtual text only, so the cursive
-# lands there and nowhere else.
-#
 # The style has to be named: Victor Mono ships Italic (cursive) and Oblique
 # (slanted roman) as separate faces, and the default would take the wrong one.
 [font.italic]
 family = "Victor Mono"
 style = "Medium Italic"
 
-# Bold is Victor Mono's heaviest italic. Without this the style falls back to
-# Cascadia and breaks the pairing mid-line.
+# Without this the style falls back to Cascadia and breaks the pairing mid-line.
 [font.bold_italic]
 family = "Victor Mono"
 style = "Bold Italic"
@@ -52,4 +48,3 @@ y = 6
 
 [general]
 import = ["/Users/matt/.config/alacritty/kanagawa-dragon.toml"]
-# import = ["/Users/matt/.config/alacritty/tomorrow-night-eighties.toml"]

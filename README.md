@@ -12,8 +12,8 @@ Configuration for my (macOS-based) dev environment, managed as a bare git repo
 
 | Area | Tooling | Config |
 | --- | --- | --- |
-| Terminal emulator | alacritty, ghostty | `.config/alacritty`, `.config/ghostty` |
-| Multiplexer | tmux | `.config/tmux` |
+| Terminal emulator | ghostty, alacritty | `.config/ghostty`, `.config/alacritty` |
+| Multiplexer | zellij, tmux | `.config/zellij`, `.config/tmux` |
 | Editor | neovim — Lua config, `init.lua` + `lua/`, lazy.nvim | `.config/nvim` |
 | Window management | Amethyst | `.amethyst.yml` |
 | Ruby | rbenv, bundler | `.rbenv/version`, `.bundle/config` |
@@ -30,6 +30,22 @@ Configuration for my (macOS-based) dev environment, managed as a bare git repo
 
 `.vimrc` is a plugin-free fallback for where neovim cannot follow: sudo,
 another account, a machine with nothing installed.
+
+### Terminal and multiplexer
+
+Ghostty and zellij are the pair I launch. Alacritty is the backup and mirrors
+the ghostty config: same theme, metrics, padding and font pairing. The two are
+kept in step by hand.
+
+tmux is only ever the inner multiplexer, running inside a zellij pane. Two
+things put it there: an overmind session, and the Claude agent fan-out `cmux`
+starts on its own tmux server. So `.config/tmux` assumes zellij already draws
+the outer chrome, and its status line carries the session name and nothing
+else.
+
+`dzj` builds the dev workspace from `.config/zellij/layouts/dev.kdl`, and `cmux`
+launches the Claude server. Both configs share the Kanagawa Dragon colours and a
+`Ctrl \` prefix, so an embedded tmux reads as part of the zellij around it.
 
 ### `.toys/` — custom commands
 
@@ -123,8 +139,8 @@ They shrink the blast radius; they don't remove it.
 Always [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): subject`.
 
 - Types: `feat`, `fix`, `docs`, `refactor`, `chore`.
-- Scope is the tool the commit touches — `claude`, `macdots`, `tmux`, `toys`, `zsh`. Omit
-  it only when the change spans the repo.
+- Scope is the tool the commit touches — `claude`, `ghostty`, `macdots`, `tmux`,
+  `toys`, `zellij`, `zsh`. Omit it only when the change spans the repo.
 - Subject in the imperative, lowercase, no trailing period.
 
 **Why:** this work tree is a pile of unrelated configs, so a subject alone rarely says

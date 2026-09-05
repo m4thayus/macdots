@@ -1,25 +1,20 @@
-// Zellij equivalent of ~/.config/tmux/dev. Launched by dzj; dmux still runs
-// the tmux original. The two are kept in step by hand.
+// The dev workspace, launched by dzj in ~/.bash_aliases.
 //
 // One-shots use `sh -c "<cmd>; exec <the shell wrapper>"` so the command runs
-// and the pane keeps a live shell, which is the behaviour send-keys gave us
-// for free.
+// and the pane keeps a live shell behind it. The wrapper is the one
+// default_shell names in config.kdl, because these panes want exactly what a
+// bare pane wants. default_shell does not reach them: it applies only to a pane
+// opened with no command, and every pane here has one. The outer sh only runs a
+// command and hands off, so running the wrapper there instead would read
+// ~/.bash_profile twice.
 //
-// The exec'd wrapper is the one default_shell names, because these panes want
-// exactly what a bare pane wants. default_shell does not reach them: it
-// applies only to a pane opened with no command, and every pane here has one.
+// A layout cannot use `zellij action send-keys` in place of this. That runs
+// against a live session and a known pane id, and a layout has neither. Reach
+// for it to drive a running session from outside instead.
 //
-// The outer sh runs a command and hands off, so it needs no profile of its
-// own. Running the wrapper there instead would read ~/.bash_profile twice.
-//
-// `zellij action send-keys --pane-id N` does exist, so this is not a gap being
-// worked around. It runs against a live session and a known pane id, and a
-// layout has neither, which is why the tmux file can use send-keys and this
-// one cannot. Reach for it to drive a running session from outside instead.
-//
-// close_on_exit matches tmux, which has remain-on-exit off by default. Without
-// it zellij holds an exited pane open showing [ EXIT CODE: n ], so Ctrl+D
-// prints "logout" and then needs a second press to dismiss the corpse.
+// close_on_exit matches tmux's default. Without it zellij holds an exited pane
+// open showing [ EXIT CODE: n ], so Ctrl+D needs a second press to dismiss the
+// corpse.
 //
 // Long-runners (npm run dev, bin/dev, toys bonsai) get a bare command: they
 // never exit, so they never need a shell behind them.
@@ -40,10 +35,9 @@ layout {
                 args "-c" "brew update && brew upgrade codex claude-code claude; exec /Users/matt/.config/zellij/shell"
             }
             pane split_direction="horizontal" {
-                // vite prints four lines and then sits there, so it is capped.
-                // The cap has to clear those four plus the frame row, or the
-                // pane opens already scrolled. bonsai takes the rest because
-                // the tree needs the height.
+                // vite prints four lines and then sits there. The cap has to
+                // clear those four plus the frame row, or the pane opens
+                // already scrolled. bonsai takes the rest for the tree.
                 pane size="33%" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
                     args "run" "dev"
                 }

@@ -2,16 +2,13 @@
 // ~/.config/zellij/config.kdl
 //
 // Overrides only. Everything unlisted comes from zellij's built-in defaults.
-//
-// This file used to be a full `zellij setup --dump-config`. That pins the
-// defaults of whatever version dumped it, so upgrades stop landing: the dump
-// predated 0.45.1 and was overriding its ScrollToPreviousPrompt/NextPrompt
-// binds back out. Keep this file to things that actually differ.
+// Never paste in a `zellij setup --dump-config`: it pins the defaults of the
+// version that dumped it, so later upgrades silently stop landing.
 
 // Matches ~/.config/ghostty/config and the nvim colorscheme.
 theme "kanagawa-dragon"
 
-// tmux runs with `set -g mouse on`; keep the two consistent.
+// tmux runs with `set -g mouse on`. Keep the two consistent.
 mouse_mode true
 
 // zellij execs $SHELL directly for new panes, where tmux creates a login
@@ -35,10 +32,9 @@ pane_frames true
 // fresh each morning, so turn it off rather than work around it in the alias.
 session_serialization false
 
-// A layout replaces zellij's default one wholesale, so anything a session
-// needs has to be in the layout that built it. That trapped the status bar in
-// dev.kdl and left a bare `zellij` on the stock tab-bar and status-bar.
-// plain.kdl is the minimal carrier: one pane plus the template.
+// A layout replaces zellij's default one wholesale, so anything a session needs
+// has to be in the layout that built it. plain.kdl is the minimal carrier that
+// gives a bare `zellij` the same bar: one pane plus the template.
 default_layout "plain"
 
 // The bar itself lives here, as a plugin alias, so the layouts reference it by
@@ -78,32 +74,16 @@ plugins {
         datetime_format   "%A, %d %b %Y %I:%M %p"
         datetime_timezone "America/New_York"
 
-        // tmux shows no prefix indicator, and does not need one: the prefix
-        // lasts a single keystroke. A zellij mode is sticky until Esc, so it is
-        // a state you can sit in without noticing, and it gets a marker.
-        //
-        // It reads far left, after the branding and before the session, which is
-        // where both nvim and zellij's own default bar put the mode.
-        //
-        // The two colours are the two frame colours, so the bar and the border a
-        // pane is wearing never say different things. Base mode takes the
-        // focused-frame yellow, any other mode takes frame_highlight's orange.
-        //
-        // Red is deliberately left alone: exit_code_error owns it, and a mode is
-        // a state you chose rather than something that went wrong.
+        // A zellij mode is sticky until Esc, so it is a state you can sit in
+        // without noticing. tmux needs no such marker: its prefix lasts one
+        // keystroke. The two colours are the two frame colours, so the bar and
+        // the border a pane wears never say different things.
         //
         // zjstatus has no key for "every mode except normal", so one real mode
-        // has to carry that format and mode_default_to_mode points the rest at
-        // it. tmux is the carrier because it is the one reached by hand, which
-        // makes the line true on its own terms rather than only as a template.
-        //
-        // A clearer invented key is not available, and would fail silently.
-        // zjstatus matches the key suffix and mode_default_to_mode against a
-        // fixed list of fourteen mode names, drops anything else without an
-        // error, and falls back to painting every mode with mode_normal.
-        //
-        // {name} is zellij's own mode name. Literal text in its place would cost
-        // a line per mode, because only the placeholder survives the fallback.
+        // carries that format and mode_default_to_mode points the rest at it.
+        // Both names have to come from zjstatus's fixed list of fourteen modes.
+        // An invented key is dropped without an error, and every mode then falls
+        // back to mode_normal.
         mode_normal          "#[fg=#c8c093]{name} "
         mode_tmux            "#[fg=#ffa066]{name} "
         mode_default_to_mode "tmux"
@@ -127,7 +107,7 @@ keybinds {
         bind "v" { NewPane "Right"; SwitchToMode "Normal"; }
         bind "h" { NewPane "Down"; SwitchToMode "Normal"; }
 
-        // Tab mode's only other door, now that Ctrl t is unbound below.
+        // Tab mode's other door. Ctrl t is unbound below.
         bind "t" { SwitchToMode "Tab"; }
 
         // prefix prefix sends the prefix through, the way tmux's own
