@@ -56,6 +56,10 @@
 # Custom Toys commands — ours end to end
 !/.toys/
 
+# .data is Toys' directory for files a tool reads at runtime. Excluded whole
+# rather than gated per file, so anything local stays local by default.
+/.toys/.data/
+
 # Scripts on PATH; the rest of .local is installed artifacts
 !/.local/
 /.local/*

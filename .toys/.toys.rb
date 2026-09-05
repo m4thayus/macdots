@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 require 'tmpdir'
+require 'yaml'
+
+# Remote paths come from .toys/.data/production.yml, which stays local to the
+# machine because this repo is public. See ~/.gitignore.
+mixin 'production_paths' do
+  def production_paths(app)
+    file = find_data('production.yml', type: :file)
+    raise 'missing .toys/.data/production.yml; see the comment in .toys/.toys.rb' unless file
+
+    YAML.load_file(file).fetch(app) { raise "#{file} has no entry for #{app}" }
+  end
+end
 
 tool 'bonsai' do
   desc 'Slow-growing bonsai screensaver that keeps your laptop awake'
@@ -92,6 +104,7 @@ tool 'production' do
 
   tool 'snapshots' do
     desc 'Fetch production database backups'
+    include 'production_paths'
 
     required_arg :remote_host, complete: ssh_hosts
     flag :app, '--app [NAME]', default: 'talaria', complete_values: %w[talaria thoth livelabs quicksilver]
@@ -99,22 +112,14 @@ tool 'production' do
 
     def run
       local_filepath = out || "~/Projects/mercury/#{app}/sandbox/"
-      remote_file = case app
-                    when 'talaria'
-                      'backups/talaria-production.sql'
-                    when 'thoth'
-                      'backups/thoth_production.sql'
-                    when 'livelabs'
-                      'backups/livelabs_production.sql'
-                    when 'quicksilver'
-                      '/var/www/quicksilver/shared/data/production.sqlite3'
-                    end
+      remote_file = production_paths(app).fetch('backup')
       exec "scp #{options[:remote_host]}:#{remote_file} #{local_filepath}"
     end
   end
 
   tool 'logs' do
     desc 'Fetch production logs'
+    include 'production_paths'
 
     required_arg :remote_host, complete: ssh_hosts
     optional_arg :log_file, default: 'production.log'
@@ -123,7 +128,8 @@ tool 'production' do
 
     def run
       output_file = out || "#{options[:remote_host]}_#{options[:log_file]}"
-      exec "scp #{options[:remote_host]}:/var/www/#{app}/shared/log/#{options[:log_file]} #{output_file}"
+      log_dir = production_paths(app).fetch('log_dir')
+      exec "scp #{options[:remote_host]}:#{log_dir}/#{options[:log_file]} #{output_file}"
     end
   end
 
