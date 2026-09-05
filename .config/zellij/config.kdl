@@ -9,7 +9,7 @@
 // binds back out. Keep this file to things that actually differ.
 
 // Matches ~/.config/ghostty/config and the nvim colorscheme.
-theme "kanagawa"
+theme "kanagawa-dragon"
 
 // tmux runs with `set -g mouse on`; keep the two consistent.
 mouse_mode true
@@ -25,3 +25,10 @@ simplified_ui true
 
 // tmux draws a thin divider and no pane titles; match it.
 pane_frames false
+
+// zellij serializes a session when it exits and resurrects it on the next
+// attach, with every command suspended behind a "Waiting to run" prompt. That
+// makes `dzj` restore yesterday's closed tabs instead of building the layout,
+// and tmux has no equivalent behaviour. The dev workspace is meant to be built
+// fresh each morning, so turn it off rather than work around it in the alias.
+session_serialization false

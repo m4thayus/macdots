@@ -18,7 +18,13 @@ layout {
     // line; the full tab-bar + status-bar pair is three lines of chrome.
     default_tab_template {
         children
-        pane size=1 borderless=true { plugin location="compact-bar"; }
+        pane size=1 borderless=true {
+            // The indicator names the active swap layout, and this layout
+            // defines none, so it only ever reads BASE.
+            plugin location="compact-bar" {
+                hide_swap_layout_indication true
+            }
+        }
     }
 
     tab name="home" focus=true {

@@ -1,0 +1,64 @@
+// Kanagawa Dragon. Upstream zellij ships only "kanagawa", which is the Wave
+// variant — blue-black and more saturated. Ghostty, alacritty and nvim all name
+// the Dragon variant explicitly, so this file supplies the one zellij is
+// missing rather than leaving the multiplexer on a different Kanagawa.
+//
+// SYNC: the hex values are Ghostty's resolved palette, from `ghostty
+// +show-config`. Re-derive from that command, never by hand, and see
+// ~/.config/ghostty/config.
+//
+// The UI slots exist to match the tmux status line, which paints nothing of its
+// own: it sets bg=default and names ANSI colors, so it inherits the terminal.
+// zellij has no bg=default, so every background here is set to Ghostty's own
+// #181616 to imitate it. In each slot `base` is the text and `background` is
+// the fill. Only ribbon_selected actually paints its fill, which is why giving
+// it the terminal background is what turns the active tab into plain green
+// text — the same marker tmux uses via window-status-current-style.
+themes {
+    kanagawa-dragon {
+        // Base16. zellij derives anything the UI slots below leave unset.
+        fg      "#c5c9c5"
+        bg      "#181616"
+        black   "#0d0c0c"
+        red     "#c4746e"
+        green   "#8a9a7b"
+        yellow  "#c4b28a"
+        blue    "#8ba4b0"
+        magenta "#a292a3"
+        cyan    "#8ea4a2"
+        orange  "#ffa066"
+        white   "#c5c9c5"
+
+        text_unselected   { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+        text_selected     { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+
+        // Inactive tabs take the same colour as ordinary text, and the active
+        // tab takes green. That is exactly tmux's window-status pair.
+        //
+        // emphasis_1 is the one compact-bar fills alternating tabs with, so it
+        // has to be the terminal background or every other tab gets a stripe.
+        ribbon_unselected { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#181616"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+        ribbon_selected   { base "#8a9a7b"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#c4b28a"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+
+        // These mirror tmux's two border colours: pane-border-style is black and
+        // pane-active-border-style is #282727, one step up. frame_highlight is
+        // the hover colour, and it joins them because tmux marks hover with
+        // nothing at all. Raise it if the split lines stop being findable.
+        frame_unselected  { base "#0d0c0c"; background "#181616"; emphasis_0 "#0d0c0c"; emphasis_1 "#0d0c0c"; emphasis_2 "#0d0c0c"; emphasis_3 "#0d0c0c"; }
+        frame_selected    { base "#282727"; background "#181616"; emphasis_0 "#282727"; emphasis_1 "#282727"; emphasis_2 "#282727"; emphasis_3 "#282727"; }
+        frame_highlight   { base "#282727"; background "#181616"; emphasis_0 "#282727"; emphasis_1 "#282727"; emphasis_2 "#282727"; emphasis_3 "#282727"; }
+
+        exit_code_success { base "#8a9a7b"; background "#181616"; emphasis_0 "#8a9a7b"; emphasis_1 "#8a9a7b"; emphasis_2 "#8a9a7b"; emphasis_3 "#8a9a7b"; }
+        exit_code_error   { base "#c4746e"; background "#181616"; emphasis_0 "#c4746e"; emphasis_1 "#c4746e"; emphasis_2 "#c4746e"; emphasis_3 "#c4746e"; }
+
+        // Plugin UIs — the session manager and friends. Selection uses
+        // Ghostty's selection-background so it matches a mouse drag.
+        table_title           { base "#c4b28a"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+        table_cell_unselected { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+        table_cell_selected   { base "#c8c093"; background "#2d4f67"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+        list_unselected       { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+        list_selected         { base "#c8c093"; background "#2d4f67"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
+
+        multiplayer_user_colors { player_1 "#8ba4b0"; player_2 "#a292a3"; player_3 "#8ea4a2"; player_4 "#c4b28a"; player_5 "#8a9a7b"; player_6 "#c4746e"; player_7 "#ffa066"; player_8 "#a6a69c"; player_9 "#c8c093"; player_10 "#7fb4ca"; }
+    }
+}
