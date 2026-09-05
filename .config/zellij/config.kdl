@@ -129,6 +129,16 @@ keybinds {
 
         // Tab mode's only other door, now that Ctrl t is unbound below.
         bind "t" { SwitchToMode "Tab"; }
+
+        // prefix prefix sends the prefix through, the way tmux's own
+        // `bind C-\\ send-prefix` does. 28 is Ctrl \, which is what the
+        // overmind session running inside a zellij pane listens for.
+        // Without this zellij swallows the key and the nested tmux never
+        // sees a prefix.
+        //
+        // This passes one keystroke. Ctrl g locks zellij outright when the
+        // nested session needs a run of them.
+        bind "Ctrl \\" { Write 28; SwitchToMode "Normal"; }
     }
     shared_except "tmux" "locked" {
         bind "Ctrl \\" { SwitchToMode "Tmux"; }

@@ -25,9 +25,8 @@ cmux() {
     -e CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 "$cmd"
 }
 
-alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
-
-# The zellij counterpart to dmux, same workspace via ~/.config/zellij/layouts/dev.kdl.
+# The dev workspace, via ~/.config/zellij/layouts/dev.kdl. zellij is the
+# multiplexer you launch, and tmux only ever runs embedded in one of its panes.
 # The subcommand order is not stylistic: `zellij --layout X --session Y` is broken
 # in 0.45.1 and exits with "There is no active session!", so the layout has to
 # arrive as a default-layout override on an attach --create instead.

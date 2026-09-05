@@ -65,6 +65,12 @@ themes {
         // frame while a mode other than the base one is open, which is a state
         // you want to notice and leave, so it takes a hue rather than another
         // step of grey. It is the only warning colour in the frames.
+        //
+        // ~/.config/tmux/tmux.conf reuses frame_unselected for its own idle
+        // border, so an embedded tmux session sits at the same weight as the
+        // frame around it. Its active border is the foreground white rather
+        // than this yellow, because both borders are on screen at once and two
+        // yellows would say the same thing. Nothing breaks if the two drift.
         frame_unselected  { base "#625e5a"; background "#181616"; emphasis_0 "#625e5a"; emphasis_1 "#625e5a"; emphasis_2 "#625e5a"; emphasis_3 "#625e5a"; }
         frame_selected    { base "#c8c093"; background "#181616"; emphasis_0 "#c8c093"; emphasis_1 "#c8c093"; emphasis_2 "#c8c093"; emphasis_3 "#c8c093"; }
         frame_highlight   { base "#ffa066"; background "#181616"; emphasis_0 "#ffa066"; emphasis_1 "#ffa066"; emphasis_2 "#ffa066"; emphasis_3 "#ffa066"; }
