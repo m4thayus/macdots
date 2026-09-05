@@ -26,8 +26,6 @@ cmux() {
 }
 
 alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
-alias pmux="tmux source-file ~/.config/tmux/prose \; attach"
-alias hgmux="tmux source-file ~/.config/tmux/mercury \; attach"
 
 alias rc_sync="rclone sync --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
 alias rc_copy="rclone copy --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
