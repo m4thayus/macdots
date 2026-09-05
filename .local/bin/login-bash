@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Login-shell wrapper for zellij's default_shell.
+#
+# tmux creates a login shell for new panes; zellij execs $SHELL plainly. On
+# macOS that difference matters, because there is no session layer setting up
+# the environment the way a Linux display manager does — /etc/profile and
+# ~/.bash_profile are what run PATH, path_helper, the version managers, direnv
+# and PS1. A non-login pane silently gets none of it.
+#
+# Fixing it here rather than in ~/.bashrc keeps the login/non-login split
+# intact: ~/.bash_profile stays the run-once file that need not be idempotent,
+# and path_helper keeps collapsing its PATH append back down.
+exec /opt/homebrew/bin/bash -l "$@"

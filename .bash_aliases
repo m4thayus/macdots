@@ -27,5 +27,14 @@ cmux() {
 
 alias dmux="tmux source-file ~/.config/tmux/dev \; attach"
 
+# The zellij counterpart to dmux, same workspace via ~/.config/zellij/layouts/dev.kdl.
+# The subcommand order is not stylistic: `zellij --layout X --session Y` is broken
+# in 0.45.1 and exits with "There is no active session!", so the layout has to
+# arrive as a default-layout override on an attach --create instead.
+alias dzj="zellij attach --create dev options --default-layout dev"
+
+# zellij's own suggested shorthand, and where dzj's suffix comes from.
+alias zj="zellij"
+
 alias rc_sync="rclone sync --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
 alias rc_copy="rclone copy --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"

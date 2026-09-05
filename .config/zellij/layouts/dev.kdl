@@ -1,0 +1,81 @@
+// Zellij equivalent of ~/.config/tmux/dev. Launched by dzj; dmux still runs
+// the tmux original. The two are kept in step by hand.
+//
+// One-shots use `bash -lic "<cmd>; exec bash -l"` so the command runs AND the
+// pane keeps a live shell — the behaviour send-keys gave us for free.
+//
+// close_on_exit matches tmux, which has remain-on-exit off by default. Without
+// it zellij holds an exited pane open showing [ EXIT CODE: n ], so Ctrl+D
+// prints "logout" and then needs a second press to dismiss the corpse.
+//
+// Long-runners (npm run dev, bin/dev, toys bonsai) get a bare command: they
+// never exit, so they never need a shell behind them.
+
+layout {
+    // A custom layout replaces zellij's default one wholesale. Without a
+    // template there is no tab bar at all. compact-bar is one line carrying
+    // both tab names and mode, which is the closest match to tmux's status
+    // line; the full tab-bar + status-bar pair is three lines of chrome.
+    default_tab_template {
+        children
+        pane size=1 borderless=true { plugin location="compact-bar"; }
+    }
+
+    tab name="home" focus=true {
+        pane split_direction="vertical" {
+            pane command="bash" close_on_exit=true {
+                args "-lic" "brew update && brew upgrade codex claude-code claude; exec bash -l"
+            }
+            pane split_direction="horizontal" {
+                pane command="bash" close_on_exit=true { args "-lic" "toys bonsai"; }
+                pane cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
+                    args "run" "dev"
+                }
+            }
+        }
+    }
+
+    tab name="talaria" cwd="$MERCURY_BASE_PATH/talaria" {
+        pane split_direction="vertical" {
+            pane command="bash" close_on_exit=true {
+                args "-lic" "toys github prune local; exec bash -l"
+            }
+            pane command="bin/dev" close_on_exit=true
+        }
+    }
+
+    tab name="thoth" cwd="$MERCURY_BASE_PATH/thoth" {
+        pane command="bash" close_on_exit=true {
+            args "-lic" "toys github prune local; exec bash -l"
+        }
+    }
+
+    tab name="personal" {
+        pane split_direction="vertical" {
+            pane cwd="$HOME/Projects/phylactery" command="bash" close_on_exit=true {
+                args "-lic" "toys github prune local; exec bash -l"
+            }
+            pane cwd="$HOME/Projects/white-room" command="bash" close_on_exit=true {
+                args "-lic" "toys github prune local; exec bash -l"
+            }
+        }
+    }
+
+    tab name="mercury" {
+        pane split_direction="vertical" {
+            pane cwd="$MERCURY_BASE_PATH"
+            pane split_direction="horizontal" {
+                pane cwd="$MERCURY_BASE_PATH/livelabs" command="bash" close_on_exit=true {
+                    args "-lic" "toys github prune local; exec bash -l"
+                }
+                pane cwd="$MERCURY_BASE_PATH/psychopomp" command="bash" close_on_exit=true {
+                    args "-lic" "toys github prune local; exec bash -l"
+                }
+            }
+        }
+    }
+
+    tab name="production" cwd="$HOME" {
+        pane
+    }
+}

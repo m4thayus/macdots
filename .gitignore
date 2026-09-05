@@ -46,6 +46,7 @@
 !/.config/nvim/
 !/.config/tmux/
 !/.config/worktrunk/
+!/.config/zellij/
 
 # rclone, gated to the tracked file only
 !/.config/rclone/

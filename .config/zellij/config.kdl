@@ -1,0 +1,27 @@
+//
+// ~/.config/zellij/config.kdl
+//
+// Overrides only. Everything unlisted comes from zellij's built-in defaults.
+//
+// This file used to be a full `zellij setup --dump-config`. That pins the
+// defaults of whatever version dumped it, so upgrades stop landing: the dump
+// predated 0.45.1 and was overriding its ScrollToPreviousPrompt/NextPrompt
+// binds back out. Keep this file to things that actually differ.
+
+// Matches ~/.config/ghostty/config and the nvim colorscheme.
+theme "kanagawa"
+
+// tmux runs with `set -g mouse on`; keep the two consistent.
+mouse_mode true
+
+// zellij execs $SHELL directly for new panes, where tmux creates a login
+// shell. Without this, a pane opened by hand has no version-manager shims,
+// no direnv and no PS1. See the comment in the wrapper.
+default_shell "/Users/matt/.local/bin/login-bash"
+
+// Drop the powerline chevrons. They are the bulk of what makes zellij's chrome
+// read as louder than tmux's single status line.
+simplified_ui true
+
+// tmux draws a thin divider and no pane titles; match it.
+pane_frames false
