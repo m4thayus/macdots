@@ -12,7 +12,8 @@
 // so it takes dragonBlack6 from upstream Kanagawa directly.
 //
 // The UI slots exist to match the tmux status line, which paints nothing of its
-// own: it sets bg=default and names ANSI colors, so it inherits the terminal.
+// own: ~/.config/tmux/tmux.conf sets status-style bg=default, so it inherits
+// the terminal.
 // zellij has no bg=default, so backgrounds here are set to Ghostty's own
 // #181616 to imitate it. text_selected is the deliberate exception. In each
 // slot `base` is the text and `background` is the fill. Only ribbon_selected
@@ -31,7 +32,7 @@ themes {
         blue    "#8ba4b0"
         magenta "#a292a3"
         cyan    "#8ea4a2"
-        orange  "#ffa066"
+        orange  "#b6927b"
         white   "#c5c9c5"
 
         text_unselected   { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
@@ -57,14 +58,33 @@ themes {
         // four and rejects the file without them.
         //
         // Unfocused and focused are one dim-to-bright pair, because a border sits
-        // under a title it should not compete with. Focus takes Ghostty's
-        // cursor-color, marking the focused pane the way the focused character
-        // is marked.
+        // under a title it should not compete with. Focus takes the yellow, the
+        // same colour as the active tab, so one hue reads as "here" in the bar
+        // and in the frames.
+        //
+        // The Dragon orange #b6927b is the louder alternative and is deliberately
+        // not used. It is the rarer hue, so it marks the border more sharply, and
+        // it clears the idle border by only 2.26:1 where this yellow clears it by
+        // 3.49:1. Sharper is still wrong here. Yellow is usually already on
+        // screen in ordinary output, so an orange border reads as a second signal
+        // rather than as the frame around the first.
+        //
+        // SYNC: ~/.config/zellij/config.kdl paints tab_active this same yellow.
+        // Change one and change the other, or the tab and the frame stop
+        // agreeing about which pane is focused.
         //
         // frame_highlight breaks that pair deliberately. It paints the focused
         // frame while a mode other than the base one is open, which is a state
         // you want to notice and leave, so it takes a hue rather than another
         // step of grey. It is the only warning colour in the frames.
+        //
+        // Magenta is the quietest hue in this palette at 8% saturation, so it
+        // marks the state without shouting. Red (#c4746e, 42%) is the louder
+        // option if this turns out to be too quiet to catch.
+        //
+        // SYNC: ~/.config/zellij/config.kdl fills the bar's mode block with
+        // this same magenta, so the border and the block never disagree about
+        // which mode is open. Change one and change the other.
         //
         // ~/.config/tmux/tmux.conf reuses frame_unselected for its own idle
         // border, so an embedded tmux session sits at the same weight as the
@@ -73,7 +93,7 @@ themes {
         // yellows would say the same thing. Nothing breaks if the two drift.
         frame_unselected  { base "#625e5a"; background "#181616"; emphasis_0 "#625e5a"; emphasis_1 "#625e5a"; emphasis_2 "#625e5a"; emphasis_3 "#625e5a"; }
         frame_selected    { base "#c8c093"; background "#181616"; emphasis_0 "#c8c093"; emphasis_1 "#c8c093"; emphasis_2 "#c8c093"; emphasis_3 "#c8c093"; }
-        frame_highlight   { base "#ffa066"; background "#181616"; emphasis_0 "#ffa066"; emphasis_1 "#ffa066"; emphasis_2 "#ffa066"; emphasis_3 "#ffa066"; }
+        frame_highlight   { base "#a292a3"; background "#181616"; emphasis_0 "#a292a3"; emphasis_1 "#a292a3"; emphasis_2 "#a292a3"; emphasis_3 "#a292a3"; }
 
         exit_code_success { base "#8a9a7b"; background "#181616"; emphasis_0 "#8a9a7b"; emphasis_1 "#8a9a7b"; emphasis_2 "#8a9a7b"; emphasis_3 "#8a9a7b"; }
         exit_code_error   { base "#c4746e"; background "#181616"; emphasis_0 "#c4746e"; emphasis_1 "#c4746e"; emphasis_2 "#c4746e"; emphasis_3 "#c4746e"; }
@@ -86,6 +106,6 @@ themes {
         list_unselected       { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
         list_selected         { base "#c8c093"; background "#2d4f67"; emphasis_0 "#c4b28a"; emphasis_1 "#8a9a7b"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
 
-        multiplayer_user_colors { player_1 "#8ba4b0"; player_2 "#a292a3"; player_3 "#8ea4a2"; player_4 "#c4b28a"; player_5 "#8a9a7b"; player_6 "#c4746e"; player_7 "#ffa066"; player_8 "#a6a69c"; player_9 "#c8c093"; player_10 "#7fb4ca"; }
+        multiplayer_user_colors { player_1 "#8ba4b0"; player_2 "#a292a3"; player_3 "#8ea4a2"; player_4 "#c4b28a"; player_5 "#8a9a7b"; player_6 "#c4746e"; player_7 "#b6927b"; player_8 "#a6a69c"; player_9 "#c8c093"; player_10 "#7fb4ca"; }
     }
 }

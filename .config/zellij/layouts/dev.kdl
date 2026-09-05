@@ -35,13 +35,32 @@ layout {
                 args "-c" "brew update && brew upgrade codex claude-code claude; exec /Users/matt/.config/zellij/shell"
             }
             pane split_direction="horizontal" {
+                pane size="33%" command="toys" close_on_exit=true { args "bonsai"; }
+
                 // vite prints four lines and then sits there. The cap has to
                 // clear those four plus the frame row, or the pane opens
-                // already scrolled. bonsai takes the rest for the tree.
-                pane size="33%" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
+                // already scrolled.
+                pane size="33%" name="hg-dev-home" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
                     args "run" "dev"
                 }
-                pane command="toys" close_on_exit=true { args "bonsai"; }
+
+                // Bottom of the column, and cwd is $HOME rather than inherited,
+                // because zellij opens a new pane in the focused pane's working
+                // directory. A scratch pane split off the bottom of this column
+                // is a quick one-off, so it wants $HOME. Every other tab keeps
+                // the inherited repo, which is why this is a pane attribute
+                // rather than a keybind.
+                //
+                // --basic drops btm's graphs for htop's table layout. A third
+                // of the screen is not enough width for the graphs to read, and
+                // btop refused this size outright.
+                //
+                // --rate is 2s against btm's 1s default. It halves the wakeups,
+                // and anything slower reads as jumping between numbers rather
+                // than tracking one.
+                pane cwd="$HOME" command="btm" close_on_exit=true {
+                    args "--basic" "--rate" "2s"
+                }
             }
         }
     }

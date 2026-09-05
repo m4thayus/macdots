@@ -31,8 +31,8 @@ foreground = '#c8c093'
 
 [[colors.indexed_colors]]
 index = 16
-color = '#ffa066'
+color = '#b6927b'
 
 [[colors.indexed_colors]]
 index = 17
-color = '#ff5d62'
+color = '#b98d7b'

@@ -12,9 +12,13 @@ theme = Kanagawa Dragon
 selection-background = #2d4f67
 selection-foreground = #c8c093
 
-# Alacritty carried these as indexed_colors 16 and 17.
-palette = 16=#ffa066
-palette = 17=#ff5d62
+# Ghostty's shipped Kanagawa Dragon theme stops at palette 15, so the theme's
+# two extended colours are set here. Take them from the Dragon term list in
+# kanagawa.nvim, never from Wave's: Wave's pair is surimiOrange and peachRed,
+# and dropping those into Dragon leaves one 100%-saturation colour in a palette
+# where nothing else clears 42%.
+palette = 16=#b6927b
+palette = 17=#b98d7b
 
 font-family = Cascadia Code NF
 font-style = SemiLight

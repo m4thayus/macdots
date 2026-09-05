@@ -16,9 +16,10 @@ mouse_mode true
 // no direnv and no PS1. See the comment in the wrapper.
 default_shell "/Users/matt/.config/zellij/shell"
 
-// Drop the powerline chevrons. They are the bulk of what makes zellij's chrome
-// read as louder than tmux's single status line.
-simplified_ui true
+// No simplified_ui line. The flag is a signal zellij passes to plugins, and
+// pane frames are core rendering rather than a plugin, so the built-in bar was
+// the only thing reading it. zjstatus replaced that bar and ignores the flag,
+// which leaves nothing for either value to change.
 
 // A deliberate break from tmux, which draws a bare divider and no pane titles.
 // The title names the command the pane is running, and that is worth the row
@@ -58,34 +59,98 @@ plugins {
         // The three formats are ~/.config/tmux/tmux.conf's status-left, window
         // list and status-right, in that order.
         //
-        // Nothing here sets bg, so the bar inherits the terminal the way
-        // tmux's `status-style bg=default` does.
-        format_left  "#[fg=#8ba4b0]Zellij {mode}#[fg=#c4b28a][{session}]{tabs}"
-        format_right "{datetime}"
+        // Branding, mode and clock are filled blocks. Each marks something that
+        // changes, or something you have to check: which multiplexer this is,
+        // which mode is open, what time it is. The session name is fixed for
+        // the life of the session, so it holds no fill and no colour of its
+        // own — it sits on the right as bracketed text, which is the shape
+        // tmux's status-left gave it.
+        //
+        // The tab list stays bare too: it is the segment that changes width as
+        // you work, and a block on each tab would move the bar's right edge
+        // every time you open one.
+        //
+        // The bar's own fill is #393836, dragonBlack5, so the bar reads as its
+        // own surface rather than as terminal background. format_space carries
+        // the same fill into the gap between the tab list and the clock.
+        //
+        // frame_unselected — #625e5a, the idle pane border — is the colour that
+        // would tie the bar to the frames, and it is too light to carry the tab
+        // list. It puts the green active tab at 2.1:1 against it, and that
+        // marker is the one thing in the list you have to be able to pick out.
+        // One step down the same ramp takes the green to 3.9:1 and the plain
+        // tab text to 7.0:1.
+        //
+        // A chevron is a solid triangle, not a blend: it takes the fill it
+        // leaves as its fg and the fill it enters as its bg. So it vanishes
+        // wherever two fills sit at the same luminance, and Kanagawa Dragon is
+        // flat by design — every hue in it lands between L 0.30 and L 0.35.
+        // Branding into mode is one of those seams, at 1.15:1, and it is a
+        // straight edge here because a chevron there would cost a column to
+        // draw nothing. Both surviving chevrons cross into the bar fill, where
+        // the ratio is about 4:1. The one leaving the mode block lives in the
+        // mode formats below, because the mode fill changes and a chevron in
+        // this string could not follow it.
+        //
+        // The glyphs are U+E0B0 and U+E0B2, which need a patched font.
+        // ~/.config/ghostty/config sets Cascadia Code NF, and NF is the patch.
+        format_left  "#[fg=#181616,bg=#8ba4b0,bold] Zellij {mode}#[fg=#c5c9c5,bg=#393836]{tabs}"
+        format_right "#[fg=#b6927b,bg=#393836][{session}] {datetime}"
+        format_space "#[bg=#393836]"
 
         // Hex rather than a theme reference: zjstatus paints itself and never
-        // reads zellij's theme. Yellow session, green active tab and blue clock
-        // are tmux's colours, resolved to Kanagawa Dragon by
+        // reads zellij's theme. The values resolve to Kanagawa Dragon through
         // ~/.config/zellij/themes/kanagawa-dragon.kdl.
-        tab_normal "#[fg=#c5c9c5] {index}:{name}"
-        tab_active "#[fg=#8a9a7b] {index}:{name}*"
+        //
+        // The active tab takes the yellow, the same colour as the focused frame,
+        // so one hue reads as "here" in the bar and in the frames.
+        //
+        // The Dragon orange #b6927b is the louder alternative and is deliberately
+        // not used. Nothing else in this palette claims that hue, so it does mark
+        // the tab more sharply. Sharper is still wrong here. Yellow is usually
+        // already on screen in ordinary output, so an orange tab reads as a
+        // second signal rather than as the marker on the first.
+        //
+        // The cost is that yellow is palette slot 7, the ANSI white that ordinary
+        // output lands on. It runs 6.37:1 against the bar fill where the inactive
+        // tabs run 6.99:1, so luminance separates the two almost not at all. The
+        // hue and the trailing asterisk carry the signal, and the asterisk is
+        // what carries it if the colour fails to.
+        //
+        // SYNC: ~/.config/zellij/themes/kanagawa-dragon.kdl paints frame_selected
+        // this same yellow. Change one and change the other, or the tab and the
+        // frame stop agreeing about which pane is focused.
+        //
+        // The session name takes the orange the tab list does not want. As text
+        // rather than a fill it reads as a label, not as a marker, so the hue's
+        // loudness costs nothing there.
+        //
+        // SYNC: ~/.config/tmux/tmux.conf paints its own session name this same
+        // orange, so an embedded session labels itself the way this one does.
+        tab_normal "#[fg=#c5c9c5,bg=#393836] {index}:{name}"
+        tab_active "#[fg=#c8c093,bg=#393836] {index}:{name}*"
 
-        datetime          "#[fg=#8ba4b0]{format}"
+        datetime          "#[fg=#8ba4b0,bg=#393836]#[fg=#181616,bg=#8ba4b0,bold] {format} "
         datetime_format   "%A, %d %b %Y %I:%M %p"
         datetime_timezone "America/New_York"
 
         // A zellij mode is sticky until Esc, so it is a state you can sit in
         // without noticing. tmux needs no such marker: its prefix lasts one
-        // keystroke. The two colours are the two frame colours, so the bar and
-        // the border a pane wears never say different things.
+        // keystroke.
+        //
+        // SYNC: magenta is frame_highlight in themes/kanagawa-dragon.kdl, the
+        // colour the focused frame takes while a mode is open. The block and
+        // the border report one state, so change them together.
+        //
+        // Normal mode is the resting state and takes green.
         //
         // zjstatus has no key for "every mode except normal", so one real mode
         // carries that format and mode_default_to_mode points the rest at it.
         // Both names have to come from zjstatus's fixed list of fourteen modes.
         // An invented key is dropped without an error, and every mode then falls
         // back to mode_normal.
-        mode_normal          "#[fg=#c8c093]{name} "
-        mode_tmux            "#[fg=#ffa066]{name} "
+        mode_normal          "#[fg=#181616,bg=#8a9a7b,bold] {name} #[fg=#8a9a7b,bg=#393836]"
+        mode_tmux            "#[fg=#181616,bg=#a292a3,bold] {name} #[fg=#a292a3,bg=#393836]"
         mode_default_to_mode "tmux"
     }
 }
