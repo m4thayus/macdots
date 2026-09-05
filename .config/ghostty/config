@@ -1,7 +1,9 @@
-# Colors and metrics came from .config/alacritty/alacritty.toml and still match
-# it. The italic pairing below does not, and cannot: alacritty takes one font
-# family with per-style faces, so a second family for italics has no equivalent
-# there. Expect the two terminals to differ on comments.
+# Ghostty is the primary terminal. Alacritty is the backup and mirrors this
+# config: same colors, metrics, padding and font pairing.
+#
+# One thing does not carry across. Ghostty falls back to D2Coding for Hangul,
+# and Alacritty has no fallback-family setting, so Korean text there lands on
+# whatever CoreText picks and loses the 2:1 cell alignment.
 
 theme = Kanagawa Dragon
 
@@ -44,5 +46,6 @@ window-padding-x = 6
 window-padding-y = 6
 window-padding-balance = true
 
-# Fullscreen and search keep Ghostty's defaults, which are the reverse of the
-# Alacritty bindings: cmd+f searches, cmd+ctrl+f goes fullscreen.
+# Fullscreen and search keep Ghostty's defaults: cmd+f searches, cmd+ctrl+f
+# goes fullscreen. Alacritty's macOS defaults are the same, so neither config
+# binds them.

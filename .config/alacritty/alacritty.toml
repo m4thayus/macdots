@@ -4,61 +4,43 @@ TERM = "alacritty"
 [font]
 size = 14.0
 
-# VictorMono
-# [font.bold]
-# family = "VictorMono Nerd Font"
-# style = "Medium"
-
-# [font.bold_italic]
-# family = "VictorMono Nerd Font"
-# style = "Medium Italic"
-
-# [font.italic]
-# family = "VictorMono Nerd Font"
-# style = "Italic"
-
-# [font.normal]
-# family = "VictorMono Nerd Font"
-# style = "Light"
-
-# Cascadia Code
-[font.bold]
-family = "Cascadia Code NF"
-style = "SemiBold"
-
-[font.bold_italic]
-family = "Cascadia Code NF"
-style = "SemiBold Italic"
-
-[font.italic]
-family = "Cascadia Code NF"
-style = "SemiLight Italic"
-
+# Mirrors .config/ghostty/config. Ghostty is primary; keep the two in step.
 [font.normal]
 family = "Cascadia Code NF"
 style = "SemiLight"
 
+[font.bold]
+family = "Cascadia Code NF"
+style = "SemiBold"
+
+# Italic comes from Victor Mono for its cursive letterforms. The nvim config
+# sets italic on comments and diagnostic virtual text only, so the cursive
+# lands there and nowhere else.
+#
+# The style has to be named: Victor Mono ships Italic (cursive) and Oblique
+# (slanted roman) as separate faces, and the default would take the wrong one.
+[font.italic]
+family = "Victor Mono"
+style = "Medium Italic"
+
+# Bold is Victor Mono's heaviest italic. Without this the style falls back to
+# Cascadia and breaks the pairing mid-line.
+[font.bold_italic]
+family = "Victor Mono"
+style = "Bold Italic"
+
+# Alacritty emits neither of these on its own. Ghostty does, natively, so it
+# has no equivalent block. Fullscreen and search are left to alacritty's
+# macOS defaults, which already match ghostty's.
 [[keyboard.bindings]]
 chars = "\u001E"
 key = "Key6"
 mods = "Control"
 
 [[keyboard.bindings]]
-action = "ToggleFullscreen"
-key = "F"
-mods = "Command"
-
-[[keyboard.bindings]]
-action = "SearchForward"
-key = "F"
-mode = "~Search"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-action = "SearchBackward"
-key = "B"
-mode = "~Search"
-mods = "Command|Control"
+chars = "\u001b\r"
+key = "Return"
+mods = "Shift"
 
 [window]
 dynamic_padding = true
@@ -71,8 +53,3 @@ y = 6
 [general]
 import = ["/Users/matt/.config/alacritty/kanagawa-dragon.toml"]
 # import = ["/Users/matt/.config/alacritty/tomorrow-night-eighties.toml"]
-
-[[keyboard.bindings]]
-key = "Return"
-mods = "Shift"
-chars = "\u001b\r"
