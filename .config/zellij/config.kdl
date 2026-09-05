@@ -32,3 +32,29 @@ pane_frames false
 // and tmux has no equivalent behaviour. The dev workspace is meant to be built
 // fresh each morning, so turn it off rather than work around it in the alias.
 session_serialization false
+
+// tmux's prefix, ported. zellij ships a Tmux mode whose binds all end in
+// SwitchToMode "Normal", which is exactly what a prefix does, so the modality
+// helps here rather than getting in the way.
+//
+// Only the prefix moves. tmux's non-prefix binds are deliberately not ported:
+// Ctrl h, Ctrl p and Ctrl n are zellij's Move, Pane and Resize mode keys, and
+// Alt h/j/k/l already focuses panes.
+//
+// `prefix r` has no equivalent. zellij has no reload action because it watches
+// this file and reloads on write.
+keybinds {
+    tmux {
+        // Matches ~/.config/tmux/tmux.conf: v splits right, h splits down.
+        // Both displace zellij's own tmux-mode meanings for these keys.
+        bind "v" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "h" { NewPane "Down"; SwitchToMode "Normal"; }
+    }
+    shared_except "tmux" "locked" {
+        bind "Ctrl \\" { SwitchToMode "Tmux"; }
+
+        // tmux unbinds Ctrl b for the reason this does: it is readline's
+        // backward-char, so a multiplexer holding it breaks that in every pane.
+        unbind "Ctrl b"
+    }
+}
