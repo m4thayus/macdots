@@ -1,0 +1,17 @@
+// The layout a bare `zellij` gets. config.kdl names it in default_layout and
+// carries the reason it exists.
+
+layout {
+    default_tab_template {
+        children
+        pane size=1 borderless=true {
+            plugin location="zjstatus"
+        }
+    }
+
+    // A loose pane here would become tab 1 directly and skip the template
+    // above, leaving the first tab barless until you open a second one.
+    tab {
+        pane
+    }
+}

@@ -17,7 +17,7 @@ mouse_mode true
 // zellij execs $SHELL directly for new panes, where tmux creates a login
 // shell. Without this, a pane opened by hand has no version-manager shims,
 // no direnv and no PS1. See the comment in the wrapper.
-default_shell "/Users/matt/.local/bin/login-bash"
+default_shell "/Users/matt/.config/zellij/shell"
 
 // Drop the powerline chevrons. They are the bulk of what makes zellij's chrome
 // read as louder than tmux's single status line.
@@ -32,6 +32,51 @@ pane_frames false
 // and tmux has no equivalent behaviour. The dev workspace is meant to be built
 // fresh each morning, so turn it off rather than work around it in the alias.
 session_serialization false
+
+// A layout replaces zellij's default one wholesale, so anything a session
+// needs has to be in the layout that built it. That trapped the status bar in
+// dev.kdl and left a bare `zellij` on the stock tab-bar and status-bar.
+// plain.kdl is the minimal carrier: one pane plus the template.
+default_layout "plain"
+
+// The bar itself lives here, as a plugin alias, so the layouts reference it by
+// name and only state it once. A user `plugins` block merges with zellij's
+// built-in aliases rather than replacing them.
+//
+// zjstatus, because no built-in plugin has a clock. It also drops the
+// swap-layout indicator compact-bar prints, so the line reads as tmux's does.
+//
+// The "Zellij" branding is put back by hand. Nothing needs it, but the bar has
+// the room and the maintainers earned the credit. It takes the clock's blue so
+// it reads as chrome, and not as part of the session and tab list beside it.
+//
+// Pinned by version deliberately. Upstream's quickstart points at
+// latest/download, and zellij caches a remote plugin per zellij version, so a
+// zellij upgrade would refetch whatever was newest that day with nothing
+// recording the change. Bump this line to upgrade, and expect a permission
+// prompt on first launch.
+plugins {
+    zjstatus location="https://github.com/dj95/zjstatus/releases/download/v0.25.0/zjstatus.wasm" {
+        // The three formats are ~/.config/tmux/tmux.conf's status-left, window
+        // list and status-right, in that order.
+        //
+        // Nothing here sets bg, so the bar inherits the terminal the way
+        // tmux's `status-style bg=default` does.
+        format_left  "#[fg=#8ba4b0]Zellij #[fg=#c4b28a][{session}]{tabs}"
+        format_right "{datetime}"
+
+        // Hex rather than a theme reference: zjstatus paints itself and never
+        // reads zellij's theme. Yellow session, green active tab and blue clock
+        // are tmux's colours, resolved to Kanagawa Dragon by
+        // ~/.config/zellij/themes/kanagawa-dragon.kdl.
+        tab_normal "#[fg=#c5c9c5] {index}:{name}"
+        tab_active "#[fg=#8a9a7b] {index}:{name}*"
+
+        datetime          "#[fg=#8ba4b0]{format}"
+        datetime_format   "%A, %d %b %Y %I:%M %p"
+        datetime_timezone "America/New_York"
+    }
+}
 
 // tmux's prefix, ported. zellij ships a Tmux mode whose binds all end in
 // SwitchToMode "Normal", which is exactly what a prefix does, so the modality

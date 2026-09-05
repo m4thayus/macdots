@@ -17,46 +17,18 @@
 // never exit, so they never need a shell behind them.
 
 layout {
-    // A custom layout replaces zellij's default one wholesale. Without a
-    // template there is no tab bar at all.
+    // Every layout needs its own copy of this: see default_layout in
+    // config.kdl, which also carries the bar's configuration.
     default_tab_template {
         children
         pane size=1 borderless=true {
-            // zjstatus, because no built-in plugin has a clock. It also drops
-            // the swap-layout indicator and the "Zellij" branding that
-            // compact-bar prints, so the line reads as tmux's does.
-            //
-            // Pinned by version deliberately. Upstream's quickstart points at
-            // latest/download, and zellij caches a remote plugin per zellij
-            // version, so a zellij upgrade would refetch whatever was newest
-            // that day with nothing recording the change. Bump this line to
-            // upgrade, and expect a permission prompt on first launch.
-            plugin location="https://github.com/dj95/zjstatus/releases/download/v0.25.0/zjstatus.wasm" {
-                // The three formats are ~/.config/tmux/tmux.conf's status-left,
-                // window list and status-right, in that order.
-                //
-                // Nothing here sets bg, so the bar inherits the terminal the
-                // way tmux's `status-style bg=default` does.
-                format_left  "#[fg=#c4b28a][{session}]{tabs}"
-                format_right "{datetime}"
-
-                // Hex rather than a theme reference: zjstatus paints itself and
-                // never reads zellij's theme. Yellow session, green active tab
-                // and blue clock are tmux's colours, resolved to Kanagawa
-                // Dragon by ~/.config/zellij/themes/kanagawa-dragon.kdl.
-                tab_normal "#[fg=#c5c9c5] {index}:{name}"
-                tab_active "#[fg=#8a9a7b] {index}:{name}*"
-
-                datetime          "#[fg=#8ba4b0]{format}"
-                datetime_format   "%A, %d %b %Y %I:%M %p"
-                datetime_timezone "America/New_York"
-            }
+            plugin location="zjstatus"
         }
     }
 
     tab name="home" focus=true {
         pane split_direction="vertical" {
-            pane command="bash" close_on_exit=true {
+            pane size="66%" command="bash" close_on_exit=true {
                 args "-lic" "brew update && brew upgrade codex claude-code claude; exec bash -l"
             }
             pane split_direction="horizontal" {
@@ -72,7 +44,7 @@ layout {
 
     tab name="talaria" cwd="$MERCURY_BASE_PATH/talaria" {
         pane split_direction="vertical" {
-            pane command="bash" close_on_exit=true {
+            pane size="66%" command="bash" close_on_exit=true {
                 args "-lic" "toys github prune local; exec bash -l"
             }
             pane command="bin/dev" close_on_exit=true

@@ -11,4 +11,8 @@
 # Fixing it here rather than in ~/.bashrc keeps the login/non-login split
 # intact: ~/.bash_profile stays the run-once file that need not be idempotent,
 # and path_helper keeps collapsing its PATH append back down.
+#
+# It lives beside config.kdl because nothing types it as a command. Only
+# default_shell calls it, by absolute path. In ~/.local/bin it would look
+# runnable, and PATH puts that directory last, so the name would never resolve.
 exec /opt/homebrew/bin/bash -l "$@"
