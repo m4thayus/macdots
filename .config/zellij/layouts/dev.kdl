@@ -13,16 +13,38 @@
 
 layout {
     // A custom layout replaces zellij's default one wholesale. Without a
-    // template there is no tab bar at all. compact-bar is one line carrying
-    // both tab names and mode, which is the closest match to tmux's status
-    // line; the full tab-bar + status-bar pair is three lines of chrome.
+    // template there is no tab bar at all.
     default_tab_template {
         children
         pane size=1 borderless=true {
-            // The indicator names the active swap layout, and this layout
-            // defines none, so it only ever reads BASE.
-            plugin location="compact-bar" {
-                hide_swap_layout_indication true
+            // zjstatus, because no built-in plugin has a clock. It also drops
+            // the swap-layout indicator and the "Zellij" branding that
+            // compact-bar prints, so the line reads as tmux's does.
+            //
+            // Pinned by version deliberately. Upstream's quickstart points at
+            // latest/download, and zellij caches a remote plugin per zellij
+            // version, so a zellij upgrade would refetch whatever was newest
+            // that day with nothing recording the change. Bump this line to
+            // upgrade, and expect a permission prompt on first launch.
+            plugin location="https://github.com/dj95/zjstatus/releases/download/v0.25.0/zjstatus.wasm" {
+                // The three formats are ~/.config/tmux/tmux.conf's status-left,
+                // window list and status-right, in that order.
+                //
+                // Nothing here sets bg, so the bar inherits the terminal the
+                // way tmux's `status-style bg=default` does.
+                format_left  "#[fg=#c4b28a][{session}]{tabs}"
+                format_right "{datetime}"
+
+                // Hex rather than a theme reference: zjstatus paints itself and
+                // never reads zellij's theme. Yellow session, green active tab
+                // and blue clock are tmux's colours, resolved to Kanagawa
+                // Dragon by ~/.config/zellij/themes/kanagawa-dragon.kdl.
+                tab_normal "#[fg=#c5c9c5] {index}:{name}"
+                tab_active "#[fg=#8a9a7b] {index}:{name}*"
+
+                datetime          "#[fg=#8ba4b0]{format}"
+                datetime_format   "%A, %d %b %Y %I:%M %p"
+                datetime_timezone "America/New_York"
             }
         }
     }
