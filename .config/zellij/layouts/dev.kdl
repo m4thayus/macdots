@@ -4,6 +4,11 @@
 // One-shots use `bash -lic "<cmd>; exec bash -l"` so the command runs AND the
 // pane keeps a live shell — the behaviour send-keys gave us for free.
 //
+// `zellij action send-keys --pane-id N` does exist, so this is not a gap being
+// worked around. It runs against a live session and a known pane id, and a
+// layout has neither, which is why the tmux file can use send-keys and this
+// one cannot. Reach for it to drive a running session from outside instead.
+//
 // close_on_exit matches tmux, which has remain-on-exit off by default. Without
 // it zellij holds an exited pane open showing [ EXIT CODE: n ], so Ctrl+D
 // prints "logout" and then needs a second press to dismiss the corpse.
