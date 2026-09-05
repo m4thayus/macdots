@@ -42,6 +42,13 @@ font-style-italic = Medium Italic
 font-family-bold-italic = Victor Mono
 font-style-bold-italic = Bold Italic
 
+# ssh-env rewrites TERM from xterm-ghostty to xterm-256color for remote hosts
+# and carries COLORTERM through. It writes nothing to the remote, which is why
+# it is on and ssh-terminfo is not — see the note below.
+#
+# cursor, path and title are on by default. sudo stays off with them.
+shell-integration-features = ssh-env
+
 window-padding-x = 6
 window-padding-y = 6
 window-padding-balance = true
