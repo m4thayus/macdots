@@ -49,6 +49,9 @@ keybinds {
         // Both displace zellij's own tmux-mode meanings for these keys.
         bind "v" { NewPane "Right"; SwitchToMode "Normal"; }
         bind "h" { NewPane "Down"; SwitchToMode "Normal"; }
+
+        // Tab mode's only other door, now that Ctrl t is unbound below.
+        bind "t" { SwitchToMode "Tab"; }
     }
     shared_except "tmux" "locked" {
         bind "Ctrl \\" { SwitchToMode "Tmux"; }
@@ -56,5 +59,10 @@ keybinds {
         // tmux unbinds Ctrl b for the reason this does: it is readline's
         // backward-char, so a multiplexer holding it breaks that in every pane.
         unbind "Ctrl b"
+
+        // Ctrl t is fzf's file widget. zellij held it for Tab mode, so fzf
+        // never saw it. Tab mode's own keys are redundant here anyway: prefix
+        // c, n, p and , already cover new, next, previous and rename.
+        unbind "Ctrl t"
     }
 }
