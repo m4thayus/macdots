@@ -1,8 +1,16 @@
 // Zellij equivalent of ~/.config/tmux/dev. Launched by dzj; dmux still runs
 // the tmux original. The two are kept in step by hand.
 //
-// One-shots use `bash -lic "<cmd>; exec bash -l"` so the command runs AND the
-// pane keeps a live shell — the behaviour send-keys gave us for free.
+// One-shots use `sh -c "<cmd>; exec <the shell wrapper>"` so the command runs
+// and the pane keeps a live shell, which is the behaviour send-keys gave us
+// for free.
+//
+// The exec'd wrapper is the one default_shell names, because these panes want
+// exactly what a bare pane wants. default_shell does not reach them: it
+// applies only to a pane opened with no command, and every pane here has one.
+//
+// The outer sh runs a command and hands off, so it needs no profile of its
+// own. Running the wrapper there instead would read ~/.bash_profile twice.
 //
 // `zellij action send-keys --pane-id N` does exist, so this is not a gap being
 // worked around. It runs against a live session and a known pane id, and a
@@ -28,8 +36,8 @@ layout {
 
     tab name="home" focus=true {
         pane split_direction="vertical" {
-            pane size="66%" command="bash" close_on_exit=true {
-                args "-lic" "brew update && brew upgrade codex claude-code claude; exec bash -l"
+            pane size="66%" command="/bin/sh" close_on_exit=true {
+                args "-c" "brew update && brew upgrade codex claude-code claude; exec /Users/matt/.config/zellij/shell"
             }
             pane split_direction="horizontal" {
                 // vite prints four lines and then sits there, so it is capped.
@@ -39,33 +47,33 @@ layout {
                 pane size="33%" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
                     args "run" "dev"
                 }
-                pane command="bash" close_on_exit=true { args "-lic" "toys bonsai"; }
+                pane command="toys" close_on_exit=true { args "bonsai"; }
             }
         }
     }
 
     tab name="talaria" cwd="$MERCURY_BASE_PATH/talaria" {
         pane split_direction="vertical" {
-            pane size="66%" command="bash" close_on_exit=true {
-                args "-lic" "toys github prune local; exec bash -l"
+            pane size="66%" command="/bin/sh" close_on_exit=true {
+                args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
             }
             pane command="bin/dev" close_on_exit=true
         }
     }
 
     tab name="thoth" cwd="$MERCURY_BASE_PATH/thoth" {
-        pane command="bash" close_on_exit=true {
-            args "-lic" "toys github prune local; exec bash -l"
+        pane command="/bin/sh" close_on_exit=true {
+            args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
         }
     }
 
     tab name="personal" {
         pane split_direction="vertical" {
-            pane cwd="$HOME/Projects/phylactery" command="bash" close_on_exit=true {
-                args "-lic" "toys github prune local; exec bash -l"
+            pane cwd="$HOME/Projects/phylactery" command="/bin/sh" close_on_exit=true {
+                args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
             }
-            pane cwd="$HOME/Projects/white-room" command="bash" close_on_exit=true {
-                args "-lic" "toys github prune local; exec bash -l"
+            pane cwd="$HOME/Projects/white-room" command="/bin/sh" close_on_exit=true {
+                args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
             }
         }
     }
@@ -74,11 +82,11 @@ layout {
         pane split_direction="vertical" {
             pane cwd="$MERCURY_BASE_PATH"
             pane split_direction="horizontal" {
-                pane cwd="$MERCURY_BASE_PATH/livelabs" command="bash" close_on_exit=true {
-                    args "-lic" "toys github prune local; exec bash -l"
+                pane cwd="$MERCURY_BASE_PATH/livelabs" command="/bin/sh" close_on_exit=true {
+                    args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
                 }
-                pane cwd="$MERCURY_BASE_PATH/psychopomp" command="bash" close_on_exit=true {
-                    args "-lic" "toys github prune local; exec bash -l"
+                pane cwd="$MERCURY_BASE_PATH/psychopomp" command="/bin/sh" close_on_exit=true {
+                    args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
                 }
             }
         }
