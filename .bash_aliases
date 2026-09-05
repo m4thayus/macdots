@@ -3,7 +3,6 @@
 #
 
 alias vi="nvim"
-alias vim='NVIM_APPNAME="nvim-legacy" nvim'
 
 alias ssh="TERM=xterm ssh"
 alias docker="podman"

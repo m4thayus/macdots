@@ -28,8 +28,8 @@ Configuration for my (macOS-based) dev environment, managed as a bare git repo
 | Agent tooling | Claude Code — config, skills, plugins | `.claude` |
 | Git | | `.gitconfig`, `.gitexcludes` |
 
-The legacy `.vimrc` and `.config/nvim-legacy/init.vim` are deprecated
-coc-based backups, kept only as a fallback.
+`.vimrc` is a plugin-free fallback for where neovim cannot follow: sudo,
+another account, a machine with nothing installed.
 
 ### `.toys/` — custom commands
 
