@@ -64,7 +64,7 @@ plugins {
         //
         // Nothing here sets bg, so the bar inherits the terminal the way
         // tmux's `status-style bg=default` does.
-        format_left  "#[fg=#8ba4b0]Zellij #[fg=#c4b28a][{session}]{tabs}"
+        format_left  "#[fg=#8ba4b0]Zellij {mode}#[fg=#c4b28a][{session}]{tabs}"
         format_right "{datetime}"
 
         // Hex rather than a theme reference: zjstatus paints itself and never
@@ -77,6 +77,36 @@ plugins {
         datetime          "#[fg=#8ba4b0]{format}"
         datetime_format   "%A, %d %b %Y %I:%M %p"
         datetime_timezone "America/New_York"
+
+        // tmux shows no prefix indicator, and does not need one: the prefix
+        // lasts a single keystroke. A zellij mode is sticky until Esc, so it is
+        // a state you can sit in without noticing, and it gets a marker.
+        //
+        // It reads far left, after the branding and before the session, which is
+        // where both nvim and zellij's own default bar put the mode.
+        //
+        // The two colours are the two frame colours, so the bar and the border a
+        // pane is wearing never say different things. Base mode takes the
+        // focused-frame yellow, any other mode takes frame_highlight's orange.
+        //
+        // Red is deliberately left alone: exit_code_error owns it, and a mode is
+        // a state you chose rather than something that went wrong.
+        //
+        // zjstatus has no key for "every mode except normal", so one real mode
+        // has to carry that format and mode_default_to_mode points the rest at
+        // it. tmux is the carrier because it is the one reached by hand, which
+        // makes the line true on its own terms rather than only as a template.
+        //
+        // A clearer invented key is not available, and would fail silently.
+        // zjstatus matches the key suffix and mode_default_to_mode against a
+        // fixed list of fourteen mode names, drops anything else without an
+        // error, and falls back to painting every mode with mode_normal.
+        //
+        // {name} is zellij's own mode name. Literal text in its place would cost
+        // a line per mode, because only the placeholder survives the fallback.
+        mode_normal          "#[fg=#c8c093]{name} "
+        mode_tmux            "#[fg=#ffa066]{name} "
+        mode_default_to_mode "tmux"
     }
 }
 

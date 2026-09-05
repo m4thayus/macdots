@@ -56,15 +56,18 @@ themes {
         // The emphasis slots are repeated anyway because the parser requires all
         // four and rejects the file without them.
         //
-        // The three are one brightness ramp rather than three hues, because each
-        // border sits under a title it should not compete with. Focus takes
-        // Ghostty's cursor-color, so the focused pane is marked the same way the
-        // focused character is. frame_highlight is hover on an unfocused frame,
-        // and it lands between the two: bright enough to answer the pointer,
-        // dim enough that it never reads as focus.
+        // Unfocused and focused are one dim-to-bright pair, because a border sits
+        // under a title it should not compete with. Focus takes Ghostty's
+        // cursor-color, marking the focused pane the way the focused character
+        // is marked.
+        //
+        // frame_highlight breaks that pair deliberately. It paints the focused
+        // frame while a mode other than the base one is open, which is a state
+        // you want to notice and leave, so it takes a hue rather than another
+        // step of grey. It is the only warning colour in the frames.
         frame_unselected  { base "#625e5a"; background "#181616"; emphasis_0 "#625e5a"; emphasis_1 "#625e5a"; emphasis_2 "#625e5a"; emphasis_3 "#625e5a"; }
         frame_selected    { base "#c8c093"; background "#181616"; emphasis_0 "#c8c093"; emphasis_1 "#c8c093"; emphasis_2 "#c8c093"; emphasis_3 "#c8c093"; }
-        frame_highlight   { base "#a6a69c"; background "#181616"; emphasis_0 "#a6a69c"; emphasis_1 "#a6a69c"; emphasis_2 "#a6a69c"; emphasis_3 "#a6a69c"; }
+        frame_highlight   { base "#ffa066"; background "#181616"; emphasis_0 "#ffa066"; emphasis_1 "#ffa066"; emphasis_2 "#ffa066"; emphasis_3 "#ffa066"; }
 
         exit_code_success { base "#8a9a7b"; background "#181616"; emphasis_0 "#8a9a7b"; emphasis_1 "#8a9a7b"; emphasis_2 "#8a9a7b"; emphasis_3 "#8a9a7b"; }
         exit_code_error   { base "#c4746e"; background "#181616"; emphasis_0 "#c4746e"; emphasis_1 "#c4746e"; emphasis_2 "#c4746e"; emphasis_3 "#c4746e"; }
