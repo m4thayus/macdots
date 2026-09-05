@@ -23,8 +23,10 @@ default_shell "/Users/matt/.config/zellij/shell"
 // read as louder than tmux's single status line.
 simplified_ui true
 
-// tmux draws a thin divider and no pane titles; match it.
-pane_frames false
+// A deliberate break from tmux, which draws a bare divider and no pane titles.
+// The title names the command the pane is running, and that is worth the row
+// and two columns a frame costs. themes/kanagawa-dragon.kdl colours them.
+pane_frames true
 
 // zellij serializes a session when it exits and resurrects it on the next
 // attach, with every command suspended behind a "Waiting to run" prompt. That

@@ -7,6 +7,10 @@
 // +show-config`. Re-derive from that command, never by hand, and see
 // ~/.config/ghostty/config.
 //
+// frame_unselected is the one exception. Ghostty resolves nothing between
+// black and dragonGray, and an unfocused pane border wants a step in that gap,
+// so it takes dragonBlack6 from upstream Kanagawa directly.
+//
 // The UI slots exist to match the tmux status line, which paints nothing of its
 // own: it sets bg=default and names ANSI colors, so it inherits the terminal.
 // zellij has no bg=default, so backgrounds here are set to Ghostty's own
@@ -45,13 +49,22 @@ themes {
         ribbon_unselected { base "#c5c9c5"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#181616"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
         ribbon_selected   { base "#8a9a7b"; background "#181616"; emphasis_0 "#c4b28a"; emphasis_1 "#c4b28a"; emphasis_2 "#8ba4b0"; emphasis_3 "#a292a3"; }
 
-        // These mirror tmux's two border colours: pane-border-style is black and
-        // pane-active-border-style is #282727, one step up. frame_highlight is
-        // the hover colour, and it joins them because tmux marks hover with
-        // nothing at all. Raise it if the split lines stop being findable.
-        frame_unselected  { base "#0d0c0c"; background "#181616"; emphasis_0 "#0d0c0c"; emphasis_1 "#0d0c0c"; emphasis_2 "#0d0c0c"; emphasis_3 "#0d0c0c"; }
-        frame_selected    { base "#282727"; background "#181616"; emphasis_0 "#282727"; emphasis_1 "#282727"; emphasis_2 "#282727"; emphasis_3 "#282727"; }
-        frame_highlight   { base "#282727"; background "#181616"; emphasis_0 "#282727"; emphasis_1 "#282727"; emphasis_2 "#282727"; emphasis_3 "#282727"; }
+        // base picks the border and nothing else. Two things were pinned down by
+        // sentinel probe: the emphasis slots do nothing for frames, and the pane
+        // title takes the terminal foreground rather than any slot here, so it
+        // cannot be recoloured without recolouring every character on screen.
+        // The emphasis slots are repeated anyway because the parser requires all
+        // four and rejects the file without them.
+        //
+        // The three are one brightness ramp rather than three hues, because each
+        // border sits under a title it should not compete with. Focus takes
+        // Ghostty's cursor-color, so the focused pane is marked the same way the
+        // focused character is. frame_highlight is hover on an unfocused frame,
+        // and it lands between the two: bright enough to answer the pointer,
+        // dim enough that it never reads as focus.
+        frame_unselected  { base "#625e5a"; background "#181616"; emphasis_0 "#625e5a"; emphasis_1 "#625e5a"; emphasis_2 "#625e5a"; emphasis_3 "#625e5a"; }
+        frame_selected    { base "#c8c093"; background "#181616"; emphasis_0 "#c8c093"; emphasis_1 "#c8c093"; emphasis_2 "#c8c093"; emphasis_3 "#c8c093"; }
+        frame_highlight   { base "#a6a69c"; background "#181616"; emphasis_0 "#a6a69c"; emphasis_1 "#a6a69c"; emphasis_2 "#a6a69c"; emphasis_3 "#a6a69c"; }
 
         exit_code_success { base "#8a9a7b"; background "#181616"; emphasis_0 "#8a9a7b"; emphasis_1 "#8a9a7b"; emphasis_2 "#8a9a7b"; emphasis_3 "#8a9a7b"; }
         exit_code_error   { base "#c4746e"; background "#181616"; emphasis_0 "#c4746e"; emphasis_1 "#c4746e"; emphasis_2 "#c4746e"; emphasis_3 "#c4746e"; }

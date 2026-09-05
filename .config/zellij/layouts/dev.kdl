@@ -33,8 +33,10 @@ layout {
             }
             pane split_direction="horizontal" {
                 // vite prints four lines and then sits there, so it is capped.
-                // bonsai takes the rest because the tree needs the height.
-                pane size="20%" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
+                // The cap has to clear those four plus the frame row, or the
+                // pane opens already scrolled. bonsai takes the rest because
+                // the tree needs the height.
+                pane size="33%" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
                     args "run" "dev"
                 }
                 pane command="bash" close_on_exit=true { args "-lic" "toys bonsai"; }
