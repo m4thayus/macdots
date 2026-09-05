@@ -1,7 +1,9 @@
+# Mirrored by ~/.config/zellij/layouts/dev.kdl, which dzj launches.
 new -s dev -n home
 splitw -h
-splitw -v -c "$MERCURY_BASE_PATH/hg-dev-home" "npm run dev"
-send-keys -t 1 'toys bonsai' Enter
+# -b puts vite above bonsai, and it renumbers the panes: bonsai is 2, not 1.
+splitw -v -b -l 20% -c "$MERCURY_BASE_PATH/hg-dev-home" "npm run dev"
+send-keys -t 2 'toys bonsai' Enter
 send-keys -t 0 'brew update && brew upgrade codex claude-code claude' Enter
 new-window -n talaria -c "$MERCURY_BASE_PATH/talaria"
 splitw -h -c "$MERCURY_BASE_PATH/talaria" "bin/dev"

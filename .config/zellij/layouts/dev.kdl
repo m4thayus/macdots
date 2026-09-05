@@ -55,10 +55,12 @@ layout {
                 args "-lic" "brew update && brew upgrade codex claude-code claude; exec bash -l"
             }
             pane split_direction="horizontal" {
-                pane command="bash" close_on_exit=true { args "-lic" "toys bonsai"; }
-                pane cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
+                // vite prints four lines and then sits there, so it is capped.
+                // bonsai takes the rest because the tree needs the height.
+                pane size="20%" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
                     args "run" "dev"
                 }
+                pane command="bash" close_on_exit=true { args "-lic" "toys bonsai"; }
             }
         }
     }
