@@ -98,6 +98,14 @@ plugins {
         format_right "#[fg=#b6927b,bg=#393836][{session}] {datetime}"
         format_space "#[bg=#393836]"
 
+        // A blank row above the bar, so the bottom pane frame does not sit
+        // flush against the bar fill. Both layouts give the plugin pane size=2
+        // to make room for it.
+        border_enabled  "true"
+        border_char     " "
+        border_format   "{char}"
+        border_position "top"
+
         // Hex rather than a theme reference: zjstatus paints itself and never
         // reads zellij's theme. The values resolve to Kanagawa Dragon through
         // ~/.config/zellij/themes/kanagawa-dragon.kdl.
