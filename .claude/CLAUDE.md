@@ -226,6 +226,22 @@ once.
 unsend, so the remedy is rotating every credential the read exposed. The `mcp-token-revocation`
 memory carries the specifics and the recovery.
 
+## Compressed Tool Output Is Retrievable
+
+Headroom compresses tool results before you read them. Structural compaction dominates and is
+usually lossless, but SmartCrusher's row-drop path discards array items, and a large opaque blob
+gets offloaded to the CCR store instead of shown.
+
+- A `<<ccr:HASH,KIND,SIZE>>` or `[... Retrieve more: hash=abc123]` marker means the content sits in
+  the store, not in what you read. Retrieve it with `mcp__headroom__headroom_retrieve`.
+- Retrieve when you see the marker, not later. The window is 30 minutes for proxy-pipeline entries.
+- Never reason over a marker as though it were the content. An abridged array narrows the answer
+  without looking wrong.
+
+**Why:** `headroom_retrieve` is a deferred tool, so its schema isn't loaded at the moment you need
+it and the capability is easy to miss. The SmartCrusher docs describe the row drop but document
+neither the marker nor the recovery, so nothing else will tell you.
+
 ## Show the Change Before You Commit
 
 Make the edit, show the changed passage, and stop. A commit or a push waits until I have read it.
