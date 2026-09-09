@@ -24,6 +24,17 @@ export FX_THEME=2
 export FX_SHOW_SIZE=true
 export FX_NO_MOUSE=true
 
+# Headroom: disable telemetry, the update check and the license reporter. It does not
+# gate model downloads, because the Kompress loader never consults it (v0.37.0).
+# Set globally so wrapped and unwrapped sessions behave the same.
+export HEADROOM_OFFLINE=1
+
+# Turn off the Kompress-v2-base paraphraser. The structural compressors (SmartCrusher,
+# log/diff, schema compaction) stay on, and their output is lossy. The CCR store
+# recovers an original for 30 minutes only, so a long session outlives that window.
+# HEADROOM_LOSSLESS=1 removes the dependency on the store.
+export HEADROOM_DISABLE_KOMPRESS=1
+
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 eval "$(direnv hook bash)"
