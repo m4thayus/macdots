@@ -59,6 +59,10 @@ tool 'bonsai' do
     trap('WINCH') do
       resized = true
       Process.kill('TERM', pid) if pid
+    rescue Errno::ESRCH
+      # The resize landed between the wait below and the next spawn, so the child
+      # is already reaped. The relaunch picks up the new size on its own.
+      nil
     end
 
     begin
@@ -76,6 +80,7 @@ tool 'bonsai' do
         resized = false
         pid = spawn({ 'TERM' => 'xterm-256color' }, *args)
         Process.wait(pid) # blocks until resize-kill or the tree finishes growing
+        pid = nil # a reaped pid can be reused, and the trap must not signal a stranger
         break unless resized
       end
     ensure
