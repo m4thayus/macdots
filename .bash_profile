@@ -35,6 +35,12 @@ export HEADROOM_OFFLINE=1
 # HEADROOM_LOSSLESS=1 removes the dependency on the store.
 export HEADROOM_DISABLE_KOMPRESS=1
 
+# HEADROOM_TEXT_CRUSHER stays unset. Turned on, prose over HEADROOM_KOMPRESS_MAX_TOKENS
+# (default 50k tok) would route to the extractive TextCrusher, which drops whole
+# sentences. That gate sits ABOVE the enable_kompress check, so DISABLE_KOMPRESS does
+# not cover it — only its own default-off does (v0.37.0). Setting =0 is a no-op: the
+# parse is a whitelist, so "0" and unset take the same branch.
+
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 eval "$(direnv hook bash)"
