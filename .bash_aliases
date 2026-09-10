@@ -17,8 +17,14 @@ alias macdots="$HOME/.local/bin/macdots"
 # out of the session you launched from. Layout lives in claude.conf. Teams stay
 # off in settings.json, which keeps their context cost a per-launch choice.
 # printf %q keeps quoted flag values intact, since tmux takes one command string.
+# The headroom launcher is spelled out rather than reusing the `claude` function
+# below, because tmux runs this string outside an interactive bash and never sees
+# it. Keep the two in step. Teammate panes reach the proxy through the
+# settings.local.json that `wrap` writes in the project, not through this
+# process, since a tmux pane inherits the server's environment and not its
+# client's.
 cmux() {
-  local cmd=claude arg
+  local cmd="headroom wrap claude --1m --" arg
   for arg in "$@"; do cmd+=" $(printf '%q' "$arg")"; done
   TMUX= tmux -L claude -f ~/.config/tmux/claude.conf \
     new-session -A -s "${PWD##*/}" -c "$PWD" \
