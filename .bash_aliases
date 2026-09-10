@@ -37,3 +37,11 @@ alias zj="zellij"
 
 alias rc_sync="rclone sync --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
 alias rc_copy="rclone copy --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
+
+# Claude Code through headroom's compressing proxy, which is how it is meant to
+# run every session — `wrap` is a launcher, not an installer. `--1m` is not
+# optional: behind a custom ANTHROPIC_BASE_URL, Claude Code drops the context-1m
+# beta header and caps the session at 200k. A function, not an alias, because
+# `wrap` needs the agent's own arguments after `--`. `command claude` still
+# launches unwrapped.
+claude() { headroom wrap claude --1m -- "$@"; }
