@@ -25,7 +25,7 @@ Configuration for my (macOS-based) dev environment, managed as a bare git repo
 | Worktrees | worktrunk | `.config/worktrunk` |
 | Sync | rclone | `.config/rclone` |
 | Log analysis | goaccess | `.goaccessrc` |
-| Agent tooling | Claude Code — config, skills, plugins | `.claude` |
+| Agent tooling | Claude Code — config, skills, plugins. serena and headroom MCP servers | `.claude` |
 | Git | | `.gitconfig`, `.gitexcludes` |
 
 `.vimrc` is a plugin-free fallback for where neovim cannot follow: sudo,
@@ -59,6 +59,40 @@ as `toys <namespace> <command>`:
 | **dataurl** | Encode and decode images as base64 `data:` URLs |
 | **ffmpeg**, **backgrounds**, **text** | Media and text helpers |
 | **rails**, **talaria**, **thoth** | Project dev shortcuts |
+
+### Agent tooling
+
+Claude Code is the agent, and `.claude` tracks its own configuration only:
+`CLAUDE.md`, `settings.json`, skills and hooks. Two MCP servers sit behind it,
+and neither one keeps a publishable config file.
+
+**serena** gives the agent LSP-backed symbol search and symbol-level edits, so
+it navigates code instead of grepping for it. Its config sits at
+`~/.serena/serena_config.yml`, untracked. Serena rewrites that file whenever it
+registers a project, restoring every default value and every template comment,
+so a pruned copy does not survive one launch. Three values differ from the
+shipped template, and only the modes are worth re-applying by hand, because the
+MCP launch args already pass `--open-web-dashboard False`:
+
+```yaml
+base_modes:
+- no-memories
+default_modes:
+- interactive
+- editing
+- query-projects
+```
+
+`no-memories` sits in `base_modes` because Basic Memory already owns memory,
+and a base mode is the one layer a project config or `--mode` cannot override.
+The three default modes stay overridable per call, which is where situational
+ones belong.
+
+**headroom** compresses tool and MCP output before it reaches the context
+window, which is what keeps a long session inside its budget. Everything under
+`~/.headroom` is runtime state, so it belongs in no repo, public or otherwise.
+The launcher is the `claude` function in `.bash_aliases`, and the environment it
+reads is set in `.bash_profile`.
 
 ## Using this elsewhere
 
