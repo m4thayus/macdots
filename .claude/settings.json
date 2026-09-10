@@ -5,7 +5,7 @@
   "skillOverrides": {
     "claude-api": "off"
   },
-  "enabledMcpjsonServers": ["headroom", "basic-memory", "serena"],
+  "enabledMcpjsonServers": ["headroom", "basic-memory", "serena", "linear", "rollbar"],
   "statusLine": {
     "type": "command",
     "command": "wt list statusline --format=claude-code"

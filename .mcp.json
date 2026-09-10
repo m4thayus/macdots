@@ -11,6 +11,10 @@
       "command": "/opt/homebrew/bin/basic-memory",
       "args": ["mcp"],
       "alwaysLoad": true
+    },
+    "linear": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
     }
   }
 }

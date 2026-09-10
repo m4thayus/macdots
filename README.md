@@ -63,8 +63,9 @@ as `toys <namespace> <command>`:
 ### Agent tooling
 
 Claude Code is the agent, and `.claude` tracks its own configuration only:
-`CLAUDE.md`, `settings.json`, skills and hooks. Two MCP servers sit behind it,
-and neither one keeps a publishable config file.
+`CLAUDE.md`, `settings.json`, skills and hooks. The MCP servers behind it are
+declared in `.mcp.json` files, each placed at the directory whose sessions need
+it.
 
 **serena** gives the agent LSP-backed symbol search and symbol-level edits, so
 it navigates code instead of grepping for it. Its config sits at
