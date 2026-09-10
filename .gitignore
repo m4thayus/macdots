@@ -87,6 +87,30 @@
 /.basic-memory/*
 !/.basic-memory/config.json
 
+# Headroom — the settings store only, which is the one source for the
+# compression knobs. The rest of .headroom is runtime state: logs, caches, the
+# CCR store, deploy manifests.
+!/.headroom/
+/.headroom/*
+!/.headroom/settings.json
+
+# MCP server definitions, scoped by placement — Claude Code walks cwd upward to
+# `/` looking for .mcp.json, so the $HOME one reaches every session and the
+# Projects one adds serena only where the work is code. These live here rather
+# than in ~/.claude.json, which is session state and cannot be published.
+!/.mcp.json
+!/Projects/
+/Projects/*
+!/Projects/.mcp.json
+
+# launchd agent for the headroom proxy. Library is otherwise machine state
+# end to end.
+!/Library/
+/Library/*
+!/Library/LaunchAgents/
+/Library/LaunchAgents/*
+!/Library/LaunchAgents/com.headroom.proxy.plist
+
 # Version pins
 !/.bundle/
 /.bundle/*

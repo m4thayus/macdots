@@ -24,21 +24,37 @@ export FX_THEME=2
 export FX_SHOW_SIZE=true
 export FX_NO_MOUSE=true
 
-# Headroom: disable telemetry, the update check and the license reporter. It does not
-# gate model downloads, because the Kompress loader never consults it (v0.37.0).
-# Set globally so wrapped and unwrapped sessions behave the same.
-export HEADROOM_OFFLINE=1
+# Every Anthropic request goes through the headroom proxy that
+# ~/Library/LaunchAgents/com.headroom.proxy.plist keeps running, so the port has to
+# match the plist. A dead daemon breaks the CLI, which is intended: falling back to
+# un-proxied traffic spends the tokens the proxy exists to save.
+export ANTHROPIC_BASE_URL=http://127.0.0.1:8787
 
-# Turn off the Kompress-v2-base paraphraser. The structural compressors (SmartCrusher,
-# log/diff, schema compaction) stay on, and their output is lossy. The CCR store
-# recovers an original for 30 minutes only, so a long session outlives that window.
-# HEADROOM_LOSSLESS=1 removes the dependency on the store.
-export HEADROOM_DISABLE_KOMPRESS=1
+# The next two are load-bearing only because the base URL above is a custom host,
+# and both are silent when they go missing.
+#
+# Claude Code turns OFF on-demand tool loading behind a custom base URL unless this
+# is set, materialising every deferred MCP tool schema into the window — tens of
+# thousands of tokens per session (headroom issue #746).
+export ENABLE_TOOL_SEARCH=true
 
-# HEADROOM_TEXT_CRUSHER stays unset. Turned on, prose over HEADROOM_KOMPRESS_MAX_TOKENS
-# (default 50k tok) would route to the extractive TextCrusher, which drops whole
-# sentences. That gate sits ABOVE the enable_kompress check, so DISABLE_KOMPRESS does
-# not cover it — only its own default-off does (v0.37.0). Setting =0 is a no-op: the
+# Claude Code only sends the context-1m beta header when the model id carries the
+# [1m] suffix, and behind a custom base URL its /model picker selection does not
+# survive. Unset, the session caps at 200k (headroom issue #1158). Pass --model to
+# override; the flag outranks this.
+export ANTHROPIC_MODEL="claude-opus-5[1m]"
+
+# Off in every headroom process, or the beacon uploads from whichever one is missed.
+# It is not a ~/.headroom/settings.json knob and launchd reads no shell rc, so it is
+# duplicated in com.headroom.proxy.plist. Change both together.
+export DO_NOT_TRACK=1
+
+# Compression knobs live in ~/.headroom/settings.json, which every headroom process
+# applies at startup. HEADROOM_TEXT_CRUSHER is the exception, because the store does
+# not carry it, so it can only be set here and it stays unset. Turned on, prose over
+# HEADROOM_KOMPRESS_MAX_TOKENS (default 50k tok) would route to the extractive
+# TextCrusher, which drops whole sentences. That gate sits ABOVE the enable_kompress
+# check, so disable_kompress does not cover it (v0.37.0). Setting =0 is a no-op: the
 # parse is a whitelist, so "0" and unset take the same branch.
 
 eval "$(rbenv init -)"

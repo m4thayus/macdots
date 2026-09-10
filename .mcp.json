@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "headroom": {
+      "type": "stdio",
+      "command": "/Users/matt/.local/bin/headroom",
+      "args": ["mcp", "serve"],
+      "alwaysLoad": true
+    },
+    "basic-memory": {
+      "type": "stdio",
+      "command": "/opt/homebrew/bin/basic-memory",
+      "args": ["mcp"],
+      "alwaysLoad": true
+    }
+  }
+}

@@ -17,14 +17,11 @@ alias macdots="$HOME/.local/bin/macdots"
 # out of the session you launched from. Layout lives in claude.conf. Teams stay
 # off in settings.json, which keeps their context cost a per-launch choice.
 # printf %q keeps quoted flag values intact, since tmux takes one command string.
-# The headroom launcher is spelled out rather than reusing the `claude` function
-# below, because tmux runs this string outside an interactive bash and never sees
-# it. Keep the two in step. Teammate panes reach the proxy through the
-# settings.local.json that `wrap` writes in the project, not through this
-# process, since a tmux pane inherits the server's environment and not its
-# client's.
+# Panes run $SHELL as a login shell, so every one of them picks the proxy routing
+# up from ~/.bash_profile. That matters because a pane inherits the tmux server's
+# environment, not the client's.
 cmux() {
-  local cmd="headroom wrap claude --1m --" arg
+  local cmd="claude" arg
   for arg in "$@"; do cmd+=" $(printf '%q' "$arg")"; done
   TMUX= tmux -L claude -f ~/.config/tmux/claude.conf \
     new-session -A -s "${PWD##*/}" -c "$PWD" \
@@ -43,11 +40,3 @@ alias zj="zellij"
 
 alias rc_sync="rclone sync --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
 alias rc_copy="rclone copy --fast-list --progress --track-renames --exclude-from $HOME/.config/rclone/exclude.conf --transfers 16"
-
-# Claude Code through headroom's compressing proxy, which is how it is meant to
-# run every session — `wrap` is a launcher, not an installer. `--1m` is not
-# optional: behind a custom ANTHROPIC_BASE_URL, Claude Code drops the context-1m
-# beta header and caps the session at 200k. A function, not an alias, because
-# `wrap` needs the agent's own arguments after `--`. `command claude` still
-# launches unwrapped.
-claude() { headroom wrap claude --1m -- "$@"; }

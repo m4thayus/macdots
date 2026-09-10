@@ -89,10 +89,35 @@ The three default modes stay overridable per call, which is where situational
 ones belong.
 
 **headroom** compresses tool and MCP output before it reaches the context
-window, which is what keeps a long session inside its budget. Everything under
-`~/.headroom` is runtime state, so it belongs in no repo, public or otherwise.
-The launcher is the `claude` function in `.bash_aliases`, and the environment it
-reads is set in `.bash_profile`.
+window, which is what keeps a long session inside its budget. It runs as a
+launchd daemon, `Library/LaunchAgents/com.headroom.proxy.plist`, whose
+`ProgramArguments` point straight at `headroom proxy`. headroom's own
+`persistent-service` preset points them at a wrapper script that spawns the
+listener as a child, so launchd supervises the wrapper and `KeepAlive` cannot
+recover a killed proxy.
+
+`.bash_profile` routes every session through the daemon and carries the two env
+vars that a custom `ANTHROPIC_BASE_URL` turns load-bearing: `ENABLE_TOOL_SEARCH`,
+without which Claude Code eagerly loads every deferred MCP tool schema, and
+`ANTHROPIC_MODEL` with a `[1m]` suffix, without which the session caps at 200k.
+Both fail silently.
+
+Most of `~/.headroom` is runtime state and belongs in no repo, but
+`settings.json` is configuration and is tracked. It holds the two Kompress keys,
+which are not interchangeable and are easy to read as redundant:
+
+- `disable_kompress` turns off the ML paraphraser, and is sufficient on its own.
+  The structural compressors — SmartCrusher, log/diff, schema compaction — stay
+  on regardless, and their output is lossy. The CCR store recovers an original
+  for 30 minutes only, so a long session outlives that window;
+  `HEADROOM_LOSSLESS=1` drops the dependency on the store entirely.
+- `disable_kompress_fallback` is nested inside the first in the proxy's router
+  wiring, so setting it alone does nothing at all. With both set, content that
+  no structural compressor claims goes to passthrough rather than the Kompress
+  fallback path.
+
+To measure Kompress again, set `disable_kompress` back to `false`. The fallback
+key goes inert at that moment whatever its own value says.
 
 ## Using this elsewhere
 

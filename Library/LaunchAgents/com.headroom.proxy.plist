@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.headroom.proxy</string>
+
+  <!-- ProgramArguments points at the real listener, not a launcher script.
+       headroom's own persistent-service preset supervises a wrapper that
+       Popen()s the proxy, so launchd watches the wrapper PID and KeepAlive
+       cannot recover a killed listener (headroom issue #3208). -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/matt/.local/bin/headroom</string>
+    <string>proxy</string>
+    <!-- host/port pinned: ANTHROPIC_BASE_URL in ~/.bash_profile must match -->
+    <string>--host</string><string>127.0.0.1</string>
+    <string>--port</string><string>8787</string>
+  </array>
+
+  <!-- Compression knobs are NOT set here. ~/.headroom/settings.json is the one
+       source, and every headroom process applies it at CLI startup. -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <!-- Off in every headroom process, or the beacon uploads from the ones that
+         are missed. It is not a settings.json knob, and launchd reads no shell
+         rc, so this is duplicated in ~/.bash_profile. Change both together. -->
+    <key>DO_NOT_TRACK</key><string>1</string>
+  </dict>
+
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>ProcessType</key><string>Background</string>
+  <key>StandardOutPath</key><string>/Users/matt/Library/Logs/headroom-proxy.log</string>
+  <key>StandardErrorPath</key><string>/Users/matt/Library/Logs/headroom-proxy.err</string>
+</dict>
+</plist>

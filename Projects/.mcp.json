@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "serena": {
+      "type": "stdio",
+      "command": "/Users/matt/.local/bin/serena",
+      "args": [
+        "start-mcp-server",
+        "--project-from-cwd",
+        "--context", "claude-code",
+        "--open-web-dashboard", "False"
+      ],
+      "alwaysLoad": true
+    }
+  }
+}
