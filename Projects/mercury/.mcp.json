@@ -4,6 +4,10 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@rollbar/mcp-server@latest"]
+    },
+    "linear": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
     }
   }
 }
