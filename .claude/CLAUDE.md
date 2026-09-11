@@ -64,8 +64,23 @@ or persuasion is the point.
 
 ## Comments in Code
 
+**Write none by default.** In code you are writing or rewriting, the comment count you are aiming
+for is zero. Every rule below describes a comment that already earned its place. None of them is a
+reason to write one.
+
+**Why:** the failure mode is volume, not quality. Each pass adds a few, each one defends itself, and
+the review then costs two rounds of pruning to reach the two that belonged there. The rules below
+are what made those comments good enough to argue for, which is what made the argument expensive.
+
+**A comment you want to write is a question for me, not a decision you make.** Name the fact, say
+where it would go, and let me rule. Never write it and justify it when I ask.
+
 **Code trumps a comment.** Before writing one, ask whether a rename, a restructure or a split makes
 it unnecessary. Often the honest fix is the name. Sometimes it isn't, and the comment is right.
+
+**Ask whether a spec already owns the fact.** An example that fails when the rule breaks states the
+rule better than a comment does, and a comment beside it is duplication. Settle this before the
+sync-comment test below, because a spec is a mechanism and a comment is not.
 
 **Configuration gets a lighter bar.** A setting's *why* is rarely derivable from its value. Every
 rule here still applies, just less tightly.
@@ -78,11 +93,16 @@ reason and drop the chronology.
 **One fact, one home.** State a fact once. A comment repeating what another comment owns shrinks to
 a pointer at that owner.
 
-**The exception is the sync comment.** When this code silently depends on code elsewhere — a wire
-format, an ordering both ends assume, a constant another service parses — the comment goes at both
-ends and each copy names the other. The test: could someone editing *this* code break the invariant
-without ever opening the other one? Yes means write it twice. The further apart the two ends sit,
-the more the second copy earns its place.
+**The sync comment is the one exception to one-fact-one-home. It is not an exception to write none
+by default.** When this code silently depends on code elsewhere — a wire format, an ordering both
+ends assume, a constant another service parses — the comment goes at both ends and each copy names
+the other. The test: could someone editing *this* code break the invariant without ever opening the
+other one? Yes means write it twice. The further apart the two ends sit, the more the second copy
+earns its place.
+
+**Never initiate the pair.** Writing one comment creates the obligation to write its twin, and the
+two then arrive in a diff nobody asked for. The sync rule tells you where the second copy goes once
+I have asked for the first. It never tells you to start.
 
 **It is the weakest way to keep two ends in sync, so look for a mechanism first.** A shared schema,
 an imported constant, a contract test that fails on drift. A comment cannot fail. Reach for it when
