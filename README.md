@@ -97,6 +97,31 @@ launchd daemon, `Library/LaunchAgents/com.headroom.proxy.plist`, whose
 listener as a child, so launchd supervises the wrapper and `KeepAlive` cannot
 recover a killed proxy.
 
+**The plist carries no comments**, because `PlistBuddy` rewrites the whole file
+to add one key, dropping every comment and reordering the dict. Its settings are
+recorded here instead.
+
+`ProgramArguments` pins the listener to `127.0.0.1:8787`, which
+`ANTHROPIC_BASE_URL` must match. `DO_NOT_TRACK=1` stops the telemetry beacon; it
+is not a `settings.json` knob and launchd reads no shell rc, so `.bash_profile`
+sets it too. Change both together.
+
+`HEADROOM_TOOL_SEARCH=0` is what lets any MCP server stay resident. headroom
+defers tool schemas server-side: it flags every tool `defer_loading: true` and
+injects its own search tool, exempting only built-in coding tools by a hardcoded
+name list. An MCP tool matches no exemption, so headroom re-defers whatever
+`alwaysLoad` asked Claude Code to send resident, and Anthropic then drops those
+schemas from the prompt. The failure is silent in every direction — nothing logs
+the decision, `/context` still reports the tools as Loaded, and the server looks
+connected but unreachable. **This flag and `alwaysLoad` in `.mcp.json` are a
+pair.** Each is useless alone.
+
+The two tool-search variables are different layers, and the names invite
+confusion. `ENABLE_TOOL_SEARCH` is Claude Code's, and keeps its own deferral
+working. `HEADROOM_TOOL_SEARCH` is the proxy's. Turning the second off leaves
+the first alone, so the tools Claude Code defers stay deferred and only the
+`alwaysLoad` servers go resident.
+
 `.bash_profile` routes every session through the daemon and carries the two env
 vars that a custom `ANTHROPIC_BASE_URL` turns load-bearing: `ENABLE_TOOL_SEARCH`,
 without which Claude Code eagerly loads every deferred MCP tool schema, and
