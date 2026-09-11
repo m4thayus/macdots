@@ -1,23 +1,25 @@
 // The dev workspace, launched by dzj in ~/.bash_aliases.
 //
-// One-shots use `sh -c "<cmd>; exec <the shell wrapper>"` so the command runs
-// and the pane keeps a live shell behind it. The wrapper is the one
-// default_shell names in config.kdl, because these panes want exactly what a
-// bare pane wants. default_shell does not reach them: it applies only to a pane
-// opened with no command, and every pane here has one. The outer sh only runs a
-// command and hands off, so running the wrapper there instead would read
-// ~/.bash_profile twice.
+// A pane with no command gets default_shell from config.kdl, which is the
+// login-shell wrapper sitting beside it. That wrapper is what runs
+// /etc/profile, path_helper, the version managers, direnv and PS1, because
+// zellij execs $SHELL plainly where tmux asks for a login shell. So a pane that
+// wants a prompt is a bare `pane` and nothing else.
 //
-// A layout cannot use `zellij action send-keys` in place of this. That runs
-// against a live session and a known pane id, and a layout has neither. Reach
-// for it to drive a running session from outside instead.
+// A pane that runs something first and then wants a prompt calls the `run`
+// wrapper beside the shell one. It echoes the command line, runs it, and execs
+// the login shell. The echo matters because a layout cannot type at a prompt
+// the way tmux's send-keys did — `zellij action write-chars` needs a live
+// session and a pane id, and a layout has neither.
 //
-// close_on_exit matches tmux's default. Without it zellij holds an exited pane
-// open showing [ EXIT CODE: n ], so Ctrl+D needs a second press to dismiss the
-// corpse.
+// A pane with a command holds when that command exits, showing [ EXIT CODE: n ]
+// and <ENTER> to re-run. Long-runners want that: the pane and its split ratio
+// outlive the process, so restarting vite or bin/dev is Ctrl+C then Enter
+// rather than a new pane resized by hand.
 //
-// Long-runners (npm run dev, bin/dev, toys bonsai) get a bare command: they
-// never exit, so they never need a shell behind them.
+// close_on_exit=true closes the pane instead, which is what a `run` pane wants.
+// Its command is the login shell by then, so holding would make Ctrl+D need a
+// second press to dismiss the corpse.
 
 layout {
     // Every layout needs its own copy of this: see default_layout in
@@ -31,16 +33,16 @@ layout {
 
     tab name="home" focus=true {
         pane split_direction="vertical" {
-            pane size="66%" command="/bin/sh" close_on_exit=true {
-                args "-c" "brew update && brew upgrade codex claude-code claude; exec /Users/matt/.config/zellij/shell"
+            pane size="66%" command="/Users/matt/.config/zellij/run" close_on_exit=true {
+                args "brew update && brew upgrade codex claude-code claude"
             }
             pane split_direction="horizontal" {
-                pane size="33%" command="toys" close_on_exit=true { args "bonsai"; }
+                pane size="33%" command="toys" { args "bonsai"; }
 
                 // vite prints four lines and then sits there. The cap has to
                 // clear those four plus the frame row, or the pane opens
                 // already scrolled.
-                pane size="33%" name="hg-dev-home" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" close_on_exit=true {
+                pane size="33%" name="hg-dev-home" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" {
                     args "run" "dev"
                 }
 
@@ -58,7 +60,7 @@ layout {
                 // --rate is 2s against btm's 1s default. It halves the wakeups,
                 // and anything slower reads as jumping between numbers rather
                 // than tracking one.
-                pane cwd="$HOME" command="btm" close_on_exit=true {
+                pane cwd="$HOME" command="btm" {
                     args "--basic" "--rate" "2s"
                 }
             }
@@ -67,26 +69,26 @@ layout {
 
     tab name="talaria" cwd="$MERCURY_BASE_PATH/talaria" {
         pane split_direction="vertical" {
-            pane size="66%" command="/bin/sh" close_on_exit=true {
-                args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
+            pane size="66%" command="/Users/matt/.config/zellij/run" close_on_exit=true {
+                args "toys github prune local"
             }
-            pane command="bin/dev" close_on_exit=true
+            pane command="bin/dev"
         }
     }
 
     tab name="thoth" cwd="$MERCURY_BASE_PATH/thoth" {
-        pane command="/bin/sh" close_on_exit=true {
-            args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
+        pane command="/Users/matt/.config/zellij/run" close_on_exit=true {
+            args "toys github prune local"
         }
     }
 
     tab name="personal" {
         pane split_direction="vertical" {
-            pane cwd="$HOME/Projects/phylactery" command="/bin/sh" close_on_exit=true {
-                args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
+            pane cwd="$HOME/Projects/phylactery" command="/Users/matt/.config/zellij/run" close_on_exit=true {
+                args "toys github prune local"
             }
-            pane cwd="$HOME/Projects/white-room" command="/bin/sh" close_on_exit=true {
-                args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
+            pane cwd="$HOME/Projects/white-room" command="/Users/matt/.config/zellij/run" close_on_exit=true {
+                args "toys github prune local"
             }
         }
     }
@@ -95,11 +97,11 @@ layout {
         pane split_direction="vertical" {
             pane cwd="$MERCURY_BASE_PATH"
             pane split_direction="horizontal" {
-                pane cwd="$MERCURY_BASE_PATH/livelabs" command="/bin/sh" close_on_exit=true {
-                    args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
+                pane cwd="$MERCURY_BASE_PATH/livelabs" command="/Users/matt/.config/zellij/run" close_on_exit=true {
+                    args "toys github prune local"
                 }
-                pane cwd="$MERCURY_BASE_PATH/psychopomp" command="/bin/sh" close_on_exit=true {
-                    args "-c" "toys github prune local; exec /Users/matt/.config/zellij/shell"
+                pane cwd="$MERCURY_BASE_PATH/psychopomp" command="/Users/matt/.config/zellij/run" close_on_exit=true {
+                    args "toys github prune local"
                 }
             }
         }

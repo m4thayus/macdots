@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Run one command in a pane, then leave a login shell behind it.
+#
+# The echo is the whole point. A layout cannot type at a prompt the way tmux's
+# send-keys did, so a command here runs before any prompt exists and leaves no
+# trace of itself. A command that prints nothing then reads as a command that
+# never ran, which is wrong for anything whose useful answer is silence.
+# Printing the command line first puts back what the prompt used to show.
+#
+# The command arrives as one string and goes through eval, so a pane can pass
+# `a && b` and get an echo that matches what ran. That is the same trust as the
+# `sh -c` this replaced: the string comes from the layout, never from input.
+#
+# It lives beside config.kdl because nothing types it as a command. Only a
+# layout names it, by absolute path. In ~/.local/bin it would look runnable, and
+# PATH puts that directory last, so the name would never resolve.
+
+printf '$ %s\n' "$1"
+eval "$1"
+
+# The login-shell wrapper, which is also what default_shell names in config.kdl.
+# Renaming it there has to change this line too.
+exec /Users/matt/.config/zellij/shell
