@@ -100,12 +100,12 @@ what change would delete it.
 Name the fact, say where it would go, and let me rule. Never write it and
 justify it when I ask.
 
-**Configuration meets a lower bar, not no bar.** Zero is still the goal. The bar
-drops because a setting's name and value can fail to say what it does, and no
-rename fixes that. Supply only the context a reader would otherwise find in the
-vendor's docs. Never restate the setting in its own words, and never rewrite the
-config in prose. A rejected setting kept commented out with its reasoning is a
-changelog, so the snapshot rule owns it.
+**Configuration meets a lower bar, not no bar.** Zero is still the goal. You
+can't rename a vendor's setting, so decode what its name hides — an
+abbreviation, jargon, a third-party convention — and say why this value where
+the choice is non-obvious. Never restate the setting in its own words or copy
+the vendor's docs in. A rejected setting kept commented out with its reasoning
+is a changelog, so the snapshot rule owns it.
 
 **A sync comment is the one case for stating a fact twice, and only across a
 boundary code can't cross:** another repo, another language, a client and a
