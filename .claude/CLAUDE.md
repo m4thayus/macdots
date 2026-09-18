@@ -1,17 +1,5 @@
 # Global Claude Instructions
 
-## Always Capture the Why
-
-When writing memory entries, documenting decisions, recommending deferrals or noting trade-offs:
-include the reasoning, not just the conclusion. Future context needs the *why* to judge whether a
-decision still applies.
-
-This applies to:
-- Memory file entries (`**Why:**` lines)
-- Inline code comments on non-obvious decisions
-- PR descriptions and commit messages
-- Any time I'm recording that something was deferred or chosen over an alternative
-
 ## Write in Simplified Technical English (flavored)
 
 ASD-STE100, flavored mode: structural rules enforced, vocabulary rules advisory. Default for all
@@ -51,7 +39,7 @@ idempotent, monomorphic — and define it once if it isn't common English. Contr
 
 **Density is not word count.** Three short sentences out of one 40-word sentence is longer text, and
 that is the right direction. The rule cuts ideas per sentence, not reasoning, and it never overrides
-Always Capture the Why.
+Capture the Why.
 
 **Two modes, picked by text type. Neither is off.**
 - **Strict** — error messages, tool descriptions, inter-agent instructions, procedures, anything
@@ -62,58 +50,42 @@ Always Capture the Why.
 Conversation sheds the flat register, not the sentence structure. Skip both modes only where voice
 or persuasion is the point.
 
-## Comments in Code
+## Recording Decisions
 
-**Write none by default.** In code you are writing or rewriting, the comment count you are aiming
-for is zero. Every rule below describes a comment that already earned its place. None of them is a
-reason to write one.
+Governs every place a decision gets written down: memory entries, commit messages, PR descriptions,
+configuration and code comments.
 
-**Why:** the failure mode is volume, not quality. Each pass adds a few, each one defends itself, and
-the review then costs two rounds of pruning to reach the two that belonged there. The rules below
-are what made those comments good enough to argue for, which is what made the argument expensive.
+**Capture the why.** When you record a decision, a deferral or a trade-off, record the reasoning
+with it. Future context needs the *why* to judge whether the decision still applies.
+
+**Write a snapshot, not a changelog.** State what holds today, and never narrate the change that
+produced it. "now applies X rather than Y", "used to", "was harmless but" — a commit message or a PR
+description breaks this as easily as a comment does. The diff carries the chronology, and a memory
+note carries it in the lines above the entry.
+
+### Comments in Code
+
+**Comments are code smells.** A comment marks a place where the code failed to say something. Treat
+the smell like any other: fix the code. A rename, a split, an extracted function, a spec whose
+failure states the rule — each one retires the comment instead of rewording it. Aim for zero.
+
+**When you prune a comment, prune the code.** Shortening the comment is the wrong default, because
+the shorter comment still marks the same failure. Ask what change would delete it.
 
 **A comment you want to write is a question for me, not a decision you make.** Name the fact, say
 where it would go, and let me rule. Never write it and justify it when I ask.
 
-**Code trumps a comment.** Before writing one, ask whether a rename, a restructure or a split makes
-it unnecessary. Often the honest fix is the name. Sometimes it isn't, and the comment is right.
+**Configuration meets a lower bar, not no bar.** Zero is still the goal. The bar drops because a
+setting's name and value can fail to say what it does, and no rename fixes that. Supply only the
+context a reader would otherwise find in the vendor's docs. Never restate the setting in its own
+words, and never rewrite the config in prose. A rejected setting kept commented out with its
+reasoning is a changelog, so the snapshot rule owns it.
 
-**Ask whether a spec already owns the fact.** An example that fails when the rule breaks states the
-rule better than a comment does, and a comment beside it is duplication. Settle this before the
-sync-comment test below, because a spec is a mechanism and a comment is not.
-
-**Configuration gets a lighter bar.** A setting's *why* is rarely derivable from its value. Every
-rule here still applies, just less tightly.
-
-**A comment states the rule the code follows now. It never narrates the change that produced it.**
-Signature phrases that mean you're writing history: "now applies X rather than Y", "under the old
-X", "was harmless but", "used to". The diff and the commit message carry the change, so keep the
-reason and drop the chronology.
-
-**One fact, one home.** State a fact once. A comment repeating what another comment owns shrinks to
-a pointer at that owner.
-
-**The sync comment is the one exception to one-fact-one-home. It is not an exception to write none
-by default.** When this code silently depends on code elsewhere — a wire format, an ordering both
-ends assume, a constant another service parses — the comment goes at both ends and each copy names
-the other. The test: could someone editing *this* code break the invariant without ever opening the
-other one? Yes means write it twice. The further apart the two ends sit, the more the second copy
-earns its place.
-
-**Never initiate the pair.** Writing one comment creates the obligation to write its twin, and the
-two then arrive in a diff nobody asked for. The sync rule tells you where the second copy goes once
-I have asked for the first. It never tells you to start.
-
-**It is the weakest way to keep two ends in sync, so look for a mechanism first.** A shared schema,
-an imported constant, a contract test that fails on drift. A comment cannot fail. Reach for it when
-nothing can enforce the link, which happens often across languages. Common does not make it the
-default.
-
-**An invariant earns a sync comment. A name does not.** The test is whether drift breaks something.
-Rename a model on one side of an API boundary and nothing breaks. See Systems Name Themselves.
-
-**Attach the rationale to the rule it justifies.** Don't write a section header that re-explains the
-section beneath it.
+**A sync comment is the one case for stating a fact twice, and only across a boundary code can't
+cross:** another repo, another language, a client and a server. Share a schema, a constant or a
+contract test first, because a comment cannot fail. Otherwise write it at both ends, each copy
+naming the other, and only for an invariant — could someone editing *this* code break it without
+ever opening the other end? Names don't qualify, see Systems Name Themselves.
 
 ## Naming
 
