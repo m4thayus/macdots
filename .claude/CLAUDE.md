@@ -74,6 +74,11 @@ messages, PR descriptions, configuration and code comments.
 record the reasoning with it. Future context needs the *why* to judge whether
 the decision still applies.
 
+**The commit message is the default home for a why, and the PR description
+carries the argument.** Both stay attached to the change, and neither drifts as
+the code moves. A why that outlives its own change graduates to a memory note
+or to the docs it belongs in.
+
 **Write a snapshot, not a changelog.** State what holds today, and never narrate
 the change that produced it. "now applies X rather than Y", "used to", "was
 harmless but" — a commit message or a PR description breaks this as easily as a
