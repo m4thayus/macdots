@@ -106,7 +106,7 @@ tool 'test' do
   def duration(seconds)
     return "#{seconds}s" if seconds < 60
 
-    format '%d:%02d', seconds / 60, seconds % 60
+    format '%<minutes>d:%<seconds>02d', minutes: seconds / 60, seconds: seconds % 60
   end
 
   def label(command)

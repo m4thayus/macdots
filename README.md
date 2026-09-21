@@ -223,7 +223,7 @@ They shrink the blast radius; they don't remove it.
 
 Always [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): subject`.
 
-- Types: `feat`, `fix`, `docs`, `refactor`, `chore`.
+- Types: `feat`, `fix`, `docs`, `refactor`, `chore`, `style`.
 - Scope is the tool the commit touches — `claude`, `ghostty`, `macdots`, `tmux`,
   `toys`, `zellij`, `zsh`. Omit it only when the change spans the repo.
 - Subject in the imperative, lowercase, no trailing period.
