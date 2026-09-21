@@ -63,37 +63,50 @@ tool 'test' do
 
     puts "\e[1m$ #{commands.join(' & ')}\e[0m\n\n"
 
-    @started = Time.now
-    @stopped = {}
+    started = Time.now
+    stopped = {}
+    codes = {}
 
-    jobs = commands.map { |cmd| exec(cmd, out: :null, err: :inherit, background: true) }
-    pairs = commands.zip(jobs)
-    pulse = Thread.new { heartbeat pairs }
+    waits = commands.map do |cmd|
+      job = exec(cmd, out: :null, err: :inherit, background: true)
+      Thread.new do
+        result = job.result
+        stopped[cmd] = Time.now
+        codes[cmd] = result.exit_code
+      end
+    end
 
-    codes = jobs.map { |job| job.result.exit_code }
-
+    pulse = Thread.new { heartbeat commands, started, stopped }
+    waits.each(&:join)
     pulse.kill
-    print "\e[2K\r" if $stdout.tty?
-    puts "\e[2m#{timings pairs}\e[0m"
 
-    exit codes.max
+    print "\e[2K\r" if $stdout.tty?
+    puts "\e[2m#{timings commands, started, stopped}\e[0m"
+
+    exit codes.values.max
   end
 
-  def heartbeat(pairs)
+  def heartbeat(commands, started, stopped)
     loop do
-      line = timings pairs
+      line = timings commands, started, stopped
       print "\e[2m\e[2K#{line}\e[0m\r" if $stdout.tty?
       sleep 1
     end
   end
 
-  def timings(pairs)
-    elapsed = pairs.map do |cmd, job|
-      @stopped[cmd] ||= Time.now if job.result timeout: 0
-      "#{label cmd} #{((@stopped[cmd] || Time.now) - @started).round}s"
+  def timings(commands, started, stopped)
+    elapsed = commands.map do |cmd|
+      seconds = ((stopped[cmd] || Time.now) - started).round
+      "#{label cmd} #{duration seconds}"
     end
 
     elapsed.join('  ')
+  end
+
+  def duration(seconds)
+    return "#{seconds}s" if seconds < 60
+
+    format '%d:%02d', seconds / 60, seconds % 60
   end
 
   def label(command)
