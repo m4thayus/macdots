@@ -12,6 +12,41 @@
   "skillOverrides": {
     "claude-api": "off"
   },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"${CLAUDE_PROJECT_DIR:-$PWD}\" in \"$HOME\"/Projects/*) serena-hooks activate --client=claude-code ;; esac"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"${CLAUDE_PROJECT_DIR:-$PWD}\" in \"$HOME\"/Projects/*) serena-hooks remind --client=claude-code ;; esac"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"${CLAUDE_PROJECT_DIR:-$PWD}\" in \"$HOME\"/Projects/*) serena-hooks cleanup --client=claude-code ;; esac"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "wt list statusline --format=claude-code"
@@ -30,7 +65,8 @@
     "slack@claude-plugins-official": true,
     "mattpocock-skills@claude-plugins-official": true,
     "white-room@white-room": true,
-    "phylactery@phylactery": false
+    "phylactery@phylactery": false,
+    "ruby-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -76,6 +112,7 @@
   "autoCompactWindow": 363000,
   "awaySummaryEnabled": false,
   "autoUpdatesChannel": "stable",
+  "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "autoDreamEnabled": true,
   "skipWorkflowUsageWarning": true,
