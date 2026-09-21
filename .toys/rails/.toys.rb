@@ -63,30 +63,37 @@ tool 'test' do
 
     puts "\e[1m$ #{commands.join(' & ')}\e[0m\n\n"
 
+    @started = Time.now
+    @stopped = {}
+
     jobs = commands.map { |cmd| exec(cmd, out: :null, err: :inherit, background: true) }
-    pulse = Thread.new { heartbeat commands.zip(jobs) } if $stdout.tty?
+    pairs = commands.zip(jobs)
+    pulse = Thread.new { heartbeat pairs }
 
     codes = jobs.map { |job| job.result.exit_code }
 
-    pulse&.kill
+    pulse.kill
     print "\e[2K\r" if $stdout.tty?
+    puts "\e[2m#{timings pairs}\e[0m"
 
     exit codes.max
   end
 
   def heartbeat(pairs)
-    started = Time.now
-    stopped = {}
-
     loop do
-      elapsed = pairs.map do |cmd, job|
-        stopped[cmd] ||= Time.now if job.result timeout: 0
-        "#{label cmd} #{((stopped[cmd] || Time.now) - started).round}s"
-      end
-
-      print "\e[2m\e[2K#{elapsed.join('  ')}\e[0m\r"
+      line = timings pairs
+      print "\e[2m\e[2K#{line}\e[0m\r" if $stdout.tty?
       sleep 1
     end
+  end
+
+  def timings(pairs)
+    elapsed = pairs.map do |cmd, job|
+      @stopped[cmd] ||= Time.now if job.result timeout: 0
+      "#{label cmd} #{((@stopped[cmd] || Time.now) - @started).round}s"
+    end
+
+    elapsed.join('  ')
   end
 
   def label(command)
