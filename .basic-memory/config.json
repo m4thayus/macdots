@@ -64,6 +64,14 @@
       "local_sync_path": null,
       "bisync_initialized": false,
       "last_sync": null
+    },
+    "mercury-tools": {
+      "path": "/Users/matt/Vault/memory/repos/mercury/mercury-tools",
+      "mode": "local",
+      "workspace_id": null,
+      "local_sync_path": null,
+      "bisync_initialized": false,
+      "last_sync": null
     }
   },
   "default_project": "personal",
