@@ -42,7 +42,7 @@ export ENABLE_TOOL_SEARCH=true
 # [1m] suffix, and behind a custom base URL its /model picker selection does not
 # survive. Unset, the session caps at 200k (headroom issue #1158). Pass --model to
 # override; the flag outranks this.
-export ANTHROPIC_MODEL="claude-opus-5[1m]"
+export ANTHROPIC_MODEL="claude-opus-5-5[1m]"
 
 # Off in every headroom process, or the beacon uploads from whichever one is missed.
 # It is not a ~/.headroom/settings.json knob and launchd reads no shell rc, so it is
