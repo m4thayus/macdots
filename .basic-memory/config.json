@@ -65,8 +65,8 @@
       "bisync_initialized": false,
       "last_sync": null
     },
-    "mercury-tools": {
-      "path": "/Users/matt/Vault/memory/repos/mercury/mercury-tools",
+    "amalgam": {
+      "path": "/Users/matt/Vault/memory/repos/mercury/amalgam",
       "mode": "local",
       "workspace_id": null,
       "local_sync_path": null,
@@ -84,7 +84,6 @@
   "database_url": null,
   "redis_url": null,
   "redis_max_connections": 20,
-  "semantic_search_enabled": true,
   "semantic_vector_index": "pgvector",
   "milvus_uri": null,
   "milvus_token": null,
@@ -137,9 +136,10 @@
   "index_parse_max_concurrent": 8,
   "index_entity_max_concurrent": 4,
   "index_metadata_update_max_concurrent": 4,
+  "date_order": "YMD",
   "kebab_filenames": true,
-  "disable_permalinks": false,
   "write_note_overwrite_default": false,
+  "enable_posix_tools": true,
   "cli_output_style": "rich",
   "ensure_frontmatter_on_sync": true,
   "permalinks_include_project": false,
