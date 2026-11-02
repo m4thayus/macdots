@@ -2,7 +2,7 @@
   "mcpServers": {
     "serena": {
       "type": "stdio",
-      "command": "/Users/matt/.local/bin/serena",
+      "command": "/Users/matt/.local/share/mise/installs/pypi-serena-agent/latest/bin/serena",
       "args": [
         "start-mcp-server",
         "--project-from-cwd",

@@ -2,7 +2,7 @@
   "mcpServers": {
     "headroom": {
       "type": "stdio",
-      "command": "/Users/matt/.local/bin/headroom",
+      "command": "/Users/matt/.local/share/mise/installs/pypi-headroom-ai/latest/bin/headroom",
       "args": ["mcp", "serve"],
       "alwaysLoad": true
     },

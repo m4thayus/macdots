@@ -12,5 +12,7 @@ $(toys system bash-completion install)
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init bash)"; fi
+eval "$(mise activate bash)"
+eval "$(direnv hook bash)"
 
 source ~/.bash_aliases

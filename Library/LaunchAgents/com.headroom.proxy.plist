@@ -17,7 +17,7 @@
 	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Users/matt/.local/bin/headroom</string>
+		<string>/Users/matt/.local/share/mise/installs/pypi-headroom-ai/latest/bin/headroom</string>
 		<string>proxy</string>
 		<string>--host</string>
 		<string>127.0.0.1</string>

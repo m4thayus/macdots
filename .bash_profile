@@ -57,13 +57,7 @@ export DO_NOT_TRACK=1
 # check, so disable_kompress does not cover it (v0.37.0). Setting =0 is a no-op: the
 # parse is a whitelist, so "0" and unset take the same branch.
 
-eval "$(rbenv init -)"
-eval "$(nodenv init -)"
-eval "$(direnv hook bash)"
-
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+eval "$(mise activate bash --shims)"
 
 function git_branch() {
   inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"

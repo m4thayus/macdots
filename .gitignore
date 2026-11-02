@@ -49,6 +49,7 @@
 !/.config/mise/
 !/.config/nvim/
 !/.config/tmux/
+!/.config/uv/
 !/.config/worktrunk/
 !/.config/zellij/
 
