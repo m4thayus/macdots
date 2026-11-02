@@ -114,12 +114,6 @@
 !/.bundle/
 /.bundle/*
 !/.bundle/config
-!/.nodenv/
-/.nodenv/*
-!/.nodenv/version
-!/.rbenv/
-/.rbenv/*
-!/.rbenv/version
 
 # Belt and braces
 .DS_Store

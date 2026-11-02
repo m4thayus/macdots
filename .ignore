@@ -2,8 +2,6 @@
 /Library
 /.Trash
 /.macdots.git
-/.rbenv/versions
-/.nodenv/versions
 /.cache
 /.config/yarn/global/node_modules
 /.config/coc/extensions/node_modules
