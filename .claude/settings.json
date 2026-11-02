@@ -19,6 +19,10 @@
         "hooks": [
           {
             "type": "command",
+            "command": "echo 'export PATH=\"$HOME/.local/share/mise/shims:$PATH\"' >> \"$CLAUDE_ENV_FILE\""
+          },
+          {
+            "type": "command",
             "command": "case \"${CLAUDE_PROJECT_DIR:-$PWD}\" in \"$HOME\"/Projects/*) serena-hooks activate --client=claude-code ;; esac"
           }
         ]
