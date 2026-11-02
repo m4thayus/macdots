@@ -37,13 +37,13 @@ layout {
                 args "brew update && brew upgrade codex claude-code claude"
             }
             pane split_direction="horizontal" {
-                pane size="33%" command="toys" { args "bonsai"; }
+                pane size="33%" command="mise" { args "exec" "--" "toys" "bonsai"; }
 
                 // vite prints four lines and then sits there. The cap has to
                 // clear those four plus the frame row, or the pane opens
                 // already scrolled.
-                pane size="33%" name="hg-dev-home" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="npm" {
-                    args "run" "dev"
+                pane size="33%" name="hg-dev-home" cwd="$MERCURY_BASE_PATH/hg-dev-home" command="mise" {
+                    args "exec" "--" "npm" "run" "dev"
                 }
 
                 // Bottom of the column, and cwd is $HOME rather than inherited,
@@ -72,7 +72,7 @@ layout {
             pane size="66%" command="/Users/matt/.config/zellij/run" close_on_exit=true {
                 args "toys github prune local"
             }
-            pane command="bin/dev"
+            pane command="mise" { args "exec" "--" "bin/dev"; }
         }
     }
 

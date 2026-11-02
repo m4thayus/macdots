@@ -17,6 +17,7 @@
 # PATH puts that directory last, so the name would never resolve.
 
 printf '$ %s\n' "$1"
+eval "$(mise env -s bash)"
 eval "$1"
 
 # The login-shell wrapper, which is also what default_shell names in config.kdl.
