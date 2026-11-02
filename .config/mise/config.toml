@@ -1,0 +1,8 @@
+[settings]
+idiomatic_version_file_enable_tools = ["ruby", "node", "python"]
+
+[tools]
+node = "lts"
+python = "3.15"
+ruby = "4.0"
+uv = "0.13"

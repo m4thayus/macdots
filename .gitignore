@@ -36,6 +36,9 @@
 !/.rubocop.yml
 !/.vimrc
 
+# Toolchains
+!/.default-gems
+
 # XDG config
 !/.config/
 /.config/*
@@ -43,6 +46,7 @@
 !/.config/bat/
 !/.config/codebook/
 !/.config/ghostty/
+!/.config/mise/
 !/.config/nvim/
 !/.config/tmux/
 !/.config/worktrunk/
