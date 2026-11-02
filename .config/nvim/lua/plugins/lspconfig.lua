@@ -397,7 +397,6 @@ return {
             },
           },
           ruby_lsp = {
-            cmd = { vim.fn.expand "~/.rbenv/shims/ruby-lsp" },
             init_option = {
               formatter = "rubocop",
               linters = { "rubocop" },

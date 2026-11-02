@@ -18,8 +18,8 @@
 # Deliberately does not cd to $HOME: pathspecs should resolve against your cwd
 # like they do in any other repo. This repo has enough exceptions already.
 #
-# Deliberately POSIX sh, not Ruby, despite Ruby being the norm here: rbenv is
-# configured by these very dotfiles, so a wrapper that needs it cannot be used
+# Deliberately POSIX sh, not Ruby, despite Ruby being the norm here: mise is
+# activated by these very dotfiles, so a wrapper that needs it cannot be used
 # to repair them on a fresh or half-broken machine — which is exactly when it
 # is needed. sh also keeps this out of the shim path on every invocation.
 refuse() {

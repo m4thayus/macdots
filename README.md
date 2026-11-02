@@ -16,8 +16,7 @@ Configuration for my (macOS-based) dev environment, managed as a bare git repo
 | Multiplexer | zellij, tmux | `.config/zellij`, `.config/tmux` |
 | Editor | neovim — Lua config, `init.lua` + `lua/`, lazy.nvim | `.config/nvim` |
 | Window management | Amethyst | `.amethyst.yml` |
-| Ruby | rbenv, bundler | `.rbenv/version`, `.bundle/config` |
-| Node | nodenv | `.nodenv/version` |
+| Ruby, Node, Python | mise, bundler, uv | `.config/mise/config.toml`, `.default-gems`, `.bundle/config`, `.config/uv/uv.toml` |
 | Environment | direnv | |
 | Linting | rubocop, eslint, coffeelint | `.rubocop.yml` |
 | Search & QoL | fzf, ripgrep, bat | `.config/bat`, `.ignore` |

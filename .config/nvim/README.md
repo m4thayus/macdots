@@ -10,7 +10,7 @@ formatting, Telescope search, tree navigation, and test runners.
 - Tooling: `git`, `make`, `unzip`, `rg`
 - Optional: Nerd Font for icons
 - Optional: Node toolchain for JS/TS tooling
-- Optional: `~/.rbenv/shims/ruby-lsp` for Ruby LSP code lenses
+- Optional: `ruby-lsp` from Mason for Ruby LSP code lenses
 - Optional: `stylua`, `prettier` or `prettierd`, `coffeelint`
 
 ## Getting Started

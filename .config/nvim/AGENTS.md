@@ -19,7 +19,7 @@
 
 ## Testing Guidelines
 - Neotest adapters are enabled for RSpec and Vitest: `<leader>tn` runs the nearest test, `<leader>tf` runs the current file, `<leader>ts` toggles the summary, `<leader>to` opens output.
-- For Ruby LSP code lenses, ensure `ruby-lsp` is available (shimmed via rbenv) so inline test/task commands work.
+- For Ruby LSP code lenses, ensure `ruby-lsp` is available (installed through Mason) so inline test/task commands work.
 - When adding language support, verify LSP/formatter installs via `:Mason` and rerun `:checkhealth`.
 
 ## Commit & Pull Request Guidelines
