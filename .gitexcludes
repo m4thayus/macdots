@@ -2,6 +2,7 @@
 .*.swp
 .*.swo
 .powenv
+mise.local.toml
 
 **/.claude/settings.local.json
 **/.claude/.headroom_wrap_*

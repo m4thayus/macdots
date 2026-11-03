@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'export PATH=\"$HOME/.local/share/mise/shims:$PATH\"' >> \"$CLAUDE_ENV_FILE\""
+            "command": "echo 'eval \"$(mise hook-env -s bash)\"' >> \"$CLAUDE_ENV_FILE\""
           },
           {
             "type": "command",
