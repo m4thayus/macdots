@@ -7,7 +7,8 @@
     "basic-memory",
     "serena",
     "linear",
-    "rollbar"
+    "rollbar",
+    "signoz"
   ],
   "skillOverrides": {
     "claude-api": "off"

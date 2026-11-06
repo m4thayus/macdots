@@ -8,6 +8,10 @@
     "linear": {
       "type": "http",
       "url": "https://mcp.linear.app/mcp"
+    },
+    "signoz": {
+      "type": "http",
+      "url": "https://mcp.us2.signoz.cloud/mcp"
     }
   }
 }
