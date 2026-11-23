@@ -206,3 +206,4 @@ keybinds {
         unbind "Ctrl t"
     }
 }
+show_startup_tips false
