@@ -47,17 +47,30 @@ tool 'node' do
   def run
     require 'json'
 
-    pattern = Regexp.new(options[:pattern])
-    instance = JSON.parse(`aws ec2 describe-instances`)['Reservations']
-                   .flat_map { |r| r['Instances'] }
-                   .reject { |i| i.dig('State', 'Name') == 'terminated' }
-                   .find { |i| name(i) =~ pattern }
+    query = options[:pattern]
+    pattern = Regexp.new(query)
+    candidates = JSON.parse(`aws ec2 describe-instances`)['Reservations']
+                     .flat_map { |r| r['Instances'] }
+                     .reject { |i| i.dig('State', 'Name') == 'terminated' }
+                     .select { |i| name(i) }
 
-    if instance
-      puts "Hostname #{instance['PublicDnsName']}"
-    else
-      warn 'Instance not found'
+    matches = candidates.select { |i| name(i) == query }
+    matches = candidates.select { |i| name(i) =~ pattern } if matches.empty?
+
+    running = matches.select { |i| i.dig('State', 'Name') == 'running' }
+    matches = running unless running.empty?
+
+    case matches.size
+    when 0 then abort 'Instance not found'
+    when 1 then puts "Hostname #{hostname(matches.first)}"
+    else abort "Ambiguous, #{matches.size} matches: #{matches.map { |i| name(i) }.sort.join(', ')}"
     end
+  end
+
+  def hostname(instance)
+    host = instance['PublicDnsName'].to_s
+    abort "#{name(instance)} is #{instance.dig('State', 'Name')} and has no public hostname" if host.empty?
+    host
   end
 
   def name(instance)
